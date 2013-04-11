@@ -1,0 +1,63 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.7	//
+FileName	tlsh_unittest.cpp	/^struct FileName {$/;"	s	file:
+LOCAL_FUNCTION	tlsh_impl.cpp	18;"	d	file:
+LOCAL_FUNCTION	tlsh_impl.cpp	20;"	d	file:
+LOG_1_1	tlsh_util.cpp	4652;"	d	file:
+LOG_1_3	tlsh_util.cpp	4651;"	d	file:
+LOG_1_5	tlsh_util.cpp	4650;"	d	file:
+RANGE_LVALUE	tlsh_impl.cpp	13;"	d	file:
+RANGE_QRATIO	tlsh_impl.cpp	14;"	d	file:
+SWAP_UINT	tlsh_impl.cpp	229;"	d	file:
+TLSH_Compare	tlsh.cpp	/^int TLSH_Compare(TLSH_CTX* c1, TLSH_CTX* c2)$/;"	f
+TLSH_Final	tlsh.cpp	/^int TLSH_Final(TLSH_CTX *c)$/;"	f
+TLSH_Free	tlsh.cpp	/^void TLSH_Free(TLSH_CTX* c)$/;"	f
+TLSH_FromTlashStr	tlsh.cpp	/^int TLSH_FromTlashStr(TLSH_CTX *c, const char* str)$/;"	f
+TLSH_Hash	tlsh.cpp	/^int TLSH_Hash(TLSH_CTX *c, char* lsh)$/;"	f
+TLSH_Init	tlsh.cpp	/^int TLSH_Init(TLSH_CTX* c)$/;"	f
+TLSH_STRING_LEN	tlsh_impl.cpp	15;"	d	file:
+TLSH_TotalDiff	tlsh.cpp	/^int TLSH_TotalDiff(TLSH_CTX* c1, TLSH_CTX* c2)$/;"	f
+TLSH_Update	tlsh.cpp	/^int TLSH_Update(TLSH_CTX *c, const unsigned char* data, unsigned int len)$/;"	f
+Tlsh	tlsh.cpp	/^Tlsh::Tlsh():impl(NULL)$/;"	f	class:Tlsh
+TlshImpl	tlsh_impl.cpp	/^TlshImpl::TlshImpl() $/;"	f	class:TlshImpl
+b_mapping	tlsh_util.cpp	/^unsigned char b_mapping( unsigned char n, unsigned char i, unsigned char j, unsigned char k) {$/;"	f
+bit_pairs_diff_table	tlsh_util.cpp	/^static unsigned char bit_pairs_diff_table[][256] = {$/;"	v	file:
+compar_FileName	tlsh_unittest.cpp	/^static int compar_FileName(const void *x1, const void *x2)$/;"	f	file:
+compare	tlsh_impl.cpp	/^int TlshImpl::compare(const TlshImpl& other) const$/;"	f	class:TlshImpl
+count_files_in_dir	tlsh_unittest.cpp	/^static int count_files_in_dir(char *dirname)$/;"	f	file:
+final	tlsh.cpp	/^void Tlsh::final(const unsigned char* data, unsigned int len)$/;"	f	class:Tlsh
+final	tlsh_impl.cpp	/^void TlshImpl::final() $/;"	f	class:TlshImpl
+find_quartile	tlsh_impl.cpp	/^void find_quartile(unsigned int *q1, unsigned int *q2, unsigned int *q3, const unsigned int * a_bucket) $/;"	f
+fromTlshStr	tlsh.cpp	/^int Tlsh::fromTlshStr(const char* str)$/;"	f	class:Tlsh
+fromTlshStr	tlsh_impl.cpp	/^int TlshImpl::fromTlshStr(const char* str)$/;"	f	class:TlshImpl
+from_hex	tlsh_util.cpp	/^void from_hex( const char* psrc, int len, unsigned char* pdest )$/;"	f
+getHash	tlsh.cpp	/^const char* Tlsh::getHash()$/;"	f	class:Tlsh
+h_distance	tlsh_util.cpp	/^int h_distance( const unsigned char x[], const unsigned char y[])$/;"	f
+hash	tlsh_impl.cpp	/^const char* TlshImpl::hash() {$/;"	f	class:TlshImpl
+is_dir	tlsh_unittest.cpp	/^bool is_dir(char *dirname)$/;"	f
+l_capturing	tlsh_util.cpp	/^unsigned char l_capturing(unsigned int len) {$/;"	f
+main	tlsh_unittest.cpp	/^int main(int argc, char *argv[])$/;"	f
+mod_diff	tlsh_util.cpp	/^int mod_diff(unsigned int x, unsigned int y, unsigned int R)$/;"	f
+name	tlsh_unittest.cpp	/^        char *name;$/;"	m	struct:FileName	file:
+operator !=	tlsh.cpp	/^bool Tlsh::operator!=(const Tlsh& other) const $/;"	f	class:Tlsh
+operator ==	tlsh.cpp	/^bool Tlsh::operator==(const Tlsh& other) const$/;"	f	class:Tlsh
+partition	tlsh_impl.cpp	/^unsigned int partition(unsigned int * buf, unsigned int left, unsigned int right) $/;"	f
+read_file_eval_tlsh	tlsh_unittest.cpp	/^static int read_file_eval_tlsh(char *fname, Tlsh *th)$/;"	f	file:
+read_files_from_dir	tlsh_unittest.cpp	/^static int read_files_from_dir(char *dirname, struct FileName *fnames, int max_fnames, int *n_file)$/;"	f	file:
+reset	tlsh.cpp	/^void Tlsh::reset()$/;"	f	class:Tlsh
+reset	tlsh_impl.cpp	/^void TlshImpl::reset()$/;"	f	class:TlshImpl
+swap_byte	tlsh_util.cpp	/^unsigned char swap_byte( const unsigned char in )$/;"	f
+to_hex	tlsh_util.cpp	/^void to_hex( unsigned char * psrc, int len, char* pdest )$/;"	f
+totalDiff	tlsh.cpp	/^int Tlsh::totalDiff(Tlsh& other) const$/;"	f	class:Tlsh
+totalDiff	tlsh_impl.cpp	/^int TlshImpl::totalDiff(const TlshImpl& other) const$/;"	f	class:TlshImpl
+trendLSH_ut	tlsh_unittest.cpp	/^static void trendLSH_ut(char *compare_fname, char *dirname, char *listname, char *fname)$/;"	f	file:
+update	tlsh.cpp	/^void Tlsh::update(const unsigned char* data, unsigned int len)$/;"	f	class:Tlsh
+update	tlsh_impl.cpp	/^void TlshImpl::update(const unsigned char* data, unsigned int len) $/;"	f	class:TlshImpl
+usage	tlsh_unittest.cpp	/^static void usage()$/;"	f	file:
+v_table	tlsh_util.cpp	/^static unsigned char v_table[] = {$/;"	v	file:
+~Tlsh	tlsh.cpp	/^Tlsh::~Tlsh()$/;"	f	class:Tlsh
+~TlshImpl	tlsh_impl.cpp	/^TlshImpl::~TlshImpl()$/;"	f	class:TlshImpl

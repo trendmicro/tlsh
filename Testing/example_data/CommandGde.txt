@@ -1,0 +1,213 @@
+
+Table Of Contents
+							Page	
+Deputy Chief of Staff for Personnel (DCSPER) Message	i
+COMMANDER'S GUIDE	1
+* Answers to Your Questions	2
+* Health Promotion Endorsements	3
+* Background and Rationale for the Civilian Health Promotion Program	4
+* Sample Commander's Letter	5
+* Program Briefing Slides	6-17
+PROGRAM COORDINATOR'S GUIDE	19
+* Answers to Your Questions	20
+* Program Coordinator's Check List	21
+* Setting Up and Starting the Program	21
+* Actions During the Program	22
+* Post-Program Actions	22
+* USACHPPM's Guidelines for Participants and Supervisors	23-24
+* Participant's Paperwork (description)	25-26
+* Fitness Assessment Procedures	27-30
+* Post-Survey for Participants	31
+* Questionnaire for Supervisors	32
+* Individual Activity Evaluation Form	33
+* Sample Database	34
+* PAR-Q	35
+* Registration Letter	36
+* Incentives	37
+* Resources	38
+USACHPPM's TARGETING FITNESS PARTICIPATION PACKET	39
+* Welcome Letter	40
+* DCSPER Message	41
+* USACHPPM's Guidelines for Participants and Supervisors	42-43
+* Course Agenda	44
+* Fitness Assessment Agenda	45
+* Targeting Health Required Forms	46-60
+* Table of Contents for Required Forms	46
+* Assessment Charts	61-78
+* Introductory Session Agenda	79
+* Health and Fitness Profile	80
+* Healthstyle Self-Test	81-83
+* Interpretation of the Fitness Assessment	84-89
+* FITT chart/Fitness Activity Pyramid	90
+* Your Exercise Prescription	91-93
+* Dietary Recommendations	94-97
+* Goal Sheet	98 
+* Daily Training Log	99
+* Activity Roster	100
+* Recommendation For Physician Referral (post fitness assessment)	101
+
+Point of contact (POC) for this program is the Fitness and Nutrition Service, U.S. Army Center for Health Promotion and Preventive Medicine, (410) 436-4656 or DSN 584-4656.
+
+
+
+
+ROUTINE						ZYUW RUEADWD2806  0882135
+R 261625Z MAR 96
+FM HQDA WASHINGTON DC//DAPE-HR-PR
+TO      AIG   7405					AIG   7406
+	 AIG   7446
+
+UNCLAS
+SUBJ: CIVILIAN HEALTH PROMOTION PROGRAMS.
+A. MESSAGE R111800Z MAR 96 SUBJ: CIVILIAN HEALTH PROMOTION.
+B. AR 600-63, ARMY HEALTH PROMOTION
+1.  REFERENCE A IS RESCINDED.
+2. CIVILIANS EMPLOYED BY THE ARMY ARE ENCOURAGED TO ENGAGE IN A REGULAR PROGRAM OF EXERCISE AND OTHER POSITIVE HEALTH HABITS.
+3.  COMMANDERS MAY APPROVE UP TO 3 HOURS EXCUSED ABSENCE PER WEEK TO ALLOW EMPLOYEES TO PARTICIPATE IN COMMAND SPONSORED FORMAL PHYSICAL EXERCISE TRAINING.  THIS TRAINING WILL INCLUDE PARTICIPANT EVALUATION BOTH PRE- AND POST- PROGRAM, CONTINUOUS MONITORING DURING THE PROGRAM, AND EXERCISE AND NUTRITIONAL EDUCATION.  THESE ACTIVITIES MUST BE AN INTEGRAL PART OF A TOTAL FITNESS PROGRAM AND ARE TIME-LIMITED, THAT IS, UP TO SIX MONTHS IN DURATION.
+4.  WHILE FORMAL PHYSICAL FITNESS PROGRAMS MAY BE REPEATED FROM TIME-TO-TIME, EMPLOYEES WILL NOT NORMALLY BE GRANTED EXCUSED ABSENCE FOR PHYSICAL EXERCISE TRAINING ONCE THEY HAVE ALREADY RECEIVED SUCH TRAINING.  THIS GRANT IS INTENDED TO BE LIMITED TO ONE TIME ONLY.  IT DOES NOT APPLY TO OTHER TRAINING OR PROFESSIONAL DEVELOPMENT.
+5.  BEYOND THESE SITUATIONS, WORK SCHEDULES SHOULD BE ADJUSTED TO PERMIT TRAINING AND EXERCISE WHERE POSSIBLE AND WHERE CONSISTENT WITH WORKLOAD AND MISSION.
+6.  INSTALLATIONS INTERESTED IN PARTICIPATING IN FITNESS PROGRAMS SHOULD CONTACT THE INSTALLATION FIT-TO-WIN COORDINATOR, COMMUNITY RECREATION OR THE COMMUNITY HEALTH NURSING SECTIONS OF THE MEDDAC OR MEDCEN.  FURTHER GUIDANCE FOR STARTING PROGRAMS MAY ALSO BE OBTAINED BY CALLING THE CENTER FOR HEALTH PROMOTION AND PREVENTIVE MEDICINE AT ABERDEEN PROVING GROUNDS, MD AT (410)671-4656 OR DSN 584-4656.  AGENCIES MAY ALSO CONSIDER CONTRACTING SERVICES FROM THE U.S. PUBLIC HEALTH SERVICE, DIVISION OF FEDERAL OCCUPATIONAL HEALTH.
+7.  HQDA HEALTH PROMOTION POC IS LTC NEWCOMB, (703)697-2448 OR DSN 227-2448. BT
+
+
+
+
+
+
+
+
+
+COMMANDER'S GUIDE
+
+ANSWERS TO YOUR QUESTIONS
+
+1.  What is the Civilian Health Promotion Program?  It is a Department of the Army (DA) program intended to encourage civilian employees to improve their health and fitness through exercise and other positive health habits.  It is authorized as an interim change to AR 600-63, Army Health Promotion (see DA message of authorization, page i).
+
+2.  What are the basic elements and requirements of the program?
+* Civilians are authorized up to three hours per week excused absence to participate in a command sponsored formal physical exercise training program.
+* Duration of program is up to six months.
+* Pre- and Post-program participant evaluation required.
+* Participants are monitored continuously during the program.
+* Program must include exercise and nutritional education.
+* Program offered one time only per person.
+
+3.  Why should I conduct it in my command?  Your civilian employees deserve concern for their health and welfare just as your soldiers do.  The Army recognizes and supports this by authorizing the Civilian Health Promotion Program.  As a commander, you should consider this a valuable tool that will add a new dimension to improving the health of your command.  (See page 3 for endorsements for the necessity of health promotion programs.)
+
+4.  How will it benefit my command?  Based on the experiences of commanders, who have conducted a Civilian Health Promotion Program, you can expect participants to achieve a heightened level of health that will be noticeable to them, their families, and their coworkers.  Some who do not initially volunteer to participate will change their minds when they begin seeing the positive effects on those around them who are participating.  You can also expect to see a boost in the morale of your civilian employees.  This will be based partly on their increased sense of well-being and personal pride as they see and feel themselves becoming healthier, and partly on their knowledge that their chain of command is concerned about their health enough to devote duty time for personal fitness.  Post-program surveys will show you that the participants themselves recognize their own higher energy levels, new enthusiasm and ability to cope with stress, and a brighter outlook on their jobs and personal lives.  (See page 4, Background and Rationale for the Civilian Health Promotion Program for more information.)
+
+5.  How formal does the program have to be?  It has to be "formal" in the sense of being a coordinated, documented, monitored program that meets the requirements outlined in Paragraph 2, above.  At the same time your program must be flexible enough to accommodate a very basic fact:  Not everyone entering the program will be at the same level of fitness.  Some will be fit from the start, while others will have difficulty climbing a single flight of stairs.  This may appear to be a dilemma in light of the requirement for "formal physical exercise training," but it is not.   Nothing in the definition of "formal" states or even implies a requirement for a single standard of exercise with group application.  To be "formal," every individual specifies his or her program in a contract with his or her supervisor.  The contract documents what will be done, when it will be done, and what the goals are for improvement.  Employees will be evaluated before beginning the program to determine where on the fitness scale they fall.  The evaluation and education provided will help the employees determine realistic goals for improvement and the best way to use their time to achieve these goals so they will have a valid program.  The slides on pages 6-17 describe the layout and outcomes of United States Army Center for Health Promotion and Preventive Medicine's (USACHPPM) program, providing an example from which to start your own.   
+
+6.  How do I get started?  First, review the remainder of this Guide to get an overview of the program.  Next, appoint a Program Coordinator to be your spokesperson and POC for your command.  Depending on the number of civilians in your command, this should be a primary duty, at least initially.  A volunteer (hopefully someone who is reasonably fit and has a healthy lifestyle) will do a better job than a more arbitrary designee.  Another option is hiring contractors to fill this position.  Have your Coordinator read this Guide and seek assistance and advice as necessary from offices listed in Program Coordinator's Guide, page 19. Give your Coordinator time to "sort things out" and develop a program proposal for your approval.  Once you have approved the program, announce it (see sample letter, page 5), schedule it, actively and visibly support it, and then, just do it!!
+
+
+HEALTH PROMOTION ENDORSEMENTS
+
+* United States Surgeon General
+
+The first Surgeon General’s report to address physical activity and health was released July 11, 1996.  “This report is a passport to good health”, said Vice President Al Gore.  The main message of the report is that Americans can substantially improve their health and quality of life by including moderate amounts of physical activity in their daily lives.  According to the Acting Surgeon General, Audrey F. Manley, M.D., “This report is nothing less than a national call to action.  Physical inactivity is a serious nationwide public health problem, but active and healthful lifestyles are well within the grasp of everyone.”
+
+* American Medical Association (AMA)
+
+The nation’s health goals for the year 2000 were set forth with the 1990 release of the AMA’s Healthy People 2000, which reviewed the principle health challenges for Americans and identified in measurable terms the opportunities for health gains during the 1990s. The program presents three broad goals for the health of the nation:
+
+       -  Increase the span of healthy life for Americans
+       -  Achieve access to preventive services for all Americans
+       -  Reduce health disparities among Americans
+
+* Department of Defense
+
+The AMA’s Healthy People 2000 identified 300 measurable objectives to be accomplished by the year 2000 in 22 areas of priority for health promotion, health protection, and clinical preventive services.  The Department of Defense chose five out of these 300 measurable objectives to focus on, one being exercise:  Objective: “To increase to at least 30 percent the proportion of people aged 6 and older who engage regularly, preferably daily, in light to moderate physical activity for at least 30 minutes per day.”  This includes civilian employees.
+
+* Centers for Disease Control and Prevention (CDC)
+
+In 1995, the CDC and the American College of Sports Medicine recommended: “Every US adult should accumulate 30 minutes or more of moderate intensity physical activity on most, preferably all days of the week.”
+
+
+
+
+BACKGROUND AND RATIONALE FOR THE CIVILIAN HEALTH PROMOTION PROGRAM
+
+In the late 1980s the Army authorized a similar program of maximum eight weeks duration, under the premise that civilian employees, like soldiers, are more productive when they are healthy and physically fit.  However, there was little Army guidance or emphasis on health promotion at the time, and relatively few commanders conducted the programs.  
+
+Since then volumes of research and statistical evidence, mostly from the civilian sector, have confirmed some basic facts regarding the differences between people who have healthy lifestyles (including regular exercise) and those that do not.
+
+* People who devote energy to becoming and remaining healthy and physically fit are more productive in their jobs--blue collar and white collar--than their peers who do not.
+* They have fewer work-related accidents and injuries.
+* They get sick less often, and have better work attendance records.  When they do get sick, they recuperate faster and incur lower medical costs.
+* They are more enthusiastic and feel better about themselves.
+
+As a result of this mounting evidence of the value of practicing healthy lifestyles, the corporate world in the United States and other industrialized nations began evaluating the cost versus benefit of offering health and wellness programs to their employees.  The conclusion was that companies that made an investment in health promotion and wellness programs for their employees not only recouped their expenditures, but also benefited from increased production, increased employee time on-the-job, and reduced costs for medical care and compensation benefits.  After a few large companies tried it and irrefutably demonstrated that it worked, the rest of the corporate world was quick to follow.  Now, health promotion and wellness programs are becoming the norm, not the exception, in successful corporations.
+
+Partially in response to this success, and for the same reasons, the Army expanded its eight-week Civilian Health Promotion Program to six months.  The intent was to give civilian employees a chance to improve their fitness and health on duty time, and more importantly, to create new health habits and lifestyles that would continue after the program ended. 
+
+The expanded Civilian Health Promotion Program is a part of the Army's current focus on health promotion and wellness.  The focus encompasses the entire Army Community--the soldiers, their family members, and the supporting civilian workforce.  From a military readiness standpoint, the direct benefits of physical fitness programs to soldiers and their commanders are self-evident:  the "facts" listed as bullets above directly relate to mission accomplishment in combat.  A fit and healthy soldier is more capable than one who is not. 
+
+Command concern for personal health and welfare also extends to military family members.  Spouses and children need to practice healthy habits and lifestyles as much as the soldiers and civilian employees do.  The Army medical community and the joint services TRICARE program are dedicating great efforts in the areas of health promotion, wellness, and preventive medicine for family members.  The resources saved by reducing clinical patient visits through these preventive measures are applied elsewhere in the medical system to ensure that continued optimum medical care and treatment will always be there for outpatients and inpatients who need them.
+
+In summary, the Civilian Health Promotion Program is a part of the Army's focus to improve the health, fitness, longevity, and quality of life of one part of the US Armed Forces "family":  The supporting civilian workforce.
+
+Example of Command Letter to Initiate
+Civilian Health Promotion Program
+
+
+
+
+
+ATZB-CPM	(690)											10 Jul 19XX
+
+MEMORANDUM FOR SEE DISTRIBUTION
+
+SUBJECT:  Civilian Employee Participation in Physical Fitness Activities During Duty Hours
+
+1.  The ?Follow Me to Fitness 2001" program will kick off on August 19, 1996 to encourage civilian participation in regular physical fitness activities.  This program will initiate the new Army guidance which allows up to three hours per week for six months in a structured fitness program.  Subsequent programs will begin quarterly.
+
+2.  Physically fit employees are more energetic, experience less stress, and enjoy a better quality of life.  Regular participation in physical fitness activities also lowers sick leave usage, and increases morale and productivity.  I expect all commanders, directors, and supervisors to fully support this program which will be implemented in accordance with the enclosed guidelines. 
+
+3.  For additional information concerning this policy, contact the Management - Employee Relations and Training Division, Directorate of Civilian Personnel, 545-5656 / 5589.
+
+
+
+
+Encl 1				 	           					    XXXXXXXXXXX
+                                    Major General, USA
+                                    Commanding
+Distribution:
+D
+D2		 
+
+
+
+
+3
+
+
+i
+
+
+
+
+
+
+
+3
+
+2
+
+
+
+2
+
+2
+
+3
+
+
+
+
+
+4
+
+
+
+5
+

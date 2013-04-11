@@ -1,0 +1,204 @@
+Follow-up of Literacy Skills of Children with Childhood Apraxia 
+Amy Skinder-Meredith, Ph.D. & April LaCoursiere, M.S. 
+Department of Communication Sciences and Disorders
+ University of Minnesota-Duluth
+
+Background
+
+Childhood Apraxia of Speech (CAS) is a motor speech disorder where the child has difficulty volitionally sequencing movements for speech in the absence of any structural anomalies or weakness.  Many children with CAS also exhibit problems with phonological awareness. ?Phonological awareness refers to the ability to reflect on and manipulate the structure of an utterance as distinct from its meaning.? (Stackhouse,1997, p.157).  Phonological awareness is an essential skill when learning to read and write, and is necessary to make sense of an alphabetic script.  A study done by Larrivee & Catts (1999) suggested that expressive phonological disorders alone are not closely related with problems in early reading skills, but when accompanied by another speech or language impairment, such as CAS, reading and writing disabilities may surface. 
+
+The purpose of this study was to further investigate the relationship between CAS, phonological awareness and literacy skills.  15 children diagnosed with CAS were given a series of tests that assessed early reading and phonologic awareness skills in a prior study.  The present study compared the earlier test results with current reading and writing skills as determined by a parent survey based on  the National Center on Education and the Economy (NCEE, 1999) reading and writing standards.  The survey also asked about parent concerns regarding reading and writing.  
+
+Research Questions
+1.  Which early reading and phonological awareness tests best predict and correlate with school 
+     age reading and writing skills?
+2.  Which early reading and phonological awareness tests best predict and correlate with 
+     parent/guardian concerns for reading and writing?
+3.  Does severity of the speech disorder correlate with likeliness of having grade level reading 
+     and writing skills? 
+Method
+Subjects
+Fifteen parents/guardians of 8 girls and 7 boys diagnosed with CAS answered surveys on their children?s literacy skills. All children had a dx of CAS with referenced criteria, normal hearing and normal receptive language skills and had been part of an earlier study (Skinder-Meredith, 2002).  *One subject was incorrectly dx as having CAS, but had a severe phonological delay (PD). See Table 1 for ages at the time of the prior and current studies and severity levels.
+Procedures
+Part I. In the earlier study, subjects were administered the Goldman Fristoe Test of Articulation 2nd Edition (GFTA-2),  Test of Early Reading Ability, 3rd edition (TERA-3),  Phonological Awareness Skills Program Test (PAPST),  Lindamood Auditory Conceptualization Test (LAC) and Test of Language Development-Primary 3rd Edition (TOLD-P:3) Word Discrimination subtest. 
+Part II. Parents/guardians were sent follow-up literacy surveys in the mail.  The survey consisted of 28 questions that were based on kindergarten through third grade reading and writing standards developed by the NCEE (1999) and additional questions regarding reading and writing. 
+Data Analysis
+* Grade level of reading and writing was determined on the criteria that the child met at least three basic standards upon completion of the previous school year.  
+* For comparison to earlier test results, %iles below 16 and grade and age levels below the child?s grade and age were considered to be below normal, otherwise scores were considered WNL.  
+* Percentage of time each test predicted current reading and writing skills was calculated.
+* Correlation values were calculated by assigning below normal skills a 1 and normal skills a 2 for all measures and then making correlations between past tests and current survey results.  In addition, severity ratings ranging from 1 to 4 were given a value of 1 and 4.5 to 7 were given a value of 2 to examine the correlation between severity and current reading and writing levels.
+
+Results
+
+Table 1.   Comparison Table of Past Reading and Phonological Awareness Test Scores to Current Reading and Writing Levels and Concerns According to Parent Report
+
+Severity
+ratingInitial
+AgeInitial
+GradeTERA
+Alph 
+%ileTERA
+Conv
+%ileTERA
+Mean
+%ileLAC
+Grade
+levelWD
+
+%ilePASPT
+Age groupCurrent
+ageCurrent
+gradeReading
+levelReading
+concernWriting
+levelWriting
+concern1.55;0Pre-k9%37%2%unableunableunable7;21st grade1 grade belowYes1 grade belowYes4.55;0Kind50%75%50%<KindUnable4-6 to 4-116;111st grade1st grade(WNL)No1st grade (WNL)Yes38;62nd9%5%2%Kind16%5-6 to 5-1110;14th grade2 grades belowYes2 grades belowYes34;3pre63%37%16%unable75%< 46;61st grade1st grade (WNL)Yes1st grade (WNL)Yes24;8pre25%16%5%unableunable< 46;101st grade1st grade (WNL)No? grade belowYes26;7Kind<1%5%5%Kind16%<48;82nd grade1 grade belowYes1 grade belowYes2 (PD)5;2pre2%16%16%unable16%<47;81st grade? grade belowYes1st grade (WNL)yes45;3pre9%50%16%unable9%4-0 to 4-57;41st grade1st grade (WNL)Yes1st grade (WNL)Yes66;81st50%37%5%1st50%6-6 to 6-118;93rd grade3rd grade (WNL)Yes1 grade belowYes66;4Kind9%37%37%< kind37%4-6 to 4-118;02nd grade1 grade belowYes2nd grade (WNL)Yes66;4Pre75%37%25%2nd37%7-0 to 7-58;03rd grade3rd grade (WNL)No1 grade belowyes65;11Pre-k9%37%37%1st75%6-6 to 6-118;03rd grade3rd grade (WNL)No1 grade belowYes76;9End 1st50%50%9%End 1st37%5-6 to 5-1110;03rd grade3rd grade (WNL)No1 grade belowyes1.55;5Kind2%5%2%Unable5%>46;81st grade1 grade belowYes1 grade belowYes2.56;7Kind67%5%5%<kind9%4-0 to 4-57;62nd grade? grade belowYes1 grade belowYes
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Figure 1. Percent of tests, parent reported NCEE grade levels, and parent concerns for reading and writing that showed the child was below grade level or within normal limits.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Figure 2. Percent of time that a severity ranking of moderate to profound would predict below grade level reading and writing skills and parent concerns in reading and writing.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Figure 3.  Percent of time that the test results from the first part of the study corresponded with current NCEE grade levels and parent concerns regarding reading skills. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Figure 4.  Percent of time that the test results from the first part of the study corresponded with current NCEE grade levels and parent concerns regarding writing skills
+
+*With the exception of these tests, N=15. LAC N=9; WD N=12; and PASPT N=14
+
+Table 2. Pearson Product Correlation Values between Tests Given in Part I of the Study to Parent Reported NCEE Grade Levels in Reading and Writing and Severity Ratings.
+
+TERA-3
+AlphabetTERA-3
+ConventionsTERA-3 
+MeaningLACWord 
+DiscrimPASPTSeverityReading
+Level.464.342-.055.632.192.452.491Writing
+Level-.189.426.866-.478.0-.389.0
+
+Conclusions
+? The % of children scoring below average ranged from 27% on the TERA-3 Conventions subtest to 79% on the PASPT. 
+? Current reading and writing levels below grade level were at 47% and 67%, respectively and parental concerns were at 67% and 100%, respectively.
+? The LAC best predicted current reading ability (78% and an r = .632), but was the worst at predicting current writing ability (33% and an r = -.478).
+? Conversely, the TERA-3 Meaning subtest best predicted current writing ability (78% and an r = .866) but was the worst at predicting reading ability (47% and an r = -.055).
+? Severity had a small correlation of .491 with current reading levels and there was no correlation with current writing levels.
+
+
+
+
+Discussion
+? Parents often had concerns about reading or writing even when children scored at grade level on the survey. (See table 1.)
+? Of all the tests given, the LAC was the most comprehensive in examining the ability to reflect on and manipulate sounds, which could be why it best predicted reading skills.  However, it isn?t clear why the correlation with writing level was so low.
+? The Meaning subtest examined construction of meaning from print.  Subtle spelling and grammar mistakes need to be recognized in order to do well on this test, especially for older children.  This may be why it predicted writing skills so well.
+? The one child with severe PD vs. CAS performed similarly to many of the children with CAS in all tests.
+
+Limitations
+* The young age of many of the children during the initial part of the study reduced the N for some of the test-survey comparisons. 
+* The survey based on NCEE standards may not have been sensitive enough to get an accurate picture of children?s current reading and writing levels. 
+* This study did not note the amount of intervention in pre-literacy and literacy skills children may have had between the two studies.
+Clinical /Research Implications
+? Discrepancies between the grade appropriate skills and parental concerns could be due to many reasons and warrants further study.
+? Replicate this study with a bigger N and PD and normal control groups.
+? Some tests warrant better predictive information than others.
+? Regardless of severity, children with CAS are at risk for reading and writing difficulties and thus should be monitored closely.
+
+References
+
+Larrivee, L.S. & Catts, H.W. (1999). Early reading achievement in children with expressive phonological disorders. American Journal of Speech-Language Pathology, 8, 118-128.
+
+Lewis, B.A., Freebairn, L.A., Hansen, A.J., Iyengar, S.K. & Taylor, H.G. (2004). School-age follow-up of children with childhood apraxia of speech. Language, Speech, and Hearing Services in Schools, 35, 122-140.
+
+Skinder-Meredith, A., (2003). A relationship between severity of childhood apraxia of speech, phonologic awareness and early reading skills. Poster Presented to the Childhood Phonology Conference, Vancouver, BC, Canada.
+
+Stackhouse, J. (1997). Phonological awareness: connecting speech and literacy problems. In B. Hodson and M.L. Edwards (Eds.), Perspectives in Applied Phonology (pp.157-196). Gaithersburg, MD: Aspen Publications.
+
+
