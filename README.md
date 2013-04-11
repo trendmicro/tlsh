@@ -28,7 +28,7 @@ TLSH is public project hosted on github.com. Clone the project from
 git@github.com:trendmicro/tlsh.git. Run CMake to create the Makefile and
 then make the project. A static library will be created under the "lib" directory.
 Look under the "test" directory for example code. 
-
+<pre>
   git clone git@github.com:trendmicro/tlsh.git
   cd tlsh
   mkdir -p build/release
@@ -36,15 +36,19 @@ Look under the "test" directory for example code.
   cmake ../..
   make
   make test
-  
+</pre>  
 Changes
 =======================================
+1.0.0:
+- Implement TLSH.
 
-1.0.0 - Implement TLSH.
-2.0.0 - Enhance TLSH to allow construct TLSH from hash string.
-3.0.0 - Bug fixes.
-      - Update to build with CMake.
-      - Published on github.
+2.0.0:
+- Enhance TLSH to allow construct TLSH from hash string.
+
+3.0.0:
+- Bug fixes.
+- Update to build with CMake.
+- Publish on github.
 
 Committers
 =======================================
