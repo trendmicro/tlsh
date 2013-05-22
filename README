@@ -31,7 +31,17 @@ TLSH similarity is expressed as a difference score.
 Get Started
 =======================================
 
-TLSH is shipped as a source tarball. Extract the files from the tarball. Run 
+Obtain TLSH
+
+  wget https://github.com/trendmicro/tlsh/tarball/3.0.4 -O tlsh.tar.gz
+  tar xfvz tlsh.tar.gz
+  cd trendmicro-tlsh-xxxxxxx (x... is the last git commit ID)
+ OR
+  git clone git://github.com/trendmicro/tlsh.git
+  cd tlsh
+  git checkout 3.0.4  
+
+Extract the files from the tarball or clone from the git repo. Run 
 CMake to create the Makefile and then make the project. A static library will 
 be created under the "lib" directory. Look under the "test" directory for 
 example code.
@@ -40,8 +50,8 @@ Edit TLSH_SHORT in CMakeLists.txt to build the shorter or the longer TLSH hash.
 
 Linux, Cygwin
 
-  tar xvzf TLSH-3.0.x.tar.gz
-  cd TLSH-3.0.x
+  tar xvzf tlsh.tar.gz
+  cd trendmicro-tlsh-xxxxxxx
   mkdir -p build/release
   cd build/release
   cmake ../..
@@ -50,8 +60,8 @@ Linux, Cygwin
 
 Visual Studio on Windows
 
-  extract TLSH--3.0.x.tar.gz
-  cd TLSH-3.0.x
+  extract tlsh.tar.gz
+  cd trendmicro-tlsh-xxxxxxx 
   mkdir build
   cd build
   "c:\program files (x86)\cmake 2.8\bin\cmake" ..
