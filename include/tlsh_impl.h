@@ -17,7 +17,21 @@
 #ifndef _TLSH_IMPL_H
 #define _TLSH_IMPL_H
     
-#define SLIDING_WND_SIZE    5
+#define SLIDING_WND_SIZE  5
+#define BUCKETS           256
+#define Q_BITS            2    // 2 bits; quartile value 0, 1, 2, 3
+
+// VERSION_70B is defined in a compiler switch at CMakeLists.txt
+
+#ifdef VERSION_70B
+#define EFF_BUCKETS       128
+#define TLSH_STRING_LEN   70   // 3 + 32 bytes = 70 hexidecimal chars
+#define CODE_SIZE         32   // 128 * 2 bits = 32 bytes
+#else
+#define EFF_BUCKETS       256
+#define TLSH_STRING_LEN   134  // 3 + 64 bytes = 134 hexidecimal chars
+#define CODE_SIZE         64   // 256 * 2 bits = 64 bytes
+#endif
 
 class TlshImpl
 {
@@ -30,28 +44,28 @@ public:
     void reset();
     const char* hash();
     int compare(const TlshImpl& other) const;
-    int totalDiff(const TlshImpl& other) const;
+    int totalDiff(const TlshImpl& other, bool len_diff=true) const;
     int fromTlshStr(const char* str);
 
 private:
-    unsigned int a_bucket[256];
+    unsigned int a_bucket[BUCKETS];
     unsigned char slide_window[SLIDING_WND_SIZE];
     unsigned int data_len;
     
     struct lsh_bin_struct {
-        unsigned char checksum;
-        unsigned char Lvalue;
-		union {
-			unsigned char QB;
-			struct{
-				unsigned char Q1ratio : 4;
-				unsigned char Q2ratio : 4;
-			} QR;
-		} Q;
-        unsigned char tmp_code[32];
+        unsigned char checksum;             // 1 byte
+        unsigned char Lvalue;               // 1 byte
+        union {
+	    unsigned char QB;
+            struct{
+                unsigned char Q1ratio : 4;
+                unsigned char Q2ratio : 4;
+            } QR;
+        } Q;                                // 1 bytes
+        unsigned char tmp_code[CODE_SIZE];  // 32/64 bytes
     } lsh_bin;
     
-    char lsh_code[71];
+    char lsh_code[TLSH_STRING_LEN];	    // 70/134 bytes
 };
 
 

@@ -20,10 +20,10 @@
 unsigned char b_mapping(unsigned char salt, unsigned char i, unsigned char j, unsigned char k);
 unsigned char l_capturing(unsigned int len);
 int mod_diff(unsigned int x, unsigned int y, unsigned int R);
-int h_distance( const unsigned char x[], const unsigned char y[]);
+int h_distance( int len, const unsigned char x[], const unsigned char y[]);
 void to_hex( unsigned char * psrc, int len, char* pdest);
 void from_hex( const char* psrc, int len, unsigned char* pdest);
-unsigned swap_byte( const unsigned char in );
+unsigned char swap_byte( const unsigned char in );
 
 #endif
 

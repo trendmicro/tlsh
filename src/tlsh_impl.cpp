@@ -28,7 +28,6 @@
 
 #define RANGE_LVALUE 256
 #define RANGE_QRATIO 16
-#define TLSH_STRING_LEN 70
 
 #ifdef UNITTEST
 #define LOCAL_FUNCTION
@@ -103,13 +102,19 @@ void TlshImpl::final()
 {
     unsigned int q1, q2, q3;
     find_quartile(&q1, &q2, &q3, this->a_bucket);
+
+    // incoming data must more than or equal to 512 bytes
+    if (this->data_len < 512) {
+      // this->lsh_code be empty
+      return;
+    }
     
-    for(unsigned int i=0; i<32; i++) {
+    for(unsigned int i=0; i<CODE_SIZE; i++) {
         unsigned char h=0;
         for(unsigned int j=0; j<4; j++) {
             unsigned int k = this->a_bucket[4*i + j];
             if( q3 < k ) {
-                h += 3 << (j*2);    // leave the optimization j*2 = j<<1 or j*2 = j+j for compiler
+                h += 3 << (j*2);  // leave the optimization j*2 = j<<1 or j*2 = j+j for compiler
             } else if( q2 < k ) {
                 h += 2 << (j*2);
             } else if( q1 < k ) {
@@ -123,14 +128,14 @@ void TlshImpl::final()
     this->lsh_bin.Q.QR.Q1ratio = (unsigned int) ((float)(q1*100)/(float) q3) % 16;
     this->lsh_bin.Q.QR.Q2ratio = (unsigned int) ((float)(q2*100)/(float) q3) % 16;
 	
-	//Need to confirm with Jon about the byte order
-	lsh_bin_struct tmp;
-	tmp.checksum = swap_byte( this->lsh_bin.checksum );
-	tmp.Lvalue = swap_byte( this->lsh_bin.Lvalue );
-	tmp.Q.QB = swap_byte( this->lsh_bin.Q.QB );
-	for( int i=0; i < 32; i++ ){
-		tmp.tmp_code[i] = (this->lsh_bin.tmp_code[31-i]);
-	}
+    //Need to confirm with Jon about the byte order
+    lsh_bin_struct tmp;
+    tmp.checksum = swap_byte( this->lsh_bin.checksum );
+    tmp.Lvalue = swap_byte( this->lsh_bin.Lvalue );
+    tmp.Q.QB = swap_byte( this->lsh_bin.Q.QB );
+    for( int i=0; i < CODE_SIZE; i++ ){
+        tmp.tmp_code[i] = (this->lsh_bin.tmp_code[CODE_SIZE-1-i]);
+    }
     to_hex( (unsigned char*)&tmp, sizeof(tmp), this->lsh_code );
 }
 
@@ -139,25 +144,25 @@ int TlshImpl::fromTlshStr(const char* str)
     // Validate input string
     for( int i=0; i < TLSH_STRING_LEN; i++ )
         if (!( 
-			(str[i] >= '0' && str[i] <= '9') || 
+            (str[i] >= '0' && str[i] <= '9') || 
             (str[i] >= 'A' && str[i] <= 'F') ||
             (str[i] >= 'a' && str[i] <= 'f') ))
         {
             return 1;
         }
-    this->reset();
+        this->reset();
 	memcpy( this->lsh_code, str, TLSH_STRING_LEN );
 	
 	lsh_bin_struct tmp;
-	from_hex( this->lsh_code, 70, (unsigned char*)&tmp );
+	from_hex( this->lsh_code, TLSH_STRING_LEN, (unsigned char*)&tmp );
 	
-    // Reconstruct checksum, Qrations & lvalue
-	//Need to confirm with Jon about the byte order
+        // Reconstruct checksum, Qrations & lvalue
+        //Need to confirm with Jon about the byte order
 	this->lsh_bin.checksum = swap_byte(tmp.checksum);
 	this->lsh_bin.Lvalue = swap_byte( tmp.Lvalue );
 	this->lsh_bin.Q.QB = swap_byte(tmp.Q.QB);
-	for( int i=0; i < 32; i++ ){
-		this->lsh_bin.tmp_code[i] = (tmp.tmp_code[31-i]);
+	for( int i=0; i < CODE_SIZE; i++ ){
+		this->lsh_bin.tmp_code[i] = (tmp.tmp_code[CODE_SIZE-1-i]);
 	}
 
 	return 0;
@@ -193,16 +198,19 @@ int TlshImpl::compare(const TlshImpl& other) const
     return 0;
 }
 
-int TlshImpl::totalDiff(const TlshImpl& other) const
+int TlshImpl::totalDiff(const TlshImpl& other, bool len_diff) const
 {
     int diff = 0;
-    int ldiff = mod_diff( this->lsh_bin.Lvalue, other.lsh_bin.Lvalue, RANGE_LVALUE);
-    if ( ldiff == 0 )
-        diff = 0;
-    else if ( ldiff == 1 )
-        diff = 1;
-    else
-        diff += ldiff*12;
+    
+    if (len_diff) {
+        int ldiff = mod_diff( this->lsh_bin.Lvalue, other.lsh_bin.Lvalue, RANGE_LVALUE);
+        if ( ldiff == 0 )
+            diff = 0;
+        else if ( ldiff == 1 )
+            diff = 1;
+        else
+           diff += ldiff*12;
+    }
     
     int q1diff = mod_diff( this->lsh_bin.Q.QR.Q1ratio, other.lsh_bin.Q.QR.Q1ratio, RANGE_QRATIO);
     if ( q1diff <= 1 )
@@ -219,7 +227,7 @@ int TlshImpl::totalDiff(const TlshImpl& other) const
     if (this->lsh_bin.checksum != other.lsh_bin.checksum )
         diff ++;
     
-	diff += h_distance( this->lsh_bin.tmp_code, other.lsh_bin.tmp_code );
+    diff += h_distance( CODE_SIZE, this->lsh_bin.tmp_code, other.lsh_bin.tmp_code );
 
     return (diff - 1);
 }
@@ -233,73 +241,77 @@ int TlshImpl::totalDiff(const TlshImpl& other) const
 
 void find_quartile(unsigned int *q1, unsigned int *q2, unsigned int *q3, const unsigned int * a_bucket) 
 {
-    unsigned int bucket_copy[128], short_cut_left[128], short_cut_right[128], spl=0, spr=0;
+    unsigned int bucket_copy[EFF_BUCKETS], short_cut_left[EFF_BUCKETS], short_cut_right[EFF_BUCKETS], spl=0, spr=0;
+    unsigned int p1 = EFF_BUCKETS/4-1;
+    unsigned int p2 = EFF_BUCKETS/2-1;
+    unsigned int p3 = EFF_BUCKETS-EFF_BUCKETS/4-1;
+    unsigned int end = EFF_BUCKETS-1;
 
-    for(unsigned int i=0; i<128; i++) {
+    for(unsigned int i=0; i<=end; i++) {
         bucket_copy[i] = a_bucket[i];
     }
 
-    for( unsigned int l=0, r=127; ; ) {
+    for( unsigned int l=0, r=end; ; ) {
         unsigned int ret = partition( bucket_copy, l, r );
-        if( ret > 63 ) {
+        if( ret > p2 ) {
             r = ret - 1;
             short_cut_right[spr] = ret;
             spr++;
-        } else if( ret < 63 ){
+        } else if( ret < p2 ){
             l = ret + 1;
             short_cut_left[spl] = ret;
             spl++;
         } else {
-            *q2 = bucket_copy[63];
+            *q2 = bucket_copy[p2];
             break;
         }
     }
     
-    short_cut_left[spl] = 62;
-    short_cut_right[spr] = 64;
+    short_cut_left[spl] = p2-1;
+    short_cut_right[spr] = p2+1;
 
     for( unsigned int i=0, l=0; i<=spl; i++ ) {
         unsigned int r = short_cut_left[i];
-        if( r > 31 ) {
+        if( r > p1 ) {
             for( ; ; ) {
                 unsigned int ret = partition( bucket_copy, l, r );
-                if( ret > 31 ) {
+                if( ret > p1 ) {
                     r = ret-1;
-                } else if( ret < 31 ) {
+                } else if( ret < p1 ) {
                     l = ret+1;
                 } else {
-                    *q1 = bucket_copy[31];
+                    *q1 = bucket_copy[p1];
                     break;
                 }
             }
             break;
-        } else if( r < 31 ) {
+        } else if( r < p1 ) {
             l = r;
         } else {
-            *q1 = bucket_copy[31];
+            *q1 = bucket_copy[p1];
             break;
         }
     }
 
-    for( unsigned int i=0, r=127; i<=spr; i++ ) {
+    for( unsigned int i=0, r=end; i<=spr; i++ ) {
         unsigned int l = short_cut_right[i];
-        if( l < 95 ) {
+        if( l < p3 ) {
             for( ; ; ) {
                 unsigned int ret = partition( bucket_copy, l, r );
-                if( ret > 95 ) {
+                if( ret > p3 ) {
                     r = ret-1;
-                } else if( ret < 95 ) {
+                } else if( ret < p3 ) {
                     l = ret+1;
                 } else {
-                    *q3 = bucket_copy[95];
+                    *q3 = bucket_copy[p3];
                     break;
                 }
             }
             break;
-        } else if( l > 95 ) {
+        } else if( l > p3 ) {
             r = l;
         } else {
-            *q3 = bucket_copy[95];
+            *q3 = bucket_copy[p3];
             break;
         }
     }

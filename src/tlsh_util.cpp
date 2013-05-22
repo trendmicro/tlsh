@@ -4667,16 +4667,16 @@ unsigned char b_mapping(unsigned char salt, unsigned char i, unsigned char j, un
 #define LOG_1_1 0.095310180
 
 unsigned char l_capturing(unsigned int len) {
-    unsigned char i;
+    int i;
     if( len <= 656 ) {
-        i = ( std::log(len) / LOG_1_5 );
+        i = (int) floor( std::log((float) len) / LOG_1_5 );
     } else if( len <= 3199 ) {
-        i = ( std::log(len) / LOG_1_3 - 8.72777 );
+        i = (int) floor( std::log((float) len) / LOG_1_3 - 8.72777 );
     } else {
-        i = ( std::log(len) / LOG_1_1 - 62.5472 );
+        i = (int) floor( std::log((float) len) / LOG_1_1 - 62.5472 );
     }
     
-    return i;
+    return (unsigned char) (i & 0xFF);
 }
 
 int mod_diff(unsigned int x, unsigned int y, unsigned int R)
@@ -4693,13 +4693,13 @@ int mod_diff(unsigned int x, unsigned int y, unsigned int R)
     return (dl > dr ? dr : dl);
 }
 
-int h_distance( const unsigned char x[], const unsigned char y[])
+int h_distance( int len, const unsigned char x[], const unsigned char y[])
 {
-	int diff = 0;
-    for( int i=0; i<32; i++ ){
+    int diff = 0;
+    for( int i=0; i<len; i++ ){
         diff += bit_pairs_diff_table[ x[i] ][ y[i] ];
     }
-	return diff;
+    return diff;
 }
 
 unsigned char swap_byte( const unsigned char in )
@@ -4760,5 +4760,4 @@ void from_hex( const char* psrc, int len, unsigned char* pdest )
 	*pdest++ = d;
     }
 }
-
 

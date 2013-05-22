@@ -76,17 +76,17 @@ bool Tlsh::operator!=(const Tlsh& other) const
     return !(*this==other);
 }
 
-int Tlsh::totalDiff(Tlsh *other)
+int Tlsh::totalDiff(Tlsh *other, bool len_diff)
 {
     if ( this == other )
         return 0;
     else if( NULL==impl || NULL == other || NULL == other->impl )
         return -(EINVAL);
     else
-        return (impl->totalDiff(*other->impl)+1);
+        return (impl->totalDiff(*other->impl, len_diff)+1);
 }
 
-int Tlsh::fromTlshStr(char* str)
+int Tlsh::fromTlshStr(const char* str)
 {
     if ( NULL == impl )
         return -(ENOMEM);

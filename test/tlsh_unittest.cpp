@@ -198,7 +198,7 @@ struct FileName *r2;
         return (strcmp(r1->name, r2->name));
 }
 
-static void trendLSH_ut(char *compare_fname, char *dirname, char *listname, char *fname, int xref)
+static void trendLSH_ut(char *compare_fname, char *dirname, char *listname, char *fname, int xref, bool xlen)
 {
 int max_files;
 	if (dirname) {
@@ -322,7 +322,7 @@ int max_files;
 			Tlsh *th = tptr[ti];
 			for (int xi=ti+1; xi<n_tptr; xi++) {
 				Tlsh *xh = tptr[xi];
-				int common = 256 - th->totalDiff(xh);
+				int common = th->totalDiff(xh, xlen);
 				printf("%s	%s	%d\n", fnames[ti].name, fnames[xi].name, common);
 			}
 		}
@@ -330,7 +330,7 @@ int max_files;
 		for (int ti=0; ti<n_tptr; ti++) {
 			Tlsh *th = tptr[ti];
 			if (comp_th != NULL) {
-				int common = 256 - comp_th->totalDiff(th);
+				int common = comp_th->totalDiff(th, xlen);
 				if (dirname || listname) {
 					printf("%s	%s	%d\n", compare_fname, fnames[ti].name, common);
 				} else {
@@ -363,6 +363,7 @@ int main(int argc, char *argv[])
 	char *compare_fname		= NULL;
 	char *fname			= NULL;
 	int xref			= 0;
+        bool xlen                       = true;
 
 	int argIdx		= 1;
 	while (argc > argIdx) {
@@ -381,6 +382,9 @@ int main(int argc, char *argv[])
 		} else if (strcmp(argv[argIdx], "-xref") == 0) {
 			xref = 1;
 			argIdx = argIdx+1;
+                } else if (strcmp(argv[argIdx], "-xlen") == 0) {
+                        xlen = false;
+                        argIdx = argIdx+1;
 		} else {
 			printf("unknown option '%s'\n", argv[argIdx]);
 			usage();
@@ -398,5 +402,5 @@ int main(int argc, char *argv[])
 	if (count != 1) {
 		usage();
 	}
-	trendLSH_ut(compare_fname, dirname, listname, fname, xref);
+	trendLSH_ut(compare_fname, dirname, listname, fname, xref, xlen);
 }

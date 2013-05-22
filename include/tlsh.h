@@ -19,30 +19,8 @@
 #ifndef _TLSH_H
 #define _TLSH_H
 
-#define TLSH_SIZE 70
-
 #ifndef NULL
 #define NULL 0
-#endif
-
-typedef void* TLSH_CTX;
-
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-int TLSH_Init(TLSH_CTX* c);
-int TLSH_Update(TLSH_CTX *c, const unsigned char* data, unsigned int len);
-int TLSH_Final(TLSH_CTX *c);
-int TLSH_Hash(TLSH_CTX *c, char* lsh);
-int TLSH_Compare(TLSH_CTX* c1, TLSH_CTX* c2);
-int TLSH_TotalDiff(TLSH_CTX* c1, TLSH_CTX* c2);
-int TLSH_FromTlashStr(TLSH_CTX *c, const char*);
-void TLSH_Free(TLSH_CTX* c);
-
-#ifdef __cplusplus
-}
 #endif
 
 #ifdef __cplusplus
@@ -67,11 +45,10 @@ public:
     void reset();
     
     /* calculate difference */
-    int totalDiff(const Tlsh& other) const;
-    int totalDiff(Tlsh *);
+    int totalDiff(Tlsh *, bool len_diff=true);
     
     /* validate TrendLSH string and reset the hash according to it */
-    int fromTlshStr(char* str);
+    int fromTlshStr(const char* str);
 
     // operators
     bool operator==(const Tlsh& other) const;

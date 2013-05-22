@@ -31,15 +31,35 @@ int main(int argc, char *argv[])
 {
 	Tlsh t1;
 	Tlsh t2;
-	const char *str1 = "This is a test for Lili Diao. This is a string. Hello Hello Hello";
-	const char *str2 = "This is a test for Jon Oliver. This is a string. Hello Hello Hello                                                                                                                                                                                                       ";
+
+	const char *str1 = "This is a test for Lili Diao. This is a string. Hello Hello Hello ";
+	const char *str2 = "This is a test for Jon Oliver. This is a string. Hello Hello Hello ";
 	int len1 = strlen(str1);
 	int len2 = strlen(str2);
-	t1.final( (const unsigned char*) str1, len1);
-	t2.final( (const unsigned char*) str2, len2);
-	printf("str1 = '%s'\n", str1 );
-	printf("str2 = '%s'\n", str2 );
+
+	char minSizeBuffer1[512];
+	for (int i = 0; i < 511; i++) {
+		minSizeBuffer1[i] = i % 26 + 'A';
+	}
+	minSizeBuffer1[511] = 0;
+	strncpy(minSizeBuffer1, str1, len1);
+	t1.final( (const unsigned char*) minSizeBuffer1, 512);
+
+	char minSizeBuffer2[1024];
+	for (int i = 0; i < 1023; i++) {
+		minSizeBuffer2[i] = i % 26 + 'A';
+	}
+	minSizeBuffer2[1023] = 0;
+	strncpy(minSizeBuffer2, str2, len2);
+	t2.final( (const unsigned char*) minSizeBuffer2, 1024);
+
+	printf("str1 = '%s'\n", minSizeBuffer1 );
+	printf("str2 = '%s'\n", minSizeBuffer2 );
+
 	printf("hash1 = %s\n", t1.getHash() );
 	printf("hash2 = %s\n", t2.getHash() );
-	printf("similarity = %d\n", 256 - t1.totalDiff(&t2) );
+
+	printf("difference (same strings) = %d\n", t1.totalDiff(&t1) );
+	printf("difference (with len) = %d\n", t1.totalDiff(&t2) );
+	printf("difference (without len) = %d\n", t1.totalDiff(&t2, false) );
 }
