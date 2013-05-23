@@ -28,7 +28,13 @@ TLSH similarity is expressed as a difference score.
   For the 134 characters hash, a score of 400 or higher means the objects are
   very different.
 
-Get Started
+LICENSE
+=======================================
+Developed by Trend Micro
+Release under the Apache License (see LICENSE)
+Please refer to section 4(d) for conditions about the NOTICE.txt file
+
+Getting Started
 =======================================
 
 Obtain TLSH
