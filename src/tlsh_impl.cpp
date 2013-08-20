@@ -65,6 +65,10 @@ void TlshImpl::update(const unsigned char* data, unsigned int len)
 	
     int j = (int)(this->data_len % RNG_SIZE);
     unsigned int fed_len = this->data_len;
+
+    for (int k = 0; k < TLSH_CHECKSUM_LEN; k++) {    
+      this->lsh_bin.checksum[k] = b_checksum(k, this->lsh_bin.checksum[k]);
+    }
     
     for( unsigned int i=0; i<len; i++, fed_len++, j=RNG_IDX(j+1) ) {
         slide_window[j] = data[i];
@@ -75,10 +79,12 @@ void TlshImpl::update(const unsigned char* data, unsigned int len)
             int j_2 = RNG_IDX(j-2);
             int j_3 = RNG_IDX(j-3);
             int j_4 = RNG_IDX(j-4);
-            
-            unsigned char r;
-            this->lsh_bin.checksum = b_mapping(0, slide_window[j], slide_window[j_1], this->lsh_bin.checksum);
+           
+            for (int k = 0; k < TLSH_CHECKSUM_LEN; k++) {    
+              this->lsh_bin.checksum[k] = b_checksum(slide_window[j], this->lsh_bin.checksum[k]);
+            }
 
+            unsigned char r;
             r = b_mapping(2, slide_window[j], slide_window[j_1], slide_window[j_2]);
             this->a_bucket[r]++;
             r = b_mapping(3, slide_window[j], slide_window[j_1], slide_window[j_3]);
@@ -108,6 +114,19 @@ void TlshImpl::final()
       // this->lsh_code be empty
       return;
     }
+
+    // buckets must be more than 50% non-zero
+    int nonzero = 0;
+    for(unsigned int i=0; i<CODE_SIZE; i++) {
+      for(unsigned int j=0; j<4; j++) {
+        if (this->a_bucket[4*i + j] > 0) {
+          nonzero++;
+        }
+      }
+    }
+    if (nonzero <= 4*CODE_SIZE/2) {
+      return;
+    }
     
     for(unsigned int i=0; i<CODE_SIZE; i++) {
         unsigned char h=0;
@@ -130,7 +149,9 @@ void TlshImpl::final()
 	
     //Need to confirm with Jon about the byte order
     lsh_bin_struct tmp;
-    tmp.checksum = swap_byte( this->lsh_bin.checksum );
+    for (int k = 0; k < TLSH_CHECKSUM_LEN; k++) {    
+      tmp.checksum[k] = swap_byte( this->lsh_bin.checksum[k] );
+    }
     tmp.Lvalue = swap_byte( this->lsh_bin.Lvalue );
     tmp.Q.QB = swap_byte( this->lsh_bin.Q.QB );
     for( int i=0; i < CODE_SIZE; i++ ){
@@ -158,7 +179,9 @@ int TlshImpl::fromTlshStr(const char* str)
 	
         // Reconstruct checksum, Qrations & lvalue
         //Need to confirm with Jon about the byte order
-	this->lsh_bin.checksum = swap_byte(tmp.checksum);
+        for (int k = 0; k < TLSH_CHECKSUM_LEN; k++) {    
+	  this->lsh_bin.checksum[k] = swap_byte(tmp.checksum[k]);
+        }
 	this->lsh_bin.Lvalue = swap_byte( tmp.Lvalue );
 	this->lsh_bin.Q.QB = swap_byte(tmp.Q.QB);
 	for( int i=0; i < CODE_SIZE; i++ ){
@@ -187,9 +210,11 @@ int TlshImpl::compare(const TlshImpl& other) const
     if ( 0 != ret )
         return ret;
         
-    ret = this->lsh_bin.checksum - other.lsh_bin.checksum;
-    if ( 0 != ret )
-        return ret;
+    for (int k = 0; k < TLSH_CHECKSUM_LEN; k++) {    
+      ret = this->lsh_bin.checksum[k] - other.lsh_bin.checksum[k];
+      if ( 0 != ret )
+          return ret;
+    }
 
     ret =  this->data_len - other.data_len;
     if ( 0 != ret )
@@ -224,8 +249,12 @@ int TlshImpl::totalDiff(const TlshImpl& other, bool len_diff) const
     else
         diff += (q2diff-1)*12;
     
-    if (this->lsh_bin.checksum != other.lsh_bin.checksum )
+    for (int k = 0; k < TLSH_CHECKSUM_LEN; k++) {    
+      if (this->lsh_bin.checksum[k] != other.lsh_bin.checksum[k] ) {
         diff ++;
+        break;
+      }
+    }
     
     diff += h_distance( CODE_SIZE, this->lsh_bin.tmp_code, other.lsh_bin.tmp_code );
 

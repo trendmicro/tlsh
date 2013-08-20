@@ -14,17 +14,20 @@
  * limitations under the License.
  */
 
-#ifndef _TLSH_UTIL_H
-#define _TLSH_UTIL_H
+//////////////////////////////////////////////////////////////////////////
+//
+// (C) Trend Micro
 
-unsigned char b_checksum(unsigned char i, unsigned char checksum);
-unsigned char b_mapping(unsigned char salt, unsigned char i, unsigned char j, unsigned char k);
-unsigned char l_capturing(unsigned int len);
-int mod_diff(unsigned int x, unsigned int y, unsigned int R);
-int h_distance( int len, const unsigned char x[], const unsigned char y[]);
-void to_hex( unsigned char * psrc, int len, char* pdest);
-void from_hex( const char* psrc, int len, unsigned char* pdest);
-unsigned char swap_byte( const unsigned char in );
+//////////////////////////////////////////////////////////////////////////
 
-#endif
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
+#include "tlsh_impl.h"
+
+int main(int argc, char *argv[])
+{
+    printf("%d\tbuckets hash (128 compact, 256 full)\n", EFF_BUCKETS);
+    printf("%d\tbyte checksum\n", TLSH_CHECKSUM_LEN);
+}

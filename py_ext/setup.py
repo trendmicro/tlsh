@@ -1,14 +1,34 @@
 from distutils.core import setup, Extension
-import os
+from os.path import join, realpath
+import re
+
+tlsh_256 = '-DBUCKETS_256'
+tlsh_3b = '-DCHECKSUM_3B'
+
+with open(join(realpath('..'), 'CMakeLists.txt'), 'r') as f:
+  l = f.readline()
+  while l:
+    l = f.readline()
+    m = re.search(r'set\s*\(TLSH_BUCKETS_128\s*1\)', l, re.I) 
+    if m:
+      tlsh_256 = ''
+    m = re.search(r'set\s*\(TLSH_CHECKSUM_1B\s*1\)', l, re.I)
+    if m:
+      tlsh_3b = ''
 
 tlsh_module = Extension('tlsh', \
   sources = ['tlshmodule.cpp', \
-    os.path.join(os.path.realpath('..'), 'src', 'tlsh.cpp'), \
-    os.path.join(os.path.realpath('..'), 'src', 'tlsh_impl.cpp'), \
-    os.path.join(os.path.realpath('..'), 'src', 'tlsh_util.cpp') \
+    join(realpath('..'), 'src', 'tlsh.cpp'), \
+    join(realpath('..'), 'src', 'tlsh_impl.cpp'), \
+    join(realpath('..'), 'src', 'tlsh_util.cpp') \
   ], \
-  include_dirs = [os.path.join(os.path.realpath('..'), 'include')] \
+  include_dirs = [join(realpath('..'), 'include')], \
 )
+
+if tlsh_256 != '':
+  tlsh_module.extra_compile_args.append(tlsh_256)
+if tlsh_3b != '':
+  tlsh_module.extra_compile_args.append(tlsh_3b)
 
 description = """A C++ extension for TLSH
 

@@ -21,16 +21,28 @@
 #define BUCKETS           256
 #define Q_BITS            2    // 2 bits; quartile value 0, 1, 2, 3
 
-// VERSION_70B is defined in a compiler switch at CMakeLists.txt
+// BUCKETS_256 & CHECKSUM_3B are compiler switches defined in CMakeLists.txt
 
-#ifdef VERSION_70B
-#define EFF_BUCKETS       128
-#define TLSH_STRING_LEN   70   // 3 + 32 bytes = 70 hexidecimal chars
-#define CODE_SIZE         32   // 128 * 2 bits = 32 bytes
+#if defined BUCKETS_256
+  #define EFF_BUCKETS         256
+  #define CODE_SIZE           64   // 256 * 2 bits = 64 bytes
+  #if defined CHECKSUM_3B
+    #define TLSH_CHECKSUM_LEN 3
+    #define TLSH_STRING_LEN   138  // 2 + 3 + 64 bytes = 138 hexidecimal chars
+  #else
+    #define TLSH_CHECKSUM_LEN 1
+    #define TLSH_STRING_LEN   134  // 2 + 1 + 64 bytes = 134 hexidecimal chars
+  #endif
 #else
-#define EFF_BUCKETS       256
-#define TLSH_STRING_LEN   134  // 3 + 64 bytes = 134 hexidecimal chars
-#define CODE_SIZE         64   // 256 * 2 bits = 64 bytes
+  #define EFF_BUCKETS         128
+  #define CODE_SIZE           32   // 128 * 2 bits = 32 bytes
+  #if defined CHECKSUM_3B
+    #define TLSH_CHECKSUM_LEN 3
+    #define TLSH_STRING_LEN   74   // 2 + 3 + 32 bytes = 74 hexidecimal chars
+  #else
+    #define TLSH_CHECKSUM_LEN 1
+    #define TLSH_STRING_LEN   70   // 2 + 1 + 32 bytes = 70 hexidecimal chars
+  #endif
 #endif
 
 class TlshImpl
@@ -53,19 +65,19 @@ private:
     unsigned int data_len;
     
     struct lsh_bin_struct {
-        unsigned char checksum;             // 1 byte
-        unsigned char Lvalue;               // 1 byte
+        unsigned char checksum[TLSH_CHECKSUM_LEN];  // 1 to 3 bytes
+        unsigned char Lvalue;                       // 1 byte
         union {
 	    unsigned char QB;
             struct{
                 unsigned char Q1ratio : 4;
                 unsigned char Q2ratio : 4;
             } QR;
-        } Q;                                // 1 bytes
-        unsigned char tmp_code[CODE_SIZE];  // 32/64 bytes
+        } Q;                                        // 1 bytes
+        unsigned char tmp_code[CODE_SIZE];          // 32/64 bytes
     } lsh_bin;
     
-    char lsh_code[TLSH_STRING_LEN];	    // 70/134 bytes
+    char lsh_code[TLSH_STRING_LEN];                 // 70/134 bytes or 74/138 bytes
 };
 
 

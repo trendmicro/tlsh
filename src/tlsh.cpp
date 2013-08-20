@@ -78,10 +78,10 @@ bool Tlsh::operator!=(const Tlsh& other) const
 
 int Tlsh::totalDiff(Tlsh *other, bool len_diff)
 {
-    if ( this == other )
-        return 0;
-    else if( NULL==impl || NULL == other || NULL == other->impl )
+    if( NULL==impl || NULL == other || NULL == other->impl )
         return -(EINVAL);
+    else if ( this == other )
+        return 0;
     else
         return (impl->totalDiff(*other->impl, len_diff)+1);
 }

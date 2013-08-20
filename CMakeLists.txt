@@ -17,21 +17,33 @@ cmake_minimum_required(VERSION 2.6)
 project(TLSH)
 
 set(VERSION_MAJOR 3)
-set(VERSION_MINOR 0)
-set(VERSION_PATCH 4)
+set(VERSION_MINOR 1)
+set(VERSION_PATCH 0)
 
-set(TLSH_SHORT 1)
-if(TLSH_SHORT EQUAL 1)
-  add_definitions(-DVERSION_70B)
+# TLSH uses only half the counting buckets.
+# It can use all the buckets now.
+set(TLSH_BUCKETS_128 1)
+if(TLSH_BUCKETS_128 EQUAL 1)
   set(TLSH_HASH "compact hash")
 else()
   set(TLSH_HASH "full hash")
-endif ()
+  add_definitions(-DBUCKETS_256)
+endif()
+
+# TLSH uses 1 byte checksum. The collision rate is 1 in 24.
+# It can use 3 bytes checksum now. That collision rate in 1 in 5800.
+set(TLSH_CHECKSUM_1B 1)
+if(TLSH_CHECKSUM_1B EQUAL 1)
+  set(TLSH_CHECKSUM "1 byte checksum")
+else()
+  set(TLSH_CHECKSUM "3 bytes checksum")
+  add_definitions(-DCHECKSUM_3B)
+endif()
 
 # write a file with the VERSION information
 file(REMOVE VERSION)
 file(WRITE VERSION 
-  "TLSH version: ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH} ${TLSH_HASH}\n")
+  "TLSH version: ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH} ${TLSH_HASH}, ${TLSH_CHECKSUM}\n")
 
 if (CMAKE_BUILD_TYPE STREQUAL Debug)
     set(BUILD_POSTFIX "_d")
@@ -69,3 +81,4 @@ set(CPACK_SOURCE_IGNORE_FILES
 "^${PROJECT_SOURCE_DIR}/CMakeFiles/"
 )
 include(CPack)
+

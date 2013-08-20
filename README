@@ -28,36 +28,23 @@ TLSH similarity is expressed as a difference score.
   For the 134 characters hash, a score of 400 or higher means the objects are
   very different.
 
-LICENSE
-=======================================
-Developed by Trend Micro
-Release under the Apache License (see LICENSE)
-Please refer to section 4(d) for conditions about the NOTICE.txt file
-
-Getting Started
+Get Started
 =======================================
 
-Obtain TLSH
-
-  wget https://github.com/trendmicro/tlsh/tarball/3.0.4 -O tlsh.tar.gz
-  tar xfvz tlsh.tar.gz
-  cd trendmicro-tlsh-xxxxxxx (x... is the last git commit ID)
- OR
-  git clone git://github.com/trendmicro/tlsh.git
-  cd tlsh
-  git checkout 3.0.4  
-
-Extract the files from the tarball or clone from the git repo. Run 
+TLSH is shipped as a source tarball. Extract the files from the tarball. Run 
 CMake to create the Makefile and then make the project. A static library will 
 be created under the "lib" directory. Look under the "test" directory for 
 example code.
 
-Edit TLSH_SHORT in CMakeLists.txt to build the shorter or the longer TLSH hash.
+Edit CMakeLists.txt to build TLSH with different options.
+
+  TLSH_BUCKETS - determines using 128 or 256 buckets, more is better
+  TLSH_CHECKSUM_1B - determines checksum length, longer means less collision
 
 Linux, Cygwin
 
-  tar xvzf tlsh.tar.gz
-  cd trendmicro-tlsh-xxxxxxx
+  tar xvzf TLSH-3.1.0.tar.gz
+  cd TLSH-3.1.0
   mkdir -p build/release
   cd build/release
   cmake ../..
@@ -66,8 +53,8 @@ Linux, Cygwin
 
 Visual Studio on Windows
 
-  extract tlsh.tar.gz
-  cd trendmicro-tlsh-xxxxxxx 
+  extract TLSH--3.1.0.tar.gz
+  cd TLSH-3.1.0
   mkdir build
   cd build
   "c:\program files (x86)\cmake 2.8\bin\cmake" ..
@@ -90,7 +77,8 @@ Python extension
 
   import tlsh
   tlsh.hash(data)
-  tlsh.diffscore(h1, h2)
+  tlsh.diff(h1, h2)
+  tlsh.diffxlen(h1, h2)
 
 Create source tarball
 
@@ -110,3 +98,13 @@ Changes
         totalDiff in tlsh.h.
       - TLSH can be compiled to generate the 70 or 134 character hashes. The 
         longer version is more accurate.
+3.1.0 - The checksum can be changed from 1 byte to 3 bytes. The collison rate 
+        is lower using 3 bytes.
+      - If the incoming data has few features. The algorithm will not generate 
+        hash value. At least half the buckets must be non-zero.
+      - Null or invalid hash strings comparison will return -EINVAL(-22).
+      - Python extension library will read CMakeLists.txt to pick the compile
+        options.
+      - The default build will use half the buckets and 1 byte checksum.
+      - New executable tlsh_version reports number of buckets, checksum length.
+
