@@ -33,14 +33,18 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 
-static int read_file_eval_tlsh(char *fname, Tlsh *th)
+#define	ERROR_READING_FILE	1
+#define	WARNING_FILE_TOO_SMALL	2
+#define	WARNING_CANNOT_HASH	3
+
+static int read_file_eval_tlsh(char *fname, Tlsh *th, int show_details)
 {
 	///////////////////////////////////////
 	// 1. How big is the file?
 	///////////////////////////////////////
 	FILE *fd = fopen(fname, "r");
 	if(fd==NULL)
-		return(1);
+		return(ERROR_READING_FILE);
 	int ret = 1;
 	int sizefile = 0;
 
@@ -49,12 +53,15 @@ static int read_file_eval_tlsh(char *fname, Tlsh *th)
 
 	fclose(fd);
 
+	if (sizefile < 128)
+		return(WARNING_FILE_TOO_SMALL);
+
 	///////////////////////////////////////
 	// 2. allocate the memory
 	///////////////////////////////////////
 	unsigned char* data = (unsigned char*)malloc(sizefile);
 	if (data == NULL) {
-		printf("out of memory...\n");
+		fprintf(stderr, "out of memory...\n");
 		exit(0);
 	}
 
@@ -63,7 +70,7 @@ static int read_file_eval_tlsh(char *fname, Tlsh *th)
 	///////////////////////////////////////
 	fd = fopen(fname, "r");
 	if (fd==NULL)
-		return(1);
+		return(ERROR_READING_FILE);
 	int offset = 0;
 	ret = 0;
 	while(offset<sizefile)
@@ -82,6 +89,12 @@ static int read_file_eval_tlsh(char *fname, Tlsh *th)
 	// 5. clean up and return
 	///////////////////////////////////////
 	free(data);
+	if (th->getHash() == NULL) {
+		return(WARNING_CANNOT_HASH);
+	}
+	if (show_details >= 2) {
+		printf("eval	%s	%s\n", fname, th->getHash() );
+	}
 	return(0);
 }
 
@@ -144,7 +157,7 @@ struct dirent   *dit;
 
 	dip = opendir(dirname);
 	if (dip == NULL) {
-		printf("cannot open directory %s\n", dirname);
+		fprintf(stderr, "cannot open directory %s\n", dirname);
 		return(1);
 	}
 	dit = readdir(dip);
@@ -167,7 +180,7 @@ struct dirent   *dit;
 				}
 			} else {
 				if (*n_file >= max_fnames) {
-					printf("warning too many files max_fnames=%d *n_file=%d\n", max_fnames, *n_file);
+					fprintf(stderr, "warning too many files max_fnames=%d *n_file=%d\n", max_fnames, *n_file);
 					closedir(dip);
 					return(1);
 				}
@@ -198,12 +211,12 @@ struct FileName *r2;
         return (strcmp(r1->name, r2->name));
 }
 
-static void trendLSH_ut(char *compare_fname, char *dirname, char *listname, char *fname, int xref, bool xlen)
+static void trendLSH_ut(char *compare_fname, char *dirname, char *listname, char *fname, int xref, bool xlen, int show_details, int threshold)
 {
 int max_files;
 	if (dirname) {
 		if (! is_dir(dirname)) {
-			printf("error opening dir: %s\n", dirname);
+			fprintf(stderr, "error opening dir: %s\n", dirname);
 			exit(1);
 		}
 		max_files = count_files_in_dir(dirname);
@@ -214,7 +227,7 @@ int max_files;
 		char buf[1000];
 		f = fopen(listname, "r");
 		if (f == NULL) {
-			printf("error: cannot read file %s\n", listname);
+			fprintf(stderr, "error: cannot read file %s\n", listname);
 			exit(1);
 		}
 		max_files = 0;
@@ -253,7 +266,7 @@ int max_files;
 		char buf[1000];
 		f = fopen(listname, "r");
 		if (f == NULL) {
-			printf("error: cannot read file %s\n", listname);
+			fprintf(stderr, "error: cannot read file %s\n", listname);
 			exit(1);
 		}
 		int count = 0;
@@ -279,29 +292,41 @@ int max_files;
 
 	Tlsh **tptr;
 	tptr = (Tlsh **) malloc ( sizeof(Tlsh *) * (max_files+1) );
-	int n_tptr = 0;
+	if (n_file > max_files) {
+		fprintf(stderr, "error: too many files n_file=%d max_files=%d\n", n_file, max_files);
+		return;
+	}
 
 	for (int ti=0; ti<n_file; ti++) {
 		int err;
+		tptr[ti] = NULL;
 		if (listname) {
 			Tlsh *th = new Tlsh();
 			err = th->fromTlshStr(fnames[ti].name);
 			if (err) {
-				printf("cannot read TLSH code %s\n", fnames[ti].name);
-				exit(1);
+				fprintf(stderr, "cannot read TLSH code %s\n", fnames[ti].name);
+				tptr[ti] = NULL;
+			} else {
+				tptr[ti] = th;
 			}
-			tptr[n_tptr] = th;
-			n_tptr ++;
 		} else {
 			char *curr_fname = fnames[ti].name;
 			Tlsh *th = new Tlsh();
-			err = read_file_eval_tlsh(curr_fname, th);
-			if (err) {
-				printf("error reading file %s\n", curr_fname);
+			err = read_file_eval_tlsh(curr_fname, th, show_details);
+			if (err == 0) {
+				tptr[ti] = th;
+			} else if (err == ERROR_READING_FILE) {
+				fprintf(stderr, "error file %s: cannot read file\n", curr_fname);
+				delete th;
+			} else if (err == WARNING_FILE_TOO_SMALL) {
+				fprintf(stderr, "file %s: file too small\n", curr_fname);
+				delete th;
+			} else if (err == WARNING_CANNOT_HASH) {
+				fprintf(stderr, "file %s: cannot hash\n", curr_fname);
 				delete th;
 			} else {
-				tptr[n_tptr] = th;
-				n_tptr ++;
+				fprintf(stderr, "file %s: unknown error\n", curr_fname);
+				delete th;
 			}
 		}
 	}
@@ -309,35 +334,58 @@ int max_files;
 	Tlsh *comp_th = NULL;
 	if (compare_fname) {
 		comp_th = new Tlsh();
-		err = read_file_eval_tlsh(compare_fname, comp_th);
-		if (err) {
-			printf("failed compare: error reading file %s\n", compare_fname);
+		err = read_file_eval_tlsh(compare_fname, comp_th, show_details);
+		if (err == 0) {
+			;
+		} else {
+			if (err == ERROR_READING_FILE) {
+				fprintf(stderr, "error file %s: cannot read file\n", compare_fname);
+			} else if (err == WARNING_FILE_TOO_SMALL) {
+				fprintf(stderr, "file %s: file too small\n", compare_fname);
+			} else if (err == WARNING_CANNOT_HASH) {
+				fprintf(stderr, "file %s: cannot hash\n", compare_fname);
+			} else {
+				fprintf(stderr, "file %s: unknown error\n", compare_fname);
+			}
 			delete comp_th;
 			comp_th = NULL;
 		}
 	}
 
 	if (xref) {
-		for (int ti=0; ti<n_tptr; ti++) {
+		for (int ti=0; ti<n_file; ti++) {
 			Tlsh *th = tptr[ti];
-			for (int xi=ti+1; xi<n_tptr; xi++) {
-				Tlsh *xh = tptr[xi];
-				int common = th->totalDiff(xh, xlen);
-				printf("%s	%s	%d\n", fnames[ti].name, fnames[xi].name, common);
+			if (th != NULL) {
+				for (int xi=ti+1; xi<n_file; xi++) {
+					Tlsh *xh = tptr[xi];
+					if (xh != NULL) {
+						int tdiff = th->totalDiff(xh, xlen);
+						if (tdiff <= threshold) {
+							if (show_details)
+								printf("%s	[%s]	%s	[%s]	%d\n", fnames[ti].name, th->getHash(), fnames[xi].name, xh->getHash(), tdiff);
+							else
+								printf("%s	%s	%d\n", fnames[ti].name, fnames[xi].name, tdiff);
+						}
+					}
+				}
 			}
 		}
 	} else {
-		for (int ti=0; ti<n_tptr; ti++) {
+		for (int ti=0; ti<n_file; ti++) {
 			Tlsh *th = tptr[ti];
-			if (comp_th != NULL) {
-				int common = comp_th->totalDiff(th, xlen);
-				if (dirname || listname) {
-					printf("%s	%s	%d\n", compare_fname, fnames[ti].name, common);
+			if (th != NULL) {
+				if (comp_th != NULL) {
+					int tdiff = comp_th->totalDiff(th, xlen);
+					if (tdiff <= threshold) {
+						if (dirname || listname) {
+							printf("%s	%s	%d\n", compare_fname, fnames[ti].name, tdiff);
+						} else {
+							printf("%4d	%s\n", tdiff, fnames[ti].name);
+						}
+					}
 				} else {
-					printf("%4d	%s\n", common, fnames[ti].name);
+					printf("%s	%s\n", th->getHash(), fnames[ti].name);
 				}
-			} else {
-				printf("%s	%s\n", th->getHash(), fnames[ti].name);
 			}
 		}
 	}
@@ -364,6 +412,8 @@ int main(int argc, char *argv[])
 	char *fname			= NULL;
 	int xref			= 0;
         bool xlen                       = true;
+	int show_details		= 0;
+	int threshold			= 9999;
 
 	int argIdx		= 1;
 	while (argc > argIdx) {
@@ -379,8 +429,20 @@ int main(int argc, char *argv[])
 		} else if (strcmp(argv[argIdx], "-f") == 0) {
 			fname = argv[argIdx+1];
 			argIdx = argIdx+2;
+		} else if (strcmp(argv[argIdx], "-T") == 0) {
+			char *threshold_str = argv[argIdx+1];
+			if ((threshold_str[0] >= '0') && (threshold_str[0] <= '9')) {
+				threshold = atoi(argv[argIdx+1]);
+			} else {
+				printf("bad threshold '%s'\n", argv[argIdx+1]);
+				usage();
+			}
+			argIdx = argIdx+2;
 		} else if (strcmp(argv[argIdx], "-xref") == 0) {
 			xref = 1;
+			argIdx = argIdx+1;
+		} else if (strcmp(argv[argIdx], "-details") == 0) {
+			show_details ++;
 			argIdx = argIdx+1;
                 } else if (strcmp(argv[argIdx], "-xlen") == 0) {
                         xlen = false;
@@ -402,5 +464,5 @@ int main(int argc, char *argv[])
 	if (count != 1) {
 		usage();
 	}
-	trendLSH_ut(compare_fname, dirname, listname, fname, xref, xlen);
+	trendLSH_ut(compare_fname, dirname, listname, fname, xref, xlen, show_details, threshold);
 }
