@@ -1,0 +1,5 @@
+# Ignore binary, cmake and test generated files
+bin/
+lib/
+build/
+Testing/tmp
