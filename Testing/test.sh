@@ -82,10 +82,8 @@ echo
 echo "test 3"
 echo
 
-echo "cut -f 1 $TMP/example_data.out > $TMP/example_data.tlsh"
-      cut -f 1 $TMP/example_data.out > $TMP/example_data.tlsh
-echo "../bin/tlsh_unittest -l $TMP/example_data.tlsh -c ../Testing/example_data/website_course_descriptors06-07.txt > $TMP/example_data.scores.2"
-      ../bin/tlsh_unittest -l $TMP/example_data.tlsh -c ../Testing/example_data/website_course_descriptors06-07.txt > $TMP/example_data.scores.2
+echo "../bin/tlsh_unittest -l $TMP/example_data.out -c ../Testing/example_data/website_course_descriptors06-07.txt > $TMP/example_data.scores.2"
+      ../bin/tlsh_unittest -l $TMP/example_data.out -c ../Testing/example_data/website_course_descriptors06-07.txt > $TMP/example_data.scores.2
 
 diffc=`diff --ignore-all-space $TMP/example_data.scores.2 exp/example_data.$HASH.$CHKSUM.$XLEN.scores.2_EXP | wc -l`
 if test ! $diffc = 0

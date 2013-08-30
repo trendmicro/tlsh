@@ -92,7 +92,7 @@ static int read_file_eval_tlsh(char *fname, Tlsh *th, int show_details)
 	if (th->getHash() == NULL) {
 		return(WARNING_CANNOT_HASH);
 	}
-	if (show_details >= 2) {
+	if (show_details >= 1) {
 		printf("eval	%s	%s\n", fname, th->getHash() );
 	}
 	return(0);
@@ -113,6 +113,7 @@ DIR	  *dip;
 }
 
 struct FileName {
+        char *tlsh;  // Only used with -l parameter
         char *name;
 };
 
@@ -253,7 +254,7 @@ int max_files;
 		if (err)
 			return;
 
-		qsort(fnames, n_file, sizeof(char *), compar_FileName);
+		qsort(fnames, n_file, sizeof(struct FileName), compar_FileName);
 
 		// printf("after sort\n");
 		// for (int fi=0; fi<n_file; fi++) {
@@ -272,14 +273,28 @@ int max_files;
 		int count = 0;
 		x = fgets(buf, 1000, f);
 		while (x != NULL) {
-			if (x != NULL) {
-				int len = strlen(buf);
-				char lastc = buf[len-1];
-				if ((lastc == '\n') || (lastc == '\r'))
-					buf[len-1] = '\0';
-				fnames[count].name = strdup(buf);
-				count ++;
+		    // Make sure that buf is null terminated
+			int len = strlen(buf);
+			char lastc = buf[len-1];
+			if ((lastc == '\n') || (lastc == '\r'))
+				buf[len-1] = '\0';
+
+		    // If buf contains tab character, then assume listname contains tlsh, filename pair 
+			// (i.e. is output of runnint tlsh_unittest -r), so advance x to filename
+			x = strchr(buf, '\t');
+			if (x == NULL) {
+			    x = buf; // No tab character, so set x to buf
 			}
+			else {
+			    buf[x-buf] = '\0';  // separate tlsh from filename for strdup below
+			    x++;     // advance past tab character to filename
+		    }
+
+			fnames[count].tlsh = strdup(buf);
+			fnames[count].name = strdup(x);
+
+			count ++;
+
 			x = fgets(buf, 1000, f);
 		}
 		n_file = count;
@@ -302,7 +317,7 @@ int max_files;
 		tptr[ti] = NULL;
 		if (listname) {
 			Tlsh *th = new Tlsh();
-			err = th->fromTlshStr(fnames[ti].name);
+			err = th->fromTlshStr(fnames[ti].tlsh);
 			if (err) {
 				fprintf(stderr, "cannot read TLSH code %s\n", fnames[ti].name);
 				tptr[ti] = NULL;
