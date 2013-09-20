@@ -33,7 +33,7 @@ Get Started
 
 Obtain TLSH
 
-  git clone git@gitlab5.spn.tw.trendnet.org:scott_forman/tlsh.git
+  git git@github.com:trendmicro/tlsh.git
   cd tlsh
   git checkout 3.1.1  
 
