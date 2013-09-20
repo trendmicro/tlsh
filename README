@@ -31,30 +31,31 @@ TLSH similarity is expressed as a difference score.
 Get Started
 =======================================
 
-TLSH is shipped as a source tarball. Extract the files from the tarball. Run 
-CMake to create the Makefile and then make the project. A static library will 
-be created under the "lib" directory. Look under the "test" directory for 
-example code.
+Obtain TLSH
+
+  git clone git@gitlab5.spn.tw.trendnet.org:scott_forman/tlsh.git
+  cd tlsh
+  git checkout 3.1.1  
+
+***************************************** NOTE *****************************************
+       TLSH depends upon cmake to create the Makefile and then make the project,
+	   so the build will fail if cmake is not installed.
+****************************************************************************************
+
+A static library will be created under the "lib" directory. Look under the "test" 
+directory for example code.
 
 Edit CMakeLists.txt to build TLSH with different options.
 
   TLSH_BUCKETS - determines using 128 or 256 buckets, more is better
   TLSH_CHECKSUM_1B - determines checksum length, longer means less collision
 
-Linux, Cygwin
+To build on Linux, Cygwin:
 
-  tar xvzf TLSH-3.1.0.tar.gz
-  cd TLSH-3.1.0
-  mkdir -p build/release
-  cd build/release
-  cmake ../..     // to build debug versions, run "cmake -DCMAKE_BUILD_TYPE=Debug"
-  make
-  make test
+  execute: make.sh 
 
-Visual Studio on Windows
+To build on Visual Studio on Windows
 
-  extract TLSH--3.1.0.tar.gz
-  cd TLSH-3.1.0
   mkdir build
   cd build
   "c:\program files (x86)\cmake 2.8\bin\cmake" ..
@@ -107,4 +108,9 @@ Changes
         options.
       - The default build will use half the buckets and 1 byte checksum.
       - New executable tlsh_version reports number of buckets, checksum length.
+3.1.1 - Add make.sh and clean.sh scripts for building/cleaning the project
+      - Modifications to tlsh_unittest.cpp to write errors to stderr (not stdout)
+        and to continue processing in some error cases. Also handle a listfile 
+        (-l parameter) which contains both TLSH and filename.
+      - Updated expected output files based on changes to tlsh_unittest.cpp
 
