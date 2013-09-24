@@ -33,7 +33,11 @@ Get Started
 
 Obtain TLSH
 
-  git git@github.com:trendmicro/tlsh.git
+  wget https://github.com/trendmicro/tlsh/tarball/3.1.1 -O tlsh.tar.gz
+  tar xfvz tlsh.tar.gz
+  cd trendmicro-tlsh-xxxxxxx (x... is the last git commit ID)
+ OR
+  git clone git://github.com/trendmicro/tlsh.git
   cd tlsh
   git checkout 3.1.1  
 
