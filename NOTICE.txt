@@ -1,0 +1,12 @@
+﻿   =========================================================================
+   ==  NOTICE file for use with the Apache License, Version 2.0,          ==
+   ==  in this case for the Trend Locality Sensitive Hash distribution.   ==
+   =========================================================================
+
+   Trend Locality Sensitive Hash (TLSH)
+   Copyright 2010-2013 Trend Micro
+
+   This product includes software developed at
+   Trend Micro (http://www.trendmicro.com/)
+
+
