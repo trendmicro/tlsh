@@ -5,13 +5,6 @@ echoerr() { echo "$@" 1>&2; }
 BASEDIR=$(dirname $0)
 pushd $BASEDIR > /dev/null
 
-if test "$1" = "-xlen"
-then
-    XLEN="xlen"
-else
-    XLEN="len"
-fi  
-
 TMP="tmp"
 HASH=`../bin/tlsh_version | head -1 | cut -f1`
 CHKSUM=`../bin/tlsh_version | tail -1 | cut -f1`
@@ -27,6 +20,21 @@ if test ! -d tmp
 then
     mkdir tmp
 fi
+
+#
+# this function will be run twice, "" and "-xlen"
+#
+runit() {
+
+if test "$1" = "-xlen"
+then
+    XLEN="xlen"
+    echo
+    echo "Running, considering len, ..."
+else
+    XLEN="len"
+    echo "Running, not considering len, ..."
+fi  
 
 ########################################################
 # Test 1
@@ -104,4 +112,10 @@ then
 fi
 
 echo "passed"
+
+}
+
+runit 
+runit "-xlen"
+
 popd > /dev/null
