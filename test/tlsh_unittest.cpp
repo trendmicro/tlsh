@@ -319,7 +319,7 @@ int max_files;
 			Tlsh *th = new Tlsh();
 			err = th->fromTlshStr(fnames[ti].tlsh);
 			if (err) {
-				fprintf(stderr, "cannot read TLSH code %s\n", fnames[ti].name);
+				fprintf(stderr, "warning: cannot read TLSH code %s\n", fnames[ti].name);
 				tptr[ti] = NULL;
 			} else {
 				tptr[ti] = th;

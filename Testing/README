@@ -1,0 +1,26 @@
+# TLSH allows comparison with or without length considerations
+#
+
+test.sh			 # standard, consider length
+test.sh -xlen 		 # ignore length
+
+destroy_refresh_exp.sh	  	  # standard, consider length
+destroy_refresh_exp.sh -xlen	  # ignore length
+
+
+# Comprehensive testing procedure
+#
+
+* Edit the root CMakeLists.txt for each combination of TLSH_BUCKETS_128 and 
+  TLSH_CHEKSUM_1B
+* Make TLSH
+* Run test.sh and test.sh -xlen
+
+
+# Populate the expected results after the algorithm is changed
+#
+
+* Edit the root CMakeLists.txt for each combination of TLSH_BUCKETS_128 and 
+  TLSH_CHEKSUM_1B
+* Make TLSH
+* Run destroy_refresh_exp.sh and destroy_refresh_exp.sh -xlen

@@ -117,4 +117,6 @@ Changes
         and to continue processing in some error cases. Also handle a listfile 
         (-l parameter) which contains both TLSH and filename.
       - Updated expected output files based on changes to tlsh_unittest.cpp
-
+3.1.2 - Updated the Testing/exp expected results.
+      - Created a script to ease the creation of the Testing/exp expected 
+        results.
