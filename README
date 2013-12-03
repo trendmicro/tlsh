@@ -33,18 +33,18 @@ Get Started
 
 Obtain TLSH
 
-  wget https://github.com/trendmicro/tlsh/tarball/3.1.1 -O tlsh.tar.gz
-  tar xfvz tlsh.tar.gz
-  cd trendmicro-tlsh-xxxxxxx (x... is the last git commit ID)
+  wget https://github.com/trendmicro/tlsh/archive/master.zip -O master.zip
+  unzip master.zip
+  cd tlsh-master
  OR
   git clone git://github.com/trendmicro/tlsh.git
   cd tlsh
-  git checkout 3.1.1  
+  git checkout master
 
-***************************************** NOTE *****************************************
-       TLSH depends upon cmake to create the Makefile and then make the project,
-	   so the build will fail if cmake is not installed.
-****************************************************************************************
+************************************* NOTE *************************************
+    TLSH depends upon cmake to create the Makefile and then make the project,
+    so the build will fail if cmake is not installed.
+********************************************************************************
 
 A static library will be created under the "lib" directory. Look under the "test" 
 directory for example code.
