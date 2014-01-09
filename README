@@ -28,6 +28,12 @@ TLSH similarity is expressed as a difference score.
   For the 134 characters hash, a score of 400 or higher means the objects are
   very different.
 
+Publications
+=======================================
+  Jonathan Oliver, Chun Cheng and Yanggui Chen, “TLSH - A Locality Sensitive Hash”
+  4th Cybercrime and Trustworthy Computing Workshop, Sydney, November 2013
+  https://drive.google.com/file/d/0B6FS3SVQ1i0GTXk5eDl3Y29QWlk/edit?usp=sharing
+    
 Get Started
 =======================================
 
