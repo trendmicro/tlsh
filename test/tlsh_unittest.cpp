@@ -212,7 +212,7 @@ struct FileName *r2;
         return (strcmp(r1->name, r2->name));
 }
 
-static void trendLSH_ut(char *compare_fname, char *dirname, char *listname, char *fname, int xref, bool xlen, int show_details, int threshold)
+static void trendLSH_ut(char *compare_fname, char *dirname, char *listname, char *fname, char *digestname, int xref, bool xlen, int show_details, int threshold)
 {
 int max_files;
 	if (dirname) {
@@ -239,7 +239,7 @@ int max_files;
 		}
 		fclose(f);
 	}
-	if (fname) {
+	if (fname || digestname) {
 		max_files = 1;
 	}
 	if (max_files == 0)
@@ -279,16 +279,16 @@ int max_files;
 			if ((lastc == '\n') || (lastc == '\r'))
 				buf[len-1] = '\0';
 
-		    // If buf contains tab character, then assume listname contains tlsh, filename pair 
+			// If buf contains tab character, then assume listname contains tlsh, filename pair 
 			// (i.e. is output of runnint tlsh_unittest -r), so advance x to filename
 			x = strchr(buf, '\t');
 			if (x == NULL) {
-			    x = buf; // No tab character, so set x to buf
+				x = buf; // No tab character, so set x to buf
 			}
 			else {
-			    buf[x-buf] = '\0';  // separate tlsh from filename for strdup below
-			    x++;     // advance past tab character to filename
-		    }
+				buf[x-buf] = '\0';  // separate tlsh from filename for strdup below
+		 		x++;     // advance past tab character to filename
+			}
 
 			fnames[count].tlsh = strdup(buf);
 			fnames[count].name = strdup(x);
@@ -304,6 +304,11 @@ int max_files;
 		fnames[0].name = strdup(fname);
 		n_file = 1;
 	}
+	if (digestname) {
+		fnames[0].name = strdup(digestname);  // set for error display
+		fnames[0].tlsh = strdup(digestname);
+		n_file = 1;
+	}
 
 	Tlsh **tptr;
 	tptr = (Tlsh **) malloc ( sizeof(Tlsh *) * (max_files+1) );
@@ -315,7 +320,7 @@ int max_files;
 	for (int ti=0; ti<n_file; ti++) {
 		int err;
 		tptr[ti] = NULL;
-		if (listname) {
+		if (listname || digestname) {
 			Tlsh *th = new Tlsh();
 			err = th->fromTlshStr(fnames[ti].tlsh);
 			if (err) {
@@ -352,10 +357,15 @@ int max_files;
 		err = read_file_eval_tlsh(compare_fname, comp_th, show_details);
 		if (err == 0) {
 			;
+		} else if (err == ERROR_READING_FILE) {
+			// compare_fname is not a file.  Assume it is a TLSH digest
+ 			if (comp_th->fromTlshStr(compare_fname)) {
+				fprintf(stderr, "error %s: not a valid file or TLSH digest\n", compare_fname);
+				delete comp_th;
+				comp_th = NULL;
+			}
 		} else {
-			if (err == ERROR_READING_FILE) {
-				fprintf(stderr, "error file %s: cannot read file\n", compare_fname);
-			} else if (err == WARNING_FILE_TOO_SMALL) {
+			if (err == WARNING_FILE_TOO_SMALL) {
 				fprintf(stderr, "file %s: file too small\n", compare_fname);
 			} else if (err == WARNING_CANNOT_HASH) {
 				fprintf(stderr, "file %s: cannot hash\n", compare_fname);
@@ -364,6 +374,9 @@ int max_files;
 			}
 			delete comp_th;
 			comp_th = NULL;
+		}
+		if (comp_th == NULL) {
+			exit(1);
 		}
 	}
 
@@ -408,27 +421,72 @@ int max_files;
 
 ////////////////////////////////////////////////////////////////////////////////
 
-static void usage()
+#define DEFAULT_THRESHOLD 9999
+static void usage(const char *fullPathName)
 {
-	printf("usage: trendLSH_ut [-c file] -r dir\n");
-	printf("OR\n");
-	printf("usage: trendLSH_ut [-c file] -f file\n");
-	printf("OR\n");
-	printf("usage: trendLSH_ut [-c file] -l listfile\n");
-	printf("defaults to using -tlsh\n");
+	const char *pgmName = strrchr(fullPathName, '/');
+	if (pgmName != NULL) pgmName++;
+	else pgmName = fullPathName;
+
+	printf("usage: %s [-c <file|digest>]         -f <file>     [-T <threshold_value>] [-xlen] [-details]\n", pgmName);
+	printf("     : %s  -c <file|digest>          -d <digest>   [-T <threshold_value>] [-xlen] [-details]\n", pgmName);
+	printf("     : %s [-c <file|digest> | -xref] -r <dir>      [-T <threshold_value>] [-xlen] [-details]\n", pgmName);
+	printf("     : %s [-c <file|digest> | -xref] -l <listfile> [-T <threshold_value>] [-xlen] [-details]\n", pgmName);
+	printf("\n");
+	printf("%s can be used to compute TLSH digest values or the distance between digest values in the following ways:\n", pgmName);
+	printf("  1) To compute the TLSH digest value of a file (-f file), or a recursive directory search for files (-r dir).\n");
+	printf("     This output can be used to create the listfile specified by the -l option.\n");
+	printf("  2) To compute the distance between a comparison file or TLSH digest (-c file|digest) and the\n");
+	printf("     specified file (-f file), TLSH digest (-d digest), directory of files (-r dir), or list (-l listfile).\n");
+	printf("  3) To compute the distance between each element in a set of files (-r dir) or files/digests in a\n");
+	printf("     list (-l listfile) with every other element in that set, using the –xref flag\n");
+	printf("\n");
+	printf("parameters: \n");
+	printf("  -c file|digest:     Specifies a filename or digest whose TLSH value will be compared to the TLSH value(s) of the file, directory or list\n");
+	printf("  -xref:              Used only when a set of files (-r dir) or TLSH values (-l listfile) is specified.\n");
+	printf("                      Results in the calculation of distance between each element in the set.\n");
+	printf("  -f file:            Specifies a file whose TLSH values are to be computed, or used for comparison (-c file|digset)\n");
+	printf("  -d digest:          Specifies a TLSH digest value is to be compared to the specified comparison file or digest (-c file|digset)\n");
+	printf("  -r dir:             Specifies a recursive directory search for files whose TLSH values are to be computed, or used for comparison (-c file|digset or -xref)\n");
+	printf("  -l listfile:        Used for comparison purposes only (-c file|digset or -xref).  Each line in listfile can contain either:\n");
+	printf("                      - a TLSH digest value (comparison output will display TLSH digests)\n");
+	printf("                      - a tab separated TLSH digest value and its corresponding filename (comparison output will display filenames)\n");
+	printf("                      The tab separated listfile can be generated by running %s with either the -f or -r flag\n", pgmName);
+	printf("  -xlen:              Passed as the len_diff parameter to Tlsh::totalDiff().  If not specified, len_diff will be true, else false\n");
+	printf("  -details:           Results in extra detailed output.\n");
+	printf("  -T threshold_value: Used only during comparisons (-c file|digset or -xref).  Specifies the maximun distance that a comparison must\n"); 
+	printf("                      generate before it is reported. (defaults to %d)\n", DEFAULT_THRESHOLD);
+	printf("\n");
+	printf("Example usages:\n");
+	printf("  To calculate the distance between two files, run the command:\n");
+	printf("     %s -c <file 1> -f <file 2>\n", pgmName);
+	printf("\n");
+	printf("  To calculate the distance between two TLSH digest values, run the command:\n");
+	printf("     %s -c <TLSH digest 1> -d <TLSH digest 2>\n", pgmName);
+	printf("\n");
+	printf("  To calculate the TLSH digest values for every file in a directory – this can create the input for the –l option\n");
+	printf("     %s -r <dir>\n", pgmName);
+	printf("\n");
+	printf("  To get the distance between a reference TLSH digest value, and a list of TLSH digest values in a file:\n");
+	printf("     %s -c <TLSH digest> -l <file>\n", pgmName);
+	printf("\n");
+	printf("  To compare the TLSH value for every file in a directory, to every other file in that directory, run the command:\n");
+	printf("     %s -xref -r <dir>\n", pgmName);
+	printf("\n");
 	exit(0);
 }
 
 int main(int argc, char *argv[])
 {
+	char *digestname		= NULL;
 	char *dirname			= NULL;
 	char *listname			= NULL;
 	char *compare_fname		= NULL;
 	char *fname			= NULL;
 	int xref			= 0;
-        bool xlen                       = true;
+	bool xlen                       = true;
 	int show_details		= 0;
-	int threshold			= 9999;
+	int threshold			= DEFAULT_THRESHOLD;
 
 	int argIdx		= 1;
 	while (argc > argIdx) {
@@ -444,13 +502,16 @@ int main(int argc, char *argv[])
 		} else if (strcmp(argv[argIdx], "-f") == 0) {
 			fname = argv[argIdx+1];
 			argIdx = argIdx+2;
+		} else if (strcmp(argv[argIdx], "-d") == 0) {
+			digestname = argv[argIdx+1];
+			argIdx = argIdx+2;
 		} else if (strcmp(argv[argIdx], "-T") == 0) {
 			char *threshold_str = argv[argIdx+1];
 			if ((threshold_str[0] >= '0') && (threshold_str[0] <= '9')) {
 				threshold = atoi(argv[argIdx+1]);
 			} else {
-				printf("bad threshold '%s'\n", argv[argIdx+1]);
-				usage();
+				printf("\nBad threshold '%s' - must be a numeric value\n", argv[argIdx+1]);
+				usage(argv[0]);
 			}
 			argIdx = argIdx+2;
 		} else if (strcmp(argv[argIdx], "-xref") == 0) {
@@ -463,21 +524,39 @@ int main(int argc, char *argv[])
                         xlen = false;
                         argIdx = argIdx+1;
 		} else {
-			printf("unknown option '%s'\n", argv[argIdx]);
-			usage();
+			printf("\nunknown option '%s'\n\n", argv[argIdx]);
+			usage(argv[0]);
 		}
 	}
 
 	// can only have one of fname / listname or dirname set
 	int count = 0;
-	if (fname)
+	if (fname) {
+		if (xref) {
+			printf("\n-xref option does not work with -f option\n\n");
+			usage(argv[0]);
+		}
 		count ++;
+	}
+	if (digestname) {
+		if (!compare_fname) {
+			printf("\nA file or digest comparison (-c option) must be specified with the digest (-d) option\n\n");
+			usage(argv[0]);
+		}
+		count ++;
+	}
 	if (listname)
 		count ++;
 	if (dirname)
 		count ++;
 	if (count != 1) {
-		usage();
+		if (count > 0) printf("\nSpecify EITHER option -f OR -d OR -r OR -l\n\n"); 
+		usage(argv[0]);
 	}
-	trendLSH_ut(compare_fname, dirname, listname, fname, xref, xlen, show_details, threshold);
+	if (compare_fname && xref) {
+		printf("\nSpecify either the -c or -xref option, but not both.\n\n");
+		usage(argv[0]);
+	}
+
+	trendLSH_ut(compare_fname, dirname, listname, fname, digestname, xref, xlen, show_details, threshold);
 }

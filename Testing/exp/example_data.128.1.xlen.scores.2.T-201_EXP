@@ -4,13 +4,9 @@ warning: cannot read TLSH code ../Testing/example_data/BookingBrochure.txt
 ../Testing/example_data/website_course_descriptors06-07.txt	../Testing/example_data/11-17-06_Academy.txt	165
 ../Testing/example_data/website_course_descriptors06-07.txt	../Testing/example_data/1english-only.txt	151
 ../Testing/example_data/website_course_descriptors06-07.txt	../Testing/example_data/2005NISSE.txt	87
-../Testing/example_data/website_course_descriptors06-07.txt	../Testing/example_data/2006-07_Resource_Brochure.txt	280
-../Testing/example_data/website_course_descriptors06-07.txt	../Testing/example_data/2006_2007PhysicalEducationConceptMap.txt	206
 ../Testing/example_data/website_course_descriptors06-07.txt	../Testing/example_data/2007ShowcaseFilm_Package.txt	100
 ../Testing/example_data/website_course_descriptors06-07.txt	../Testing/example_data/22-ppa-3rd_e2snewsletter_jun06.txt	85
-../Testing/example_data/website_course_descriptors06-07.txt	../Testing/example_data/42nd_street.txt	219
 ../Testing/example_data/website_course_descriptors06-07.txt	../Testing/example_data/5._.txt	133
-../Testing/example_data/website_course_descriptors06-07.txt	../Testing/example_data/7-prikaz-slozeno.txt	205
 ../Testing/example_data/website_course_descriptors06-07.txt	../Testing/example_data/AccessToNationalSportsCentresPassportScheme.txt	132
 ../Testing/example_data/website_course_descriptors06-07.txt	../Testing/example_data/Adult-Sports.txt	168
 ../Testing/example_data/website_course_descriptors06-07.txt	../Testing/example_data/AfghanistanLiteracyDiscussionPaper.txt	121
@@ -44,10 +40,8 @@ warning: cannot read TLSH code ../Testing/example_data/BookingBrochure.txt
 ../Testing/example_data/website_course_descriptors06-07.txt	../Testing/example_data/SAR_Dog_Avalanche_promo.txt	131
 ../Testing/example_data/website_course_descriptors06-07.txt	../Testing/example_data/SCE_3320.txt	151
 ../Testing/example_data/website_course_descriptors06-07.txt	../Testing/example_data/Shopping.txt	138
-../Testing/example_data/website_course_descriptors06-07.txt	../Testing/example_data/SoundResources.txt	288
 ../Testing/example_data/website_course_descriptors06-07.txt	../Testing/example_data/Summer_Math_Syllabus.txt	170
 ../Testing/example_data/website_course_descriptors06-07.txt	../Testing/example_data/TeachingMathCameroon.txt	91
-../Testing/example_data/website_course_descriptors06-07.txt	../Testing/example_data/The-Global-Warming-Response-Act.txt	242
 ../Testing/example_data/website_course_descriptors06-07.txt	../Testing/example_data/WPTC2006Season.txt	132
 ../Testing/example_data/website_course_descriptors06-07.txt	../Testing/example_data/Week3.txt	120
 ../Testing/example_data/website_course_descriptors06-07.txt	../Testing/example_data/aReportOfTheSurgeonGeneral.txt	83
@@ -63,11 +57,9 @@ warning: cannot read TLSH code ../Testing/example_data/BookingBrochure.txt
 ../Testing/example_data/website_course_descriptors06-07.txt	../Testing/example_data/greenhouse.txt	105
 ../Testing/example_data/website_course_descriptors06-07.txt	../Testing/example_data/lac_rfp_inner-cities.txt	94
 ../Testing/example_data/website_course_descriptors06-07.txt	../Testing/example_data/ledger091505.txt	153
-../Testing/example_data/website_course_descriptors06-07.txt	../Testing/example_data/modelgeneralnotice.txt	253
 ../Testing/example_data/website_course_descriptors06-07.txt	../Testing/example_data/parentarticle.txt	101
 ../Testing/example_data/website_course_descriptors06-07.txt	../Testing/example_data/record_voting.txt	140
 ../Testing/example_data/website_course_descriptors06-07.txt	../Testing/example_data/rkc_flyer.txt	126
-../Testing/example_data/website_course_descriptors06-07.txt	../Testing/example_data/sisters_pressrelease.txt	236
 ../Testing/example_data/website_course_descriptors06-07.txt	../Testing/example_data/socy642_f02_milkie.txt	183
 ../Testing/example_data/website_course_descriptors06-07.txt	../Testing/example_data/spanish_place_namesA.txt	133
 ../Testing/example_data/website_course_descriptors06-07.txt	../Testing/example_data/spanish_place_namesB.txt	164
