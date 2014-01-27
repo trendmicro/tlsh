@@ -237,7 +237,7 @@
 ../Testing/example_data/1english-only.txt	../Testing/example_data/42nd_street.txt	248
 ../Testing/example_data/1english-only.txt	../Testing/example_data/5._.txt	333
 ../Testing/example_data/1english-only.txt	../Testing/example_data/7-prikaz-slozeno.txt	219
-../Testing/example_data/1english-only.txt	../Testing/example_data/AccessToNationalSportsCentresPassportScheme.txt	299
+../Testing/example_data/1english-only.txt	../Testing/example_data/AccessToNationalSportsCentresPassportScheme.txt	300
 ../Testing/example_data/1english-only.txt	../Testing/example_data/Adult-Sports.txt	236
 ../Testing/example_data/1english-only.txt	../Testing/example_data/AfghanistanLiteracyDiscussionPaper.txt	455
 ../Testing/example_data/1english-only.txt	../Testing/example_data/BBVDlivepr.txt	216
@@ -583,7 +583,7 @@
 ../Testing/example_data/2007ShowcaseFilm_Package.txt	../Testing/example_data/modelgeneralnotice.txt	270
 ../Testing/example_data/2007ShowcaseFilm_Package.txt	../Testing/example_data/parentarticle.txt	205
 ../Testing/example_data/2007ShowcaseFilm_Package.txt	../Testing/example_data/record_voting.txt	301
-../Testing/example_data/2007ShowcaseFilm_Package.txt	../Testing/example_data/rkc_flyer.txt	186
+../Testing/example_data/2007ShowcaseFilm_Package.txt	../Testing/example_data/rkc_flyer.txt	187
 ../Testing/example_data/2007ShowcaseFilm_Package.txt	../Testing/example_data/sisters_pressrelease.txt	432
 ../Testing/example_data/2007ShowcaseFilm_Package.txt	../Testing/example_data/socy642_f02_milkie.txt	282
 ../Testing/example_data/2007ShowcaseFilm_Package.txt	../Testing/example_data/spanish_place_namesA.txt	288
@@ -778,7 +778,7 @@
 ../Testing/example_data/5._.txt	../Testing/example_data/ashaam2.txt	185
 ../Testing/example_data/5._.txt	../Testing/example_data/billboard-021205.txt	242
 ../Testing/example_data/5._.txt	../Testing/example_data/bio.txt	247
-../Testing/example_data/5._.txt	../Testing/example_data/cme2i05.txt	213
+../Testing/example_data/5._.txt	../Testing/example_data/cme2i05.txt	214
 ../Testing/example_data/5._.txt	../Testing/example_data/didges_brew_band_info.txt	145
 ../Testing/example_data/5._.txt	../Testing/example_data/exploring_dallas.txt	227
 ../Testing/example_data/5._.txt	../Testing/example_data/exxonmobil_climate_change_backgrounder.txt	231
@@ -1030,7 +1030,7 @@
 ../Testing/example_data/AfghanistanLiteracyDiscussionPaper.txt	../Testing/example_data/SAR_Dog_Avalanche_promo.txt	367
 ../Testing/example_data/AfghanistanLiteracyDiscussionPaper.txt	../Testing/example_data/SCE_3320.txt	202
 ../Testing/example_data/AfghanistanLiteracyDiscussionPaper.txt	../Testing/example_data/Shopping.txt	414
-../Testing/example_data/AfghanistanLiteracyDiscussionPaper.txt	../Testing/example_data/SoundResources.txt	510
+../Testing/example_data/AfghanistanLiteracyDiscussionPaper.txt	../Testing/example_data/SoundResources.txt	511
 ../Testing/example_data/AfghanistanLiteracyDiscussionPaper.txt	../Testing/example_data/Summer_Math_Syllabus.txt	284
 ../Testing/example_data/AfghanistanLiteracyDiscussionPaper.txt	../Testing/example_data/TeachingMathCameroon.txt	212
 ../Testing/example_data/AfghanistanLiteracyDiscussionPaper.txt	../Testing/example_data/The-Global-Warming-Response-Act.txt	366
@@ -1376,7 +1376,7 @@
 ../Testing/example_data/ClaremontTrioBio0607.txt	../Testing/example_data/Fitness_Myths.txt	176
 ../Testing/example_data/ClaremontTrioBio0607.txt	../Testing/example_data/Global_Warming_Resolution_April_2001.txt	233
 ../Testing/example_data/ClaremontTrioBio0607.txt	../Testing/example_data/GovernorsTaskForceReport.txt	290
-../Testing/example_data/ClaremontTrioBio0607.txt	../Testing/example_data/Groove_Yard.txt	246
+../Testing/example_data/ClaremontTrioBio0607.txt	../Testing/example_data/Groove_Yard.txt	247
 ../Testing/example_data/ClaremontTrioBio0607.txt	../Testing/example_data/HSCPR10306.txt	180
 ../Testing/example_data/ClaremontTrioBio0607.txt	../Testing/example_data/HandoutSportsInjuryPrevention.txt	160
 ../Testing/example_data/ClaremontTrioBio0607.txt	../Testing/example_data/IntlChildrensFestRevisedRelease.txt	322
@@ -1476,12 +1476,12 @@
 ../Testing/example_data/CommandGde.txt	../Testing/example_data/sisters_pressrelease.txt	467
 ../Testing/example_data/CommandGde.txt	../Testing/example_data/socy642_f02_milkie.txt	252
 ../Testing/example_data/CommandGde.txt	../Testing/example_data/spanish_place_namesA.txt	328
-../Testing/example_data/CommandGde.txt	../Testing/example_data/spanish_place_namesB.txt	184
+../Testing/example_data/CommandGde.txt	../Testing/example_data/spanish_place_namesB.txt	185
 ../Testing/example_data/CommandGde.txt	../Testing/example_data/sports_massage_and_recovery.txt	90
 ../Testing/example_data/CommandGde.txt	../Testing/example_data/srilanka.txt	121
 ../Testing/example_data/CommandGde.txt	../Testing/example_data/survey_mathtch.txt	234
 ../Testing/example_data/CommandGde.txt	../Testing/example_data/syllabus.txt	151
-../Testing/example_data/CommandGde.txt	../Testing/example_data/victim.txt	167
+../Testing/example_data/CommandGde.txt	../Testing/example_data/victim.txt	168
 ../Testing/example_data/CommandGde.txt	../Testing/example_data/website_course_descriptors06-07.txt	170
 ../Testing/example_data/DOC-DHHS_Joint_Action_Plan_summary.txt	../Testing/example_data/DanceFestOMAIPressReleaseFeb15_07.txt	287
 ../Testing/example_data/DOC-DHHS_Joint_Action_Plan_summary.txt	../Testing/example_data/ExercisePocketSliderText.txt	259
@@ -2086,7 +2086,7 @@
 ../Testing/example_data/LOTRLeadRelease.txt	../Testing/example_data/sports_massage_and_recovery.txt	248
 ../Testing/example_data/LOTRLeadRelease.txt	../Testing/example_data/srilanka.txt	245
 ../Testing/example_data/LOTRLeadRelease.txt	../Testing/example_data/survey_mathtch.txt	138
-../Testing/example_data/LOTRLeadRelease.txt	../Testing/example_data/syllabus.txt	275
+../Testing/example_data/LOTRLeadRelease.txt	../Testing/example_data/syllabus.txt	276
 ../Testing/example_data/LOTRLeadRelease.txt	../Testing/example_data/victim.txt	234
 ../Testing/example_data/LOTRLeadRelease.txt	../Testing/example_data/website_course_descriptors06-07.txt	117
 ../Testing/example_data/Landau-Pickford-Press-Rel.txt	../Testing/example_data/Lotuspike-VBTD-Jenkins.txt	187
@@ -2425,7 +2425,7 @@
 ../Testing/example_data/Reviews-GrooveYard.txt	../Testing/example_data/aReportOfTheSurgeonGeneral.txt	197
 ../Testing/example_data/Reviews-GrooveYard.txt	../Testing/example_data/ashaam2.txt	211
 ../Testing/example_data/Reviews-GrooveYard.txt	../Testing/example_data/billboard-021205.txt	257
-../Testing/example_data/Reviews-GrooveYard.txt	../Testing/example_data/bio.txt	264
+../Testing/example_data/Reviews-GrooveYard.txt	../Testing/example_data/bio.txt	265
 ../Testing/example_data/Reviews-GrooveYard.txt	../Testing/example_data/cme2i05.txt	201
 ../Testing/example_data/Reviews-GrooveYard.txt	../Testing/example_data/didges_brew_band_info.txt	129
 ../Testing/example_data/Reviews-GrooveYard.txt	../Testing/example_data/exploring_dallas.txt	233
@@ -2589,7 +2589,7 @@
 ../Testing/example_data/Summer_Math_Syllabus.txt	../Testing/example_data/Week3.txt	317
 ../Testing/example_data/Summer_Math_Syllabus.txt	../Testing/example_data/aReportOfTheSurgeonGeneral.txt	246
 ../Testing/example_data/Summer_Math_Syllabus.txt	../Testing/example_data/ashaam2.txt	246
-../Testing/example_data/Summer_Math_Syllabus.txt	../Testing/example_data/billboard-021205.txt	252
+../Testing/example_data/Summer_Math_Syllabus.txt	../Testing/example_data/billboard-021205.txt	253
 ../Testing/example_data/Summer_Math_Syllabus.txt	../Testing/example_data/bio.txt	266
 ../Testing/example_data/Summer_Math_Syllabus.txt	../Testing/example_data/cme2i05.txt	262
 ../Testing/example_data/Summer_Math_Syllabus.txt	../Testing/example_data/didges_brew_band_info.txt	325
@@ -3062,7 +3062,7 @@
 ../Testing/example_data/spanish_place_namesB.txt	../Testing/example_data/srilanka.txt	220
 ../Testing/example_data/spanish_place_namesB.txt	../Testing/example_data/survey_mathtch.txt	223
 ../Testing/example_data/spanish_place_namesB.txt	../Testing/example_data/syllabus.txt	257
-../Testing/example_data/spanish_place_namesB.txt	../Testing/example_data/victim.txt	180
+../Testing/example_data/spanish_place_namesB.txt	../Testing/example_data/victim.txt	181
 ../Testing/example_data/spanish_place_namesB.txt	../Testing/example_data/website_course_descriptors06-07.txt	165
 ../Testing/example_data/sports_massage_and_recovery.txt	../Testing/example_data/srilanka.txt	132
 ../Testing/example_data/sports_massage_and_recovery.txt	../Testing/example_data/survey_mathtch.txt	268

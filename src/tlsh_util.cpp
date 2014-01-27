@@ -4652,14 +4652,6 @@ static unsigned char bit_pairs_diff_table[][256] = {
 };
 
 // Pearson's algorithm
-unsigned char b_checksum(unsigned char i, unsigned char checksum) {
-  unsigned char h = 0;
-
-  h = v_table[h ^ i];
-  h = v_table[h ^ checksum];
-  return h;
-}
-
 unsigned char b_mapping(unsigned char salt, unsigned char i, unsigned char j, unsigned char k) {
     unsigned char h = 0;
     

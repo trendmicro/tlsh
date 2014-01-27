@@ -17,7 +17,6 @@
 #ifndef _TLSH_UTIL_H
 #define _TLSH_UTIL_H
 
-unsigned char b_checksum(unsigned char i, unsigned char checksum);
 unsigned char b_mapping(unsigned char salt, unsigned char i, unsigned char j, unsigned char k);
 unsigned char l_capturing(unsigned int len);
 int mod_diff(unsigned int x, unsigned int y, unsigned int R);

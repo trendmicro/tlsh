@@ -66,10 +66,6 @@ void TlshImpl::update(const unsigned char* data, unsigned int len)
     int j = (int)(this->data_len % RNG_SIZE);
     unsigned int fed_len = this->data_len;
 
-    for (int k = 0; k < TLSH_CHECKSUM_LEN; k++) {    
-      this->lsh_bin.checksum[k] = b_checksum(k, this->lsh_bin.checksum[k]);
-    }
-    
     for( unsigned int i=0; i<len; i++, fed_len++, j=RNG_IDX(j+1) ) {
         slide_window[j] = data[i];
         
@@ -80,8 +76,14 @@ void TlshImpl::update(const unsigned char* data, unsigned int len)
             int j_3 = RNG_IDX(j-3);
             int j_4 = RNG_IDX(j-4);
            
-            for (int k = 0; k < TLSH_CHECKSUM_LEN; k++) {    
-              this->lsh_bin.checksum[k] = b_checksum(slide_window[j], this->lsh_bin.checksum[k]);
+            for (int k = 0; k < TLSH_CHECKSUM_LEN; k++) {
+                 if (k == 0) {
+                     this->lsh_bin.checksum[k] = b_mapping(0, slide_window[j], slide_window[j_1], this->lsh_bin.checksum[k]);
+                 }
+                 else {
+                     // use calculated 1 byte checksums to expand the total checksum to 3 bytes
+                     this->lsh_bin.checksum[k] = b_mapping(this->lsh_bin.checksum[k-1], slide_window[j], slide_window[j_1], this->lsh_bin.checksum[k]);
+                 }
             }
 
             unsigned char r;
