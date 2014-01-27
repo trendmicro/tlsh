@@ -45,6 +45,10 @@ public:
     void reset();
     
     /* calculate difference */
+    /* The len_diff parameter specifies if the file length is to be included in the difference calculation (len_diff=true) or if it */
+    /* is to be excluded (len_diff=false).  In general, the length should be considered in the difference calculation, but there */
+    /* could be applications where a part of the adversarial activity might be to add a lot of content.  For example to add 1 million */
+    /* zero bytes at the end of a file.  In that case, the caller would want to exclude the length from the calculation. */
     int totalDiff(Tlsh *, bool len_diff=true);
     
     /* validate TrendLSH string and reset the hash according to it */
