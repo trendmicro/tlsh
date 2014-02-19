@@ -45,6 +45,8 @@
   #endif
 #endif
 
+#define TLSH_STRING_BUFFER_LEN TLSH_STRING_LEN + 1
+
 class TlshImpl
 {
 public:
@@ -55,20 +57,20 @@ public:
     void final();
     void reset();
     const char* hash();
+    const char* hash(char *buffer, unsigned int bufSize);  // saves allocating hash string in TLSH instance - bufSize should be TLSH_STRING_LEN + 1
     int compare(const TlshImpl& other) const;
     int totalDiff(const TlshImpl& other, bool len_diff=true) const;
     int fromTlshStr(const char* str);
 
 private:
-    unsigned int a_bucket[BUCKETS];
-    unsigned char slide_window[SLIDING_WND_SIZE];
+    unsigned int *a_bucket;  
     unsigned int data_len;
     
     struct lsh_bin_struct {
         unsigned char checksum[TLSH_CHECKSUM_LEN];  // 1 to 3 bytes
         unsigned char Lvalue;                       // 1 byte
         union {
-	    unsigned char QB;
+        unsigned char QB;
             struct{
                 unsigned char Q1ratio : 4;
                 unsigned char Q2ratio : 4;
@@ -77,7 +79,8 @@ private:
         unsigned char tmp_code[CODE_SIZE];          // 32/64 bytes
     } lsh_bin;
     
-    char lsh_code[TLSH_STRING_LEN];                 // 70/134 bytes or 74/138 bytes
+    char *lsh_code;       // allocated when hash() function without buffer is called - 70/134 bytes or 74/138 bytes
+    bool lsh_code_valid;  // true iff final() or fromTlshStr complete successfully
 };
 
 

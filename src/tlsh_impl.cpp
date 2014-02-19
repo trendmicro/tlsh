@@ -40,22 +40,24 @@ LOCAL_FUNCTION unsigned int partition(unsigned int * buf, unsigned int left, uns
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
-TlshImpl::TlshImpl() 
+TlshImpl::TlshImpl() : a_bucket(NULL), data_len(0), lsh_code(NULL), lsh_code_valid(false)
 {
-    this->reset();
+    memset(&this->lsh_bin, 0, sizeof this->lsh_bin);
 }
 
 TlshImpl::~TlshImpl()
 {
+    delete [] this->a_bucket;
+    delete [] this->lsh_code;
 }
 
 void TlshImpl::reset()
 {
-    memset(this->a_bucket, 0, sizeof this->a_bucket);
-    memset(this->slide_window, 0, sizeof this->slide_window);
+    delete [] this->a_bucket; this->a_bucket = NULL;
+    delete [] this->lsh_code; this->lsh_code = NULL; 
     memset(&this->lsh_bin, 0, sizeof this->lsh_bin);
-    memset(this->lsh_code, 0, sizeof this->lsh_code);
     this->data_len = 0;
+    this->lsh_code_valid = false;   
 }
 
 void TlshImpl::update(const unsigned char* data, unsigned int len) 
@@ -66,6 +68,13 @@ void TlshImpl::update(const unsigned char* data, unsigned int len)
     int j = (int)(this->data_len % RNG_SIZE);
     unsigned int fed_len = this->data_len;
 
+    if (this->a_bucket == NULL) {
+        this->a_bucket = new unsigned int [BUCKETS];
+        memset(this->a_bucket, 0, sizeof(int)*BUCKETS);
+    }
+
+    unsigned char slide_window[SLIDING_WND_SIZE];  
+    memset(slide_window, 0, sizeof(slide_window));
     for( unsigned int i=0; i<len; i++, fed_len++, j=RNG_IDX(j+1) ) {
         slide_window[j] = data[i];
         
@@ -108,14 +117,15 @@ void TlshImpl::update(const unsigned char* data, unsigned int len)
 /* to signal the class there is no more data to be added */
 void TlshImpl::final() 
 {
-    unsigned int q1, q2, q3;
-    find_quartile(&q1, &q2, &q3, this->a_bucket);
-
     // incoming data must more than or equal to 512 bytes
     if (this->data_len < 512) {
       // this->lsh_code be empty
+      delete [] this->a_bucket; this->a_bucket = NULL;
       return;
     }
+
+    unsigned int q1, q2, q3;
+    find_quartile(&q1, &q2, &q3, this->a_bucket);
 
     // buckets must be more than 50% non-zero
     int nonzero = 0;
@@ -127,6 +137,7 @@ void TlshImpl::final()
       }
     }
     if (nonzero <= 4*CODE_SIZE/2) {
+      delete [] this->a_bucket; this->a_bucket = NULL;
       return;
     }
     
@@ -144,22 +155,14 @@ void TlshImpl::final()
         }
         this->lsh_bin.tmp_code[i] = h;
     }
+
+    //Done with a_bucket so deallocate
+    delete [] this->a_bucket; this->a_bucket = NULL;
     
     this->lsh_bin.Lvalue = l_capturing(this->data_len);
     this->lsh_bin.Q.QR.Q1ratio = (unsigned int) ((float)(q1*100)/(float) q3) % 16;
     this->lsh_bin.Q.QR.Q2ratio = (unsigned int) ((float)(q2*100)/(float) q3) % 16;
-	
-    //Need to confirm with Jon about the byte order
-    lsh_bin_struct tmp;
-    for (int k = 0; k < TLSH_CHECKSUM_LEN; k++) {    
-      tmp.checksum[k] = swap_byte( this->lsh_bin.checksum[k] );
-    }
-    tmp.Lvalue = swap_byte( this->lsh_bin.Lvalue );
-    tmp.Q.QB = swap_byte( this->lsh_bin.Q.QB );
-    for( int i=0; i < CODE_SIZE; i++ ){
-        tmp.tmp_code[i] = (this->lsh_bin.tmp_code[CODE_SIZE-1-i]);
-    }
-    to_hex( (unsigned char*)&tmp, sizeof(tmp), this->lsh_code );
+    this->lsh_code_valid = true;   
 }
 
 int TlshImpl::fromTlshStr(const char* str)
@@ -174,13 +177,11 @@ int TlshImpl::fromTlshStr(const char* str)
             return 1;
         }
         this->reset();
-	memcpy( this->lsh_code, str, TLSH_STRING_LEN );
 	
 	lsh_bin_struct tmp;
-	from_hex( this->lsh_code, TLSH_STRING_LEN, (unsigned char*)&tmp );
+	from_hex( str, TLSH_STRING_LEN, (unsigned char*)&tmp );
 	
         // Reconstruct checksum, Qrations & lvalue
-        //Need to confirm with Jon about the byte order
         for (int k = 0; k < TLSH_CHECKSUM_LEN; k++) {    
 	  this->lsh_bin.checksum[k] = swap_byte(tmp.checksum[k]);
         }
@@ -189,40 +190,55 @@ int TlshImpl::fromTlshStr(const char* str)
 	for( int i=0; i < CODE_SIZE; i++ ){
 		this->lsh_bin.tmp_code[i] = (tmp.tmp_code[CODE_SIZE-1-i]);
 	}
+	this->lsh_code_valid = true;   
 
 	return 0;
 }
 
+const char* TlshImpl::hash(char *buffer, unsigned int bufSize)
+{
+    if (bufSize < TLSH_STRING_LEN + 1) {
+        // TODO: log error
+        return NULL;
+    }
+    if (this->lsh_code_valid == false) {
+        strncpy(buffer, "", bufSize);
+        return buffer;
+    }
+
+    lsh_bin_struct tmp;
+    for (int k = 0; k < TLSH_CHECKSUM_LEN; k++) {    
+      tmp.checksum[k] = swap_byte( this->lsh_bin.checksum[k] );
+    }
+    tmp.Lvalue = swap_byte( this->lsh_bin.Lvalue );
+    tmp.Q.QB = swap_byte( this->lsh_bin.Q.QB );
+    for( int i=0; i < CODE_SIZE; i++ ){
+        tmp.tmp_code[i] = (this->lsh_bin.tmp_code[CODE_SIZE-1-i]);
+    }
+
+    to_hex( (unsigned char*)&tmp, sizeof(tmp), buffer);
+    return buffer;
+}
 
 /* to get the hex-encoded hash code */
-const char* TlshImpl::hash() {
-    return this->lsh_code;
+const char* TlshImpl::hash() 
+{
+    if (this->lsh_code != NULL) {
+        // lsh_code has been previously calculated, so just return it
+        return this->lsh_code;
+    }
+
+    this->lsh_code = new char [TLSH_STRING_LEN+1];
+    memset(this->lsh_code, 0, TLSH_STRING_LEN+1);
+	
+    return hash(this->lsh_code, TLSH_STRING_LEN+1);
 }
 
 
 // compare
 int TlshImpl::compare(const TlshImpl& other) const
 {
-    int ret = 0;
-    ret = memcmp( this->a_bucket, other.a_bucket, sizeof this->a_bucket );
-    if ( 0 != ret )
-        return ret;
-    
-    ret = memcmp( this->slide_window, other.slide_window, sizeof this->slide_window );
-    if ( 0 != ret )
-        return ret;
-        
-    for (int k = 0; k < TLSH_CHECKSUM_LEN; k++) {    
-      ret = this->lsh_bin.checksum[k] - other.lsh_bin.checksum[k];
-      if ( 0 != ret )
-          return ret;
-    }
-
-    ret =  this->data_len - other.data_len;
-    if ( 0 != ret )
-        return ret;
-
-    return 0;
+    return (memcmp( &(this->lsh_bin), &(other.lsh_bin), sizeof(this->lsh_bin)));
 }
 
 int TlshImpl::totalDiff(const TlshImpl& other, bool len_diff) const

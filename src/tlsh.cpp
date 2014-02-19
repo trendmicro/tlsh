@@ -15,60 +15,53 @@
  */
 
 #include "tlsh.h"
-#include "tlsh_impl.h"
 #include <errno.h>
 #include <string.h>
 
 /////////////////////////////////////////////////////
 // C++ Implementation
 
-Tlsh::Tlsh():impl(NULL)
+Tlsh::Tlsh()
 {
-    impl = new TlshImpl();
 }
 
 Tlsh::~Tlsh()
 {
-    delete impl;
 }
 
 void Tlsh::update(const unsigned char* data, unsigned int len)
 {
-    if ( NULL != impl )
-        impl->update(data, len);
+    impl.update(data, len);
 }
 
 void Tlsh::final(const unsigned char* data, unsigned int len)
 {
-    if ( NULL != impl ){
-        if ( NULL != data && len > 0 )
-            impl->update(data, len);
-        impl->final();
-    }
+    if ( NULL != data && len > 0 )
+        impl.update(data, len);
+    impl.final();
 }
 
 const char* Tlsh::getHash()
 {
-    if ( NULL != impl )
-        return impl->hash();
-    else
-        return NULL;
+    return impl.hash();
+}
+
+const char* Tlsh::getHash(char *buffer, unsigned int bufSize)  
+{
+    return impl.hash(buffer, bufSize);
 }
 
 void Tlsh::reset()
 {
-    if ( NULL != impl )
-        impl->reset();
+    impl.reset();
 }
 
 bool Tlsh::operator==(const Tlsh& other) const
 {
     if( this == &other )
         return true;
-    else if( NULL == impl || NULL == other.impl )
-        return false;
     else
-        return ( 0 == impl->compare(*other.impl) );
+        return ( 0 == impl.compare(other.impl) );
 }
 
 bool Tlsh::operator!=(const Tlsh& other) const 
@@ -78,21 +71,17 @@ bool Tlsh::operator!=(const Tlsh& other) const
 
 int Tlsh::totalDiff(Tlsh *other, bool len_diff)
 {
-    if( NULL==impl || NULL == other || NULL == other->impl )
-        return -(EINVAL);
-    else if ( this == other )
+    if ( this == other )
         return 0;
     else
-        return (impl->totalDiff(*other->impl, len_diff)+1);
+        return (impl.totalDiff(other->impl, len_diff)+1);
 }
 
 int Tlsh::fromTlshStr(const char* str)
 {
-    if ( NULL == impl )
-        return -(ENOMEM);
-    else if ( NULL == str )
+    if ( NULL == str )
         return -(EINVAL);
     else
-        return impl->fromTlshStr(str);
+        return impl.fromTlshStr(str);
 }
 
