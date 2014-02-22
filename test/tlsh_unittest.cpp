@@ -69,8 +69,10 @@ static int read_file_eval_tlsh(char *fname, Tlsh *th, int show_details)
 	// 3. read the file
 	///////////////////////////////////////
 	fd = fopen(fname, "r");
-	if (fd==NULL)
+	if (fd==NULL) {
+		free(data);
 		return(ERROR_READING_FILE);
+	}
 	int offset = 0;
 	ret = 0;
 	while(offset<sizefile)
@@ -212,6 +214,19 @@ struct FileName *r2;
         return (strcmp(r1->name, r2->name));
 }
 
+static void freeFileName(struct FileName *fnames, int count)
+{
+    for (int i=0; i<count; i++) {
+		if (fnames[i].tlsh != NULL) {
+			free(fnames[i].tlsh);
+		}
+		if (fnames[i].name != NULL) {
+			free(fnames[i].name);
+		}
+	}
+	free(fnames);
+}
+
 static void trendLSH_ut(char *compare_fname, char *dirname, char *listname, char *fname, char *digestname, int xref, bool xlen, int show_details, int threshold)
 {
 int max_files;
@@ -246,13 +261,15 @@ int max_files;
 		return;
 
 	struct FileName *fnames;
-	fnames = (struct FileName *) malloc ( sizeof(struct FileName) * (max_files+1) );
+	fnames = (struct FileName *) calloc ( max_files+1, sizeof(struct FileName) * (max_files+1) );
 	int err;
 	int n_file = 0;
 	if (dirname) {
 		err = read_files_from_dir(dirname, fnames, max_files+1, &n_file);
-		if (err)
+		if (err) {
+			freeFileName(fnames, max_files+1);
 			return;
+		}
 
 		qsort(fnames, n_file, sizeof(struct FileName), compar_FileName);
 
@@ -268,6 +285,7 @@ int max_files;
 		f = fopen(listname, "r");
 		if (f == NULL) {
 			fprintf(stderr, "error: cannot read file %s\n", listname);
+			freeFileName(fnames, max_files+1);
 			exit(1);
 		}
 		int count = 0;
@@ -314,6 +332,8 @@ int max_files;
 	tptr = (Tlsh **) malloc ( sizeof(Tlsh *) * (max_files+1) );
 	if (n_file > max_files) {
 		fprintf(stderr, "error: too many files n_file=%d max_files=%d\n", n_file, max_files);
+		free(tptr);
+		freeFileName(fnames, max_files+1);
 		return;
 	}
 
@@ -325,7 +345,7 @@ int max_files;
 			err = th->fromTlshStr(fnames[ti].tlsh);
 			if (err) {
 				fprintf(stderr, "warning: cannot read TLSH code %s\n", fnames[ti].name);
-				tptr[ti] = NULL;
+				delete th;
 			} else {
 				tptr[ti] = th;
 			}
@@ -376,6 +396,7 @@ int max_files;
 			comp_th = NULL;
 		}
 		if (comp_th == NULL) {
+			freeFileName(fnames, max_files+1);
 			exit(1);
 		}
 	}
@@ -417,6 +438,18 @@ int max_files;
 			}
 		}
 	}
+
+    // free allocated memory
+	for (int ti=0; ti<n_file; ti++) {
+		if (tptr[ti] != NULL) {
+			delete tptr[ti];
+		}
+	}
+	if (comp_th != NULL) {
+		delete comp_th;
+	}
+	free(tptr);
+	freeFileName(fnames, max_files+1);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
