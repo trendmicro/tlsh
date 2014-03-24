@@ -57,6 +57,9 @@ public:
     /* validate TrendLSH string and reset the hash according to it */
     int fromTlshStr(const char* str);
 
+    /* Return the version information used to build this library */
+    static const char *version();
+
     // operators
     bool operator==(const Tlsh& other) const;
     bool operator!=(const Tlsh& other) const;

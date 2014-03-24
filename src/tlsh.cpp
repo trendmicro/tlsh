@@ -15,6 +15,8 @@
  */
 
 #include "tlsh.h"
+#include "stdio.h"
+#include "version.h"
 #include <errno.h>
 #include <string.h>
 
@@ -27,6 +29,14 @@ Tlsh::Tlsh()
 
 Tlsh::~Tlsh()
 {
+}
+
+const char *Tlsh::version()
+{
+    static char versionBuf[256];
+    if (versionBuf[0] == '\0')
+        snprintf(versionBuf, sizeof(versionBuf), "%d.%d.%d %s %s", VERSION_MAJOR, VERSION_MINOR, VERSION_PATCH, TLSH_HASH, TLSH_CHECKSUM);
+    return versionBuf;
 }
 
 void Tlsh::update(const unsigned char* data, unsigned int len)

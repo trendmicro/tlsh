@@ -44,6 +44,14 @@ endif()
 file(REMOVE VERSION)
 file(WRITE VERSION 
   "TLSH version: ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH} ${TLSH_HASH}, ${TLSH_CHECKSUM}\n")
+  
+file(REMOVE include/version.h)
+file(WRITE include/version.h
+  "#define VERSION_MAJOR ${VERSION_MAJOR}\n"
+  "#define VERSION_MINOR ${VERSION_MINOR}\n"
+  "#define VERSION_PATCH ${VERSION_PATCH}\n"
+  "#define TLSH_HASH \"${TLSH_HASH}\"\n"
+  "#define TLSH_CHECKSUM \"${TLSH_CHECKSUM}\"\n")
 
 if (CMAKE_BUILD_TYPE STREQUAL Debug)
     set(BUILD_POSTFIX "_d")
