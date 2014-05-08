@@ -25,8 +25,13 @@
 #include <stdlib.h>
 #include <string.h>
 
+#ifdef WINDOWS
+#include <WinFunctions.h>
+#else
 // for directory processing on Unix / Linux
 #include <dirent.h>
+#endif
+
 #include <errno.h>
 
 #include "tlsh.h"
@@ -68,19 +73,28 @@ static int read_file_eval_tlsh(char *fname, Tlsh *th, int show_details)
 	///////////////////////////////////////
 	// 3. read the file
 	///////////////////////////////////////
+#ifdef WINDOWS
+	// Handle differently for Windows because the fread function in msvcr80.dll has a bug
+	// and it does not always read the entire file.
+	if (!read_file_win(fname, sizefile, data)) {
+		free(data);
+		return(ERROR_READING_FILE);
+	}
+#else
 	fd = fopen(fname, "r");
 	if (fd==NULL) {
 		free(data);
 		return(ERROR_READING_FILE);
 	}
-	int offset = 0;
-	ret = 0;
-	while(offset<sizefile)
-	{
-		ret = fread(data+offset, sizeof(unsigned char), sizefile, fd);
-		offset += ret;
-	}
+
+	ret = fread(data, sizeof(unsigned char), sizefile, fd);
 	fclose(fd);
+
+	if (ret != sizefile) {
+		fprintf(stderr, "fread %d bytes from %s failed: only %d bytes read\n", sizefile, fname, ret);
+		return(ERROR_READING_FILE);
+	}
+#endif
 
 	///////////////////////////////////////
 	// 4. calculate the th

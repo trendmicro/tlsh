@@ -128,3 +128,9 @@ Changes
         results.
 3.1.3 - Updated tlsh_util.h, tlsh_impl.cpp, tlsh_util.cpp on checksum
       - Updated destroy_refersh_exp.sh and Testing/exp results
+3.2.0 - Add Visual Studio 2005 project and solution files to enable build on Windows environment
+      - Added files WinFunctions.h and .cpp to handle code changes needed for Windows build.
+      - Modified several unit test expected output files to remove error messages, to allow 
+        the running of unittests on Windows under cygwin.  This was caused by the opposite order 
+        in which stdout and stderr are written when stderr is redirected to stdout as 2>&1.  Also
+        modified test.sh to write stderr to /dev/null

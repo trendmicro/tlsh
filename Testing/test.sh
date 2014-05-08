@@ -96,13 +96,15 @@ echo
 echo "test 3"
 echo
 
+# note that test 3 will output the following error, so write stderr to /dev/null, so it will not be seen.
+#   warning: cannot read TLSH code ../Testing/example_data/BookingBrochure.txt
 if test $XLEN = "xlen"
 then
 echo "../bin/tlsh_unittest -xlen -l $TMP/example_data.out -c ../Testing/example_data/website_course_descriptors06-07.txt > $TMP/example_data.scores.2"
-      ../bin/tlsh_unittest -xlen -l $TMP/example_data.out -c ../Testing/example_data/website_course_descriptors06-07.txt > $TMP/example_data.scores.2 2>&1
+      ../bin/tlsh_unittest -xlen -l $TMP/example_data.out -c ../Testing/example_data/website_course_descriptors06-07.txt > $TMP/example_data.scores.2 2>/dev/null
 else
 echo "../bin/tlsh_unittest -l $TMP/example_data.out -c ../Testing/example_data/website_course_descriptors06-07.txt > $TMP/example_data.scores.2"
-      ../bin/tlsh_unittest -l $TMP/example_data.out -c ../Testing/example_data/website_course_descriptors06-07.txt > $TMP/example_data.scores.2 2>&1
+      ../bin/tlsh_unittest -l $TMP/example_data.out -c ../Testing/example_data/website_course_descriptors06-07.txt > $TMP/example_data.scores.2 2>/dev/null
 fi
 
 diffc=`diff --ignore-all-space $TMP/example_data.scores.2 exp/example_data.$HASH.$CHKSUM.$XLEN.scores.2_EXP | wc -l`
@@ -112,6 +114,8 @@ then
         popd > /dev/null
 	exit 3
 fi
+
+echo "passed"
 
 ########################################################
 # Test 4
@@ -124,18 +128,20 @@ echo "test $testnum"
 echo 
 if [ $XLEN = "xlen" ]; then
 echo "../bin/tlsh_unittest -xref -xlen -r ../Testing/example_data $TMP/example_data.xref.scores"
-      ../bin/tlsh_unittest -xref -xlen -r ../Testing/example_data > $TMP/example_data.xref.scores 2>&1
+      ../bin/tlsh_unittest -xref -xlen -r ../Testing/example_data > $TMP/example_data.xref.scores 2>/dev/null
 else
 echo "../bin/tlsh_unittest -xref -r ../Testing/example_data $TMP/example_data.xref.scores"
-      ../bin/tlsh_unittest -xref -r ../Testing/example_data > $TMP/example_data.xref.scores 2>&1
+      ../bin/tlsh_unittest -xref -r ../Testing/example_data > $TMP/example_data.xref.scores 2>/dev/null
 fi
 
-diff --ignore-all-space $TMP/example_data.xref.scores exp/example_data.$HASH.$CHKSUM.$XLEN.xref.scores_EXP > /dev/null 2>&1
+diff --ignore-all-space $TMP/example_data.xref.scores exp/example_data.$HASH.$CHKSUM.$XLEN.xref.scores_EXP > /dev/null 2>/dev/null
 if [ $? -ne 0 ]; then
 	echoerr "error: ($testnum), diff $TMP/example_data.xref.scores exp/example_data.$HASH.$CHKSUM.$XLEN.xref.scores_EXP"
         popd > /dev/null
 	exit $testnum
 fi
+
+echo "passed"
 
 ########################################################
 # Test 5
@@ -145,16 +151,18 @@ testnum=$(($testnum + 1))
 echo
 echo "test $testnum"
 echo
+# note that test 5 will output the following error, so write stderr to /dev/null, so it will not be seen.
+#   warning: cannot read TLSH code ../Testing/example_data/BookingBrochure.txt
 
 if [ $XLEN = "xlen" ]; then
 echo "../bin/tlsh_unittest -T 201 -xlen -l $TMP/example_data.out -c ../Testing/example_data/website_course_descriptors06-07.txt > $TMP/example_data.scores.2.T-201"
-      ../bin/tlsh_unittest -T 201 -xlen -l $TMP/example_data.out -c ../Testing/example_data/website_course_descriptors06-07.txt > $TMP/example_data.scores.2.T-201 2>&1
+      ../bin/tlsh_unittest -T 201 -xlen -l $TMP/example_data.out -c ../Testing/example_data/website_course_descriptors06-07.txt > $TMP/example_data.scores.2.T-201 2>/dev/null
 else
 echo "../bin/tlsh_unittest -T 201 -l $TMP/example_data.out -c ../Testing/example_data/website_course_descriptors06-07.txt > $TMP/example_data.scores.2.T-201"
-      ../bin/tlsh_unittest -T 201 -l $TMP/example_data.out -c ../Testing/example_data/website_course_descriptors06-07.txt > $TMP/example_data.scores.2.T-201 2>&1
+      ../bin/tlsh_unittest -T 201 -l $TMP/example_data.out -c ../Testing/example_data/website_course_descriptors06-07.txt > $TMP/example_data.scores.2.T-201 2>/dev/null
 fi
 
-diff --ignore-all-space $TMP/example_data.scores.2.T-201 exp/example_data.$HASH.$CHKSUM.$XLEN.scores.2.T-201_EXP > /dev/null 2>&1
+diff --ignore-all-space $TMP/example_data.scores.2.T-201 exp/example_data.$HASH.$CHKSUM.$XLEN.scores.2.T-201_EXP > /dev/null 2>/dev/null
 if [ $? -ne 0 ]; then
 	echoerr "error: ($testnum) diff $TMP/example_data.scores.2.T-201 exp/example_data.$HASH.$CHKSUM.$XLEN.scores.2.T-201_EXP"
         popd > /dev/null

@@ -27,7 +27,7 @@
 
 #include "tlsh_impl.h"
 
-class Tlsh{
+class TLSH_API Tlsh{
 
 public:
     Tlsh();

@@ -14,6 +14,12 @@
  * limitations under the License.
  */
 
+#ifdef WINDOWS
+#include <WinFunctions.h>
+#else 
+#define TLSH_API
+#endif
+
 #ifndef _TLSH_IMPL_H
 #define _TLSH_IMPL_H
     
@@ -47,7 +53,7 @@
 
 #define TLSH_STRING_BUFFER_LEN TLSH_STRING_LEN + 1
 
-class TlshImpl
+class TLSH_API TlshImpl
 {
 public:
     TlshImpl();
