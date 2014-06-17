@@ -511,7 +511,7 @@ static void usage(const char *fullPathName)
 	printf("  To calculate the distance between two TLSH digest values, run the command:\n");
 	printf("     %s -c <TLSH digest 1> -d <TLSH digest 2>\n", pgmName);
 	printf("\n");
-	printf("  To calculate the TLSH digest values for every file in a directory – this can create the input for the –l option\n");
+	printf("  To calculate the TLSH digest values for every file in a directory - this can create the input for the -l option\n");
 	printf("     %s -r <dir>\n", pgmName);
 	printf("\n");
 	printf("  To get the distance between a reference TLSH digest value, and a list of TLSH digest values in a file:\n");
