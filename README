@@ -132,12 +132,12 @@ Changes
 3.2.0 - Add Visual Studio 2005 project and solution files to enable build on Windows 
         environment
       - Added files WinFunctions.h and .cpp to handle code changes needed for Windows 
-	    build.
+        build.
       - Modified several unit test expected output files to remove error messages, to 
-	    allow the running of unittests on Windows under cygwin.  This was caused by 
-		the opposite order in which stdout and stderr are written when stderr is 
-		redirected to stdout as 2>&1.  Also modified test.sh to write stderr to 
-		/dev/null
+        allow the running of unittests on Windows under cygwin.  This was caused by 
+        the opposite order in which stdout and stderr are written when stderr is 
+        redirected to stdout as 2>&1.  Also modified test.sh to write stderr to 
+        /dev/null
       - Move rand_tags executable from tlsh_forest project to tlsh, to reduce the 
-	    dependencies of the tlsh ROC analysis project, which depends upon 
-		tlsh_unittest and rand_tags.
+        dependencies of the tlsh ROC analysis project, which depends upon 
+        tlsh_unittest and rand_tags.
