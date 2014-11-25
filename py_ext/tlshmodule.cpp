@@ -74,16 +74,42 @@ static PyMethodDef tlsh_methods[] =
 };
 
 // Initializes the module
-PyMODINIT_FUNC inittlsh(void)
-{
-	PyObject *module = Py_InitModule3("tlsh", 
-                                    tlsh_methods, 
-                                    tlsh_doc);
-	PyModule_AddStringConstant(module, 
-                             "__version__", 
-                             TLSH_VERSION);
-	PyModule_AddStringConstant(module,
-                             "__author__",
-                             AUTHOR);
-}
+#if PY_MAJOR_VERSION >= 3
+    static struct PyModuleDef moduledef = {
+            PyModuleDef_HEAD_INIT,
+            "tlsh",     /* m_name */
+            tlsh_doc,  /* m_doc */
+            -1,                  /* m_size */
+            tlsh_methods,    /* m_methods */
+            NULL,                /* m_reload */
+            NULL,                /* m_traverse */
+            NULL,                /* m_clear */
+            NULL,                /* m_free */
+        };
+    
+    PyMODINIT_FUNC PyInit_tlsh(void)
+    {
+        PyObject *module = PyModule_Create(&moduledef);
+        PyModule_AddStringConstant(module,
+        "__version__",
+        TLSH_VERSION);
+        PyModule_AddStringConstant(module,
+        "__author__",
+        AUTHOR);
+        return module;
+    }
+#else
 
+    PyMODINIT_FUNC inittlsh(void)
+    {
+        PyObject *module = Py_InitModule3("tlsh",
+        tlsh_methods,
+        tlsh_doc);
+        PyModule_AddStringConstant(module,
+        "__version__",
+        TLSH_VERSION);
+        PyModule_AddStringConstant(module,
+        "__author__",
+        AUTHOR);
+    }
+#endif
