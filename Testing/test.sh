@@ -6,8 +6,10 @@ BASEDIR=$(dirname $0)
 pushd $BASEDIR > /dev/null
 
 TMP="tmp"
-HASH=`../bin/tlsh_version | head -1 | cut -f1`
-CHKSUM=`../bin/tlsh_version | tail -1 | cut -f1`
+HASH=`../test/tlsh_version | head -1 | cut -f1`
+CHKSUM=`../test/tlsh_version | tail -1 | cut -f1`
+echo "HASH is $HASH"
+echo "CHKSUM is $CHKSUM"
 
 if test ! -f ../bin/tlsh_unittest
 then

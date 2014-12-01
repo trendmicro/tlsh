@@ -1,14 +1,86 @@
-TLSH
+=======================================
+TLSH - Trend Micro Locality Sensitive Hash
 =======================================
 
 TLSH is a fuzzy matching library. Given a binary object, it generates a hash 
 value. The hash values can be used for similarity comparison. Similary 
 objects have similar hash values. Similar hash values signal similar objects.
 
-The output hash is 35 bytes long. The first 3 bytes are used to capture the 
-global similarity. The last 32 bytes are used to capture the local similarity.
+The computed hash is 35 bytes long (output as 70 hexidecimal charactes). The 
+first 3 bytes are used to capture the information about the file as a whole 
+(length, ...), while the last 32 bytes are used to capture information about 
+incremental parts of the file.  (Note that the length of the hash can be 
+increased by changing build parameters described below in CMakeLists.txt, 
+which will increase the information stored in the hash, and thus its accuracy 
+in predicting similarities between files.)
 
-Here are the design choices.
+Building TLSH (see below) will create a static library in the lib directory,
+and the tlsh_unittest executable, which links to the static library, in the bin
+directory.  The library has functionality to generate the hash value from a given 
+file, and to compute the similarity between two hash values.
+
+tlsh_unittest is a utility for generating TLSH hash values and comparing TLSH
+hash values to determine similarity.  Run it with no parameters for detailed usage.
+
+=======================================
+Downloading TLSH
+=======================================
+
+Download TLSH as follows:
+
+  wget https://github.com/trendmicro/tlsh/archive/master.zip -O master.zip
+  unzip master.zip
+  cd tlsh-master
+ OR
+  git clone git://github.com/trendmicro/tlsh.git
+  cd tlsh
+  git checkout master
+
+=======================================
+Building TLSH
+=======================================
+
+Edit CMakeLists.txt to build TLSH with different options.
+
+  TLSH_BUCKETS - determines using 128 or 256 buckets, more is better
+  TLSH_CHECKSUM_1B - determines checksum length, longer means less collision
+
+To build on Linux 
+
+  *********************************** NOTE *************************************** 
+  Building TLSH on Linux depends upon cmake to create the Makefile and then make the 
+  project, so the build will fail if cmake is not installed.
+  ********************************************************************************
+
+  execute: make.sh 
+
+To build on Visual Studio on Windows: 
+
+  Use the version specific tlsh solution files (tlsh.VC2005.sln, tlsh.VC2008.sln, ...) 
+  under the Windows directory
+
+See include/tlsh.h for the tlsh library interface and tlsh_unittest.cpp and 
+simple_unittest.cpp under the test directory for example code.
+
+Python extension
+
+  cd py_ext
+  python setup.py build
+  python setup.py install (sudo, run as root or administrator)
+
+  import tlsh
+  tlsh.hash(data)
+  tlsh.diff(h1, h2)
+  tlsh.diffxlen(h1, h2)
+  - the diffxlen function removes the file length component of the tlsh header from
+    the comparison.  If a file with a repeating pattern is compared to a file 
+    with only a single instance of the pattern, then the difference will be increased
+    if the file lenght is included.  But by using the diffxlen function, the file
+    length will be removed from consideration.
+
+=======================================
+Design Choices
+=======================================
 * To improve comparison accuracy, TLSH tracks counting bucket height 
   distribution in quartiles. Bigger quartile difference results in higher 
   difference score.
@@ -28,6 +100,7 @@ TLSH similarity is expressed as a difference score.
   For the 134 characters hash, a score of 400 or higher means the objects are
   very different.
 
+=======================================
 Publications
 =======================================
   Jonathan Oliver, Chun Cheng and Yanggui Chen, “TLSH - A Locality Sensitive Hash”
@@ -35,67 +108,6 @@ Publications
   https://drive.google.com/file/d/0B6FS3SVQ1i0GTXk5eDl3Y29QWlk/edit?usp=sharing
   (included in distribution as TLSH_CTC_final.pdf)
     
-Get Started
-=======================================
-
-Obtain TLSH
-
-  wget https://github.com/trendmicro/tlsh/archive/master.zip -O master.zip
-  unzip master.zip
-  cd tlsh-master
- OR
-  git clone git://github.com/trendmicro/tlsh.git
-  cd tlsh
-  git checkout master
-
-************************************* NOTE *************************************
-    TLSH depends upon cmake to create the Makefile and then make the project,
-    so the build will fail if cmake is not installed.
-********************************************************************************
-
-A static library will be created under the "lib" directory. Look under the "test" 
-directory for example code.
-
-Edit CMakeLists.txt to build TLSH with different options.
-
-  TLSH_BUCKETS - determines using 128 or 256 buckets, more is better
-  TLSH_CHECKSUM_1B - determines checksum length, longer means less collision
-
-To build on Linux, Cygwin:
-
-  execute: make.sh 
-
-To build on Visual Studio on Windows
-
-  mkdir build
-  cd build
-  "c:\program files (x86)\cmake 2.8\bin\cmake" ..
-  Open TLSH.sln in Visual Studio
-  Build Solution
-  Note: tlsh_unittest is not build because it has not been updated for Windows
-
-Python extension
-
-  Prerequisite:
-    Install python 2.7 or above. For Windows, install 32 bits version.
-    If you have Visual Studio 2010 installed, execute
-      SET VS90COMNTOOLS=%VS100COMNTOOLS%
-    or with Visual Studio 2012 installed
-      SET VS90COMNTOOLS=%VS110COMNTOOLS%
-
-  cd py_ext
-  python setup.py build
-  python setup.py install (sudo, run as root or administrator)
-
-  import tlsh
-  tlsh.hash(data)
-  tlsh.diff(h1, h2)
-  tlsh.diffxlen(h1, h2)
-
-Create source tarball
-
-  make package_source
-  
 Changes
 =======================================
 
@@ -129,8 +141,8 @@ Changes
         results.
 3.1.3 - Updated tlsh_util.h, tlsh_impl.cpp, tlsh_util.cpp on checksum
       - Updated destroy_refersh_exp.sh and Testing/exp results
-3.2.0 - Add Visual Studio 2005 project and solution files to enable build on Windows 
-        environment
+3.2.0 - Add Visual Studio 2005 and 2008 project and solution files to enable build on 
+        Windows environment
       - Added files WinFunctions.h and .cpp to handle code changes needed for Windows 
         build.
       - Modified several unit test expected output files to remove error messages, to 
@@ -141,3 +153,7 @@ Changes
       - Move rand_tags executable from tlsh_forest project to tlsh, to reduce the 
         dependencies of the tlsh ROC analysis project, which depends upon 
         tlsh_unittest and rand_tags.
+      - Remove simple_unittest and tlsh_version from bin directory as these 
+        executables are for internal testing and source code documentation, and do 
+	not need to be exported.  
+      - Add -version flag to tlsh_unittest to get the version of the tlsh library.
