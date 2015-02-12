@@ -22,6 +22,8 @@ file, and to compute the similarity between two hash values.
 tlsh_unittest is a utility for generating TLSH hash values and comparing TLSH
 hash values to determine similarity.  Run it with no parameters for detailed usage.
 
+TLSH has been ported to Java, which can be found at https://github.com/triplecheck/TLSH
+
 =======================================
 Downloading TLSH
 =======================================
@@ -155,5 +157,5 @@ Changes
         tlsh_unittest and rand_tags.
       - Remove simple_unittest and tlsh_version from bin directory as these 
         executables are for internal testing and source code documentation, and do 
-	not need to be exported.  
+        not need to be exported.  
       - Add -version flag to tlsh_unittest to get the version of the tlsh library.
