@@ -20,7 +20,7 @@ static char tlsh_diffxlen_doc[] =
 static PyObject* hash_py(PyObject* self, PyObject* args) {
   unsigned char* pBuffer;
   int len;
-  if (!PyArg_ParseTuple(args, "t#", &pBuffer, &len)) {
+  if (!PyArg_ParseTuple(args, "s#", &pBuffer, &len)) {
     return NULL;
   }
   
