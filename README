@@ -2,9 +2,12 @@
 TLSH - Trend Micro Locality Sensitive Hash
 =======================================
 
-TLSH is a fuzzy matching library. Given a binary object, it generates a hash 
-value. The hash values can be used for similarity comparison. Similary 
-objects have similar hash values. Similar hash values signal similar objects.
+TLSH is a fuzzy matching library. Given a byte stream with a minimum length 
+of 512 bytes, TLSH generates a hash value which can be used for similarity 
+comparisons.  Similar objects will have similar hash values which allows for 
+the detection of similar objects by comparing their hash values.  Note that 
+the byte stream should have a sufficient amount of complexity.  For example, 
+a byte stream of identical bytes will not generate a hash value.
 
 The computed hash is 35 bytes long (output as 70 hexidecimal charactes). The 
 first 3 bytes are used to capture the information about the file as a whole 
@@ -72,6 +75,7 @@ Python extension
 
   import tlsh
   tlsh.hash(data)
+  - note that the data must contain at least 512 bytes to generate a hash value.
   tlsh.diff(h1, h2)
   tlsh.diffxlen(h1, h2)
   - the diffxlen function removes the file length component of the tlsh header from
@@ -159,3 +163,5 @@ Changes
         executables are for internal testing and source code documentation, and do 
         not need to be exported.  
       - Add -version flag to tlsh_unittest to get the version of the tlsh library.
+3.2.1 - Pickup fix to hash_py() in py_ext/tlshmodule.cpp 
+        (commit da5370bcfdd40dd6a33c877ee87fe3866188cf2d)

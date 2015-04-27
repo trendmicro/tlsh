@@ -198,8 +198,8 @@ int TlshImpl::fromTlshStr(const char* str)
 const char* TlshImpl::hash(char *buffer, unsigned int bufSize)
 {
     if (bufSize < TLSH_STRING_LEN + 1) {
-        // TODO: log error
-        return NULL;
+        strncpy(buffer, "", bufSize);
+        return buffer;
     }
     if (this->lsh_code_valid == false) {
         strncpy(buffer, "", bufSize);
