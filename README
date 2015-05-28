@@ -3,7 +3,8 @@ TLSH - Trend Micro Locality Sensitive Hash
 =======================================
 
 TLSH is a fuzzy matching library. Given a byte stream with a minimum length 
-of 512 bytes, TLSH generates a hash value which can be used for similarity 
+of 512 bytes (and a minimum amount of randomness - see note in Python 
+extension below), TLSH generates a hash value which can be used for similarity 
 comparisons.  Similar objects will have similar hash values which allows for 
 the detection of similar objects by comparing their hash values.  Note that 
 the byte stream should have a sufficient amount of complexity.  For example, 
@@ -75,9 +76,10 @@ Python extension
 
   import tlsh
   tlsh.hash(data)
-  - note that the data must contain at least 512 bytes to generate a hash value and that it must
-    have a certain amount of randomness. For example, tlsh.hash(str(os.urandom(512))), should
-    always generate a hash.  To get the hash value of a file, try tlsh.hash(open(file, 'rb').read())
+  - note that the data must contain at least 512 bytes to generate a hash value and that
+    it must have a certain amount of randomness. 
+	For example, tlsh.hash(str(os.urandom(512))), should always generate a hash.  
+	To get the hash value of a file, try tlsh.hash(open(file, 'rb').read())
     
   tlsh.diff(h1, h2)
   tlsh.diffxlen(h1, h2)

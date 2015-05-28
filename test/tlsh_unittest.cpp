@@ -105,7 +105,7 @@ static int read_file_eval_tlsh(char *fname, Tlsh *th, int show_details)
 	// 5. clean up and return
 	///////////////////////////////////////
 	free(data);
-	if (th->getHash() == NULL) {
+	if (th->getHash() == NULL || th->getHash()[0] == '\0') {
 		return(WARNING_CANNOT_HASH);
 	}
 	if (show_details >= 1) {

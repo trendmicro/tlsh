@@ -58,9 +58,8 @@ file(WRITE include/version.h
   "#define TLSH_CHECKSUM \"${TLSH_CHECKSUM}\"\n")
 
 if (CMAKE_BUILD_TYPE STREQUAL Debug)
-    set(BUILD_POSTFIX "_d")
+    set(CMAKE_CXX_FLAGS "-g")
 else(CMAKE_BUILD_TYPE STREQUAL Debug)
-    set(BUILD_POSTFIX "")
     if(CMAKE_COMPILER_IS_GNUCXX)
         set(CMAKE_CXX_FLAGS "-O2")        ## Optimize
     endif()
