@@ -146,9 +146,9 @@ struct dirent   *dit;
 	int n_file = 0;
 	while (dit != NULL) {
 		char tmp_fname[2000];
-		strncpy(tmp_fname,	dirname,	sizeof(tmp_fname));
-		strncat(tmp_fname,	"/",		sizeof(tmp_fname));
-		strncat(tmp_fname,	dit->d_name,	sizeof(tmp_fname));
+		strncpy(tmp_fname,	dirname, sizeof(tmp_fname)-1);
+		strncat(tmp_fname,	"/", sizeof(tmp_fname)-1);
+		strncat(tmp_fname,	dit->d_name, sizeof(tmp_fname)-1);
 		if (strlen(tmp_fname) < sizeof(tmp_fname) - 2) {
 			if (is_dir(tmp_fname) ) {
 				if ((strcmp(dit->d_name, ".") == 0) || (strcmp(dit->d_name, "..") == 0)) {
@@ -180,9 +180,9 @@ struct dirent   *dit;
 	dit = readdir(dip);
 	while (dit != NULL) {
 		char tmp_fname[2000];
-		strncpy(tmp_fname,	dirname,	sizeof(tmp_fname));
-		strncat(tmp_fname,	"/",		sizeof(tmp_fname));
-		strncat(tmp_fname,	dit->d_name,	sizeof(tmp_fname));
+		strncpy(tmp_fname,	dirname, sizeof(tmp_fname)-1);
+		strncat(tmp_fname,	"/", sizeof(tmp_fname)-1);
+		strncat(tmp_fname,	dit->d_name, sizeof(tmp_fname)-1);
 		// -2 for safety
 		if (strlen(tmp_fname) < sizeof(tmp_fname) - 2) {
 			if (is_dir(tmp_fname) ) {
