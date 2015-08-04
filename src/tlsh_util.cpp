@@ -40,6 +40,7 @@ static unsigned char v_table[256] = {
     51, 65, 28, 144, 254, 221, 93, 189, 194, 139, 112, 43, 71, 109, 184, 209
 };
 
+// Compile and run gen_arr2.cpp to generate bit_pairs_diff_table
 static unsigned char bit_pairs_diff_table[][256] = {
 {
 0, 1, 2, 6, 1, 2, 3, 7, 2, 3, 4, 8, 6, 7, 8, 12, 

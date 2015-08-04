@@ -62,4 +62,10 @@ int main(int argc, char *argv[])
 	printf("difference (same strings) = %d\n", t1.totalDiff(&t1) );
 	printf("difference (with len) = %d\n", t1.totalDiff(&t2) );
 	printf("difference (without len) = %d\n", t1.totalDiff(&t2, false) );
+
+	Tlsh t3, t4;
+	t3.fromTlshStr(t1.getHash());
+	t4.fromTlshStr(t2.getHash());
+	printf("difference = %d\n", t3.totalDiff(&t4) );
+
 }

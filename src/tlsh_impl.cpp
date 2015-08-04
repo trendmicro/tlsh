@@ -176,23 +176,24 @@ int TlshImpl::fromTlshStr(const char* str)
         {
             return 1;
         }
-        this->reset();
-	
-	lsh_bin_struct tmp;
-	from_hex( str, TLSH_STRING_LEN, (unsigned char*)&tmp );
-	
-        // Reconstruct checksum, Qrations & lvalue
-        for (int k = 0; k < TLSH_CHECKSUM_LEN; k++) {    
-	  this->lsh_bin.checksum[k] = swap_byte(tmp.checksum[k]);
-        }
-	this->lsh_bin.Lvalue = swap_byte( tmp.Lvalue );
-	this->lsh_bin.Q.QB = swap_byte(tmp.Q.QB);
-	for( int i=0; i < CODE_SIZE; i++ ){
-		this->lsh_bin.tmp_code[i] = (tmp.tmp_code[CODE_SIZE-1-i]);
-	}
-	this->lsh_code_valid = true;   
 
-	return 0;
+    this->reset();
+    
+    lsh_bin_struct tmp;
+    from_hex( str, TLSH_STRING_LEN, (unsigned char*)&tmp );
+    
+    // Reconstruct checksum, Qrations & lvalue
+    for (int k = 0; k < TLSH_CHECKSUM_LEN; k++) {    
+        this->lsh_bin.checksum[k] = swap_byte(tmp.checksum[k]);
+    }
+    this->lsh_bin.Lvalue = swap_byte( tmp.Lvalue );
+    this->lsh_bin.Q.QB = swap_byte(tmp.Q.QB);
+    for( int i=0; i < CODE_SIZE; i++ ){
+        this->lsh_bin.tmp_code[i] = (tmp.tmp_code[CODE_SIZE-1-i]);
+    }
+    this->lsh_code_valid = true;   
+
+    return 0;
 }
 
 const char* TlshImpl::hash(char *buffer, unsigned int bufSize)
@@ -276,7 +277,7 @@ int TlshImpl::totalDiff(const TlshImpl& other, bool len_diff) const
     
     diff += h_distance( CODE_SIZE, this->lsh_bin.tmp_code, other.lsh_bin.tmp_code );
 
-    return (diff - 1);
+    return (diff);
 }
 
 
