@@ -117,8 +117,8 @@ void TlshImpl::update(const unsigned char* data, unsigned int len)
 /* to signal the class there is no more data to be added */
 void TlshImpl::final() 
 {
-    // incoming data must more than or equal to 512 bytes
-    if (this->data_len < 512) {
+    // incoming data must more than or equal to MIN_DATA_LENGTH bytes
+    if (this->data_len < MIN_DATA_LENGTH) {
       // this->lsh_code be empty
       delete [] this->a_bucket; this->a_bucket = NULL;
       return;

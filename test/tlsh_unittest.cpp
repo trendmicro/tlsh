@@ -58,7 +58,7 @@ static int read_file_eval_tlsh(char *fname, Tlsh *th, int show_details)
 
 	fclose(fd);
 
-	if (sizefile < 512)
+	if (sizefile < MIN_DATA_LENGTH)
 		return(WARNING_FILE_TOO_SMALL);
 
 	///////////////////////////////////////
