@@ -170,4 +170,5 @@ Changes
       - Add -version flag to tlsh_unittest to get the version of the tlsh library.
 3.2.1 - Pickup fix to hash_py() in py_ext/tlshmodule.cpp 
         (commit da5370bcfdd40dd6a33c877ee87fe3866188cf2d)
-3.3   - Made the minimum data length = 256 for the C version
+3.3.0 - Made the minimum data length = 256 for the C version
+		https://www.blackhat.com/us-15/speakers/Sean-Park.html
