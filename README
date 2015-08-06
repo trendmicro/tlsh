@@ -78,8 +78,8 @@ Python extension
   tlsh.hash(data)
   - note that the data must contain at least 256 bytes to generate a hash value and that
     it must have a certain amount of randomness. 
-	For example, tlsh.hash(str(os.urandom(256))), should always generate a hash.  
-	To get the hash value of a file, try tlsh.hash(open(file, 'rb').read())
+    For example, tlsh.hash(str(os.urandom(256))), should always generate a hash.  
+    To get the hash value of a file, try tlsh.hash(open(file, 'rb').read())
     
   tlsh.diff(h1, h2)
   tlsh.diffxlen(h1, h2)
@@ -171,4 +171,7 @@ Changes
 3.2.1 - Pickup fix to hash_py() in py_ext/tlshmodule.cpp 
         (commit da5370bcfdd40dd6a33c877ee87fe3866188cf2d)
 3.3.0 - Made the minimum data length = 256 for the C version
-		https://www.blackhat.com/us-15/speakers/Sean-Park.html
+        https://www.blackhat.com/us-15/speakers/Sean-Park.html
+3.3.1 - Fixed bug introduced by commit 1a8f1c581c8b988ced683ff8e0a0f9c574058df4 
+        which caused a different hash value to be generated if there were multiple
+        calls to Tlsh::update as opposed to a single call to Tlsh::update.

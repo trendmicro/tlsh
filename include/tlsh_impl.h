@@ -70,6 +70,7 @@ public:
 
 private:
     unsigned int *a_bucket;  
+    unsigned char slide_window[SLIDING_WND_SIZE];
     unsigned int data_len;
     
     struct lsh_bin_struct {

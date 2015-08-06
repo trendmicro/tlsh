@@ -42,6 +42,7 @@ LOCAL_FUNCTION unsigned int partition(unsigned int * buf, unsigned int left, uns
 
 TlshImpl::TlshImpl() : a_bucket(NULL), data_len(0), lsh_code(NULL), lsh_code_valid(false)
 {
+    memset(this->slide_window, 0, sizeof this->slide_window);
     memset(&this->lsh_bin, 0, sizeof this->lsh_bin);
 }
 
@@ -54,6 +55,7 @@ TlshImpl::~TlshImpl()
 void TlshImpl::reset()
 {
     delete [] this->a_bucket; this->a_bucket = NULL;
+    memset(this->slide_window, 0, sizeof this->slide_window);
     delete [] this->lsh_code; this->lsh_code = NULL; 
     memset(&this->lsh_bin, 0, sizeof this->lsh_bin);
     this->data_len = 0;
@@ -73,10 +75,8 @@ void TlshImpl::update(const unsigned char* data, unsigned int len)
         memset(this->a_bucket, 0, sizeof(int)*BUCKETS);
     }
 
-    unsigned char slide_window[SLIDING_WND_SIZE];  
-    memset(slide_window, 0, sizeof(slide_window));
     for( unsigned int i=0; i<len; i++, fed_len++, j=RNG_IDX(j+1) ) {
-        slide_window[j] = data[i];
+        this->slide_window[j] = data[i];
         
         if ( fed_len >= 4 ) {
             //only calculate when input >= 5 bytes
@@ -87,26 +87,26 @@ void TlshImpl::update(const unsigned char* data, unsigned int len)
            
             for (int k = 0; k < TLSH_CHECKSUM_LEN; k++) {
                  if (k == 0) {
-                     this->lsh_bin.checksum[k] = b_mapping(0, slide_window[j], slide_window[j_1], this->lsh_bin.checksum[k]);
+                     this->lsh_bin.checksum[k] = b_mapping(0, this->slide_window[j], this->slide_window[j_1], this->lsh_bin.checksum[k]);
                  }
                  else {
                      // use calculated 1 byte checksums to expand the total checksum to 3 bytes
-                     this->lsh_bin.checksum[k] = b_mapping(this->lsh_bin.checksum[k-1], slide_window[j], slide_window[j_1], this->lsh_bin.checksum[k]);
+                     this->lsh_bin.checksum[k] = b_mapping(this->lsh_bin.checksum[k-1], this->slide_window[j], this->slide_window[j_1], this->lsh_bin.checksum[k]);
                  }
             }
 
             unsigned char r;
-            r = b_mapping(2, slide_window[j], slide_window[j_1], slide_window[j_2]);
+            r = b_mapping(2, this->slide_window[j], this->slide_window[j_1], this->slide_window[j_2]);
             this->a_bucket[r]++;
-            r = b_mapping(3, slide_window[j], slide_window[j_1], slide_window[j_3]);
+            r = b_mapping(3, this->slide_window[j], this->slide_window[j_1], this->slide_window[j_3]);
             this->a_bucket[r]++;
-            r = b_mapping(5, slide_window[j], slide_window[j_2], slide_window[j_3]);
+            r = b_mapping(5, this->slide_window[j], this->slide_window[j_2], this->slide_window[j_3]);
             this->a_bucket[r]++;
-            r = b_mapping(7, slide_window[j], slide_window[j_2], slide_window[j_4]);
+            r = b_mapping(7, this->slide_window[j], this->slide_window[j_2], this->slide_window[j_4]);
             this->a_bucket[r]++;
-            r = b_mapping(11, slide_window[j], slide_window[j_1], slide_window[j_4]);
+            r = b_mapping(11, this->slide_window[j], this->slide_window[j_1], this->slide_window[j_4]);
             this->a_bucket[r]++;
-            r = b_mapping(13, slide_window[j], slide_window[j_3], slide_window[j_4]);
+            r = b_mapping(13, this->slide_window[j], this->slide_window[j_3], this->slide_window[j_4]);
             this->a_bucket[r]++;
 
         }
