@@ -18,6 +18,13 @@ then
 	exit 127
 fi
 
+if test ! -f ../test/simple_unittest
+then
+	echoerr "error: (127), you must compile ../test/simple_unittest"
+        popd > /dev/null
+	exit 127
+fi
+
 if test ! -d tmp
 then
     mkdir tmp
@@ -177,5 +184,16 @@ echo "passed"
 
 runit 
 runit "-xlen"
+
+echo "Running simple_unittest"
+../test/simple_unittest > $TMP/simple_unittest.out
+diff --ignore-all-space $TMP/simple_unittest.out exp/simple_unittest_EXP > /dev/null 2>/dev/null
+if [ $? -ne 0 ]; then
+	echoerr "error: diff $TMP/simple_unittest.out exp/simple_unittest_EXP"
+        popd > /dev/null
+	exit -1
+fi
+
+echo "passed"
 
 popd > /dev/null
