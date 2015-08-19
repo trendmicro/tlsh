@@ -5,3 +5,5 @@ build/
 Testing/tmp
 test/simple_unittest
 test/tlsh_version
+VERSION
+include/version.h

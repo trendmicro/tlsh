@@ -58,7 +58,7 @@ static int read_file_eval_tlsh(char *fname, Tlsh *th, int show_details)
 
 	fclose(fd);
 
-	if (sizefile < 512)
+	if (sizefile < MIN_DATA_LENGTH)
 		return(WARNING_FILE_TOO_SMALL);
 
 	///////////////////////////////////////
@@ -146,10 +146,8 @@ struct dirent   *dit;
 	int n_file = 0;
 	while (dit != NULL) {
 		char tmp_fname[2000];
-		strncpy(tmp_fname,	dirname,	sizeof(tmp_fname));
-		strncat(tmp_fname,	"/",		sizeof(tmp_fname));
-		strncat(tmp_fname,	dit->d_name,	sizeof(tmp_fname));
-		if (strlen(tmp_fname) < sizeof(tmp_fname) - 2) {
+		int len = snprintf(tmp_fname,	sizeof(tmp_fname)-1, "%s/%s", dirname, dit->d_name);
+		if (len < sizeof(tmp_fname) - 2) {
 			if (is_dir(tmp_fname) ) {
 				if ((strcmp(dit->d_name, ".") == 0) || (strcmp(dit->d_name, "..") == 0)) {
 					;
@@ -180,11 +178,9 @@ struct dirent   *dit;
 	dit = readdir(dip);
 	while (dit != NULL) {
 		char tmp_fname[2000];
-		strncpy(tmp_fname,	dirname,	sizeof(tmp_fname));
-		strncat(tmp_fname,	"/",		sizeof(tmp_fname));
-		strncat(tmp_fname,	dit->d_name,	sizeof(tmp_fname));
+		int len = snprintf(tmp_fname,	sizeof(tmp_fname)-1, "%s/%s", dirname, dit->d_name);
 		// -2 for safety
-		if (strlen(tmp_fname) < sizeof(tmp_fname) - 2) {
+		if (len < sizeof(tmp_fname) - 2) {
 			if (is_dir(tmp_fname) ) {
 				if ((strcmp(dit->d_name, ".") == 0) || (strcmp(dit->d_name, "..") == 0)) {
 					;

@@ -84,7 +84,7 @@ int Tlsh::totalDiff(Tlsh *other, bool len_diff)
     if ( this == other )
         return 0;
     else
-        return (impl.totalDiff(other->impl, len_diff)+1);
+        return (impl.totalDiff(other->impl, len_diff));
 }
 
 int Tlsh::fromTlshStr(const char* str)

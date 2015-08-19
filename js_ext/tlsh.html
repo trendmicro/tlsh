@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body>
+
+<p>TLSH simpletest demo:</p>
+<p id="tlsh_simple_test"></p>
+
+<script src="tlsh.js"> </script>
+
+
+<script type="text/javascript">
+
+/* 
+ *  Tester for tlsh.js.
+ *  Output to correspond to output from C++ executable, simple_test 
+ */
+
+var debug = false;
+document.getElementById("tlsh_simple_test").innerHTML  = "Output to correspond to output from the C++ executable, simple_test";
+document.getElementById("tlsh_simple_test").innerHTML += "<br>";
+document.getElementById("tlsh_simple_test").innerHTML += "<br>";
+
+/***************************************************************************************************
+ * Create str1 from 2 substrings
+ */
+var str_1_a = "This is a test for Lili Diao. This is a string. Hello Hello Hello ";
+var str_1_b = "OPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQ";
+var str_1 = str_1_a + str_1_b;
+debug && console.log("str1 = '"+str_1+"'");
+document.getElementById("tlsh_simple_test").innerHTML += "str1 = '" + str_1 + "'";
+document.getElementById("tlsh_simple_test").innerHTML += "<br>";
+
+/***************************************************************************************************
+ * Create Tlsh from str1
+ */
+var tlsh1 = new Tlsh();
+tlsh1.update(str_1, str_1.length+1); // str_1 includes NULL byte at end in simple_test.cpp, so add 1 to the length
+tlsh1.finale();
+
+/***************************************************************************************************
+ * Create str2 from 2 substrings
+ */
+var str_2_a = "This is a test for Jon Oliver. This is a string. Hello Hello Hello ";
+var str_2_b = "PQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHI";
+var str_2 = str_2_a + str_2_b;
+debug && console.log("str2 = '"+str_2+"'");
+document.getElementById("tlsh_simple_test").innerHTML += "str2 = '" + str_2 + "'";
+document.getElementById("tlsh_simple_test").innerHTML += "<br>";
+
+/***************************************************************************************************
+ * Create Tlsh from str2
+ */
+var tlsh2 = new Tlsh();
+tlsh2.update(str_2, str_2.length+1); // str_2 includes NULL byte at end in simple_test.cpp, so add 1 to the length
+tlsh2.finale();
+var hash2 = tlsh2.hash();
+
+/***************************************************************************************************
+ * Get differences (with and without length) and output.
+ */
+var hash1 = tlsh1.hash();
+var diff_same_str = tlsh1.totalDiff(tlsh1);
+var diff_with_len = tlsh1.totalDiff(tlsh2);
+var diff_without_len = tlsh1.totalDiff(tlsh2, false);
+
+debug && console.log("hash1 = "+hash1);
+debug && console.log("hash2 = "+hash2);
+debug && console.log("difference (same strings) = " + diff_same_str);
+debug && console.log("difference (with len) = " + diff_with_len);
+debug && console.log("difference (without len) = " + diff_without_len);
+
+document.getElementById("tlsh_simple_test").innerHTML += "hash1 = " + hash1;
+document.getElementById("tlsh_simple_test").innerHTML += "<br>";
+document.getElementById("tlsh_simple_test").innerHTML += "hash2 = " + hash2;
+document.getElementById("tlsh_simple_test").innerHTML += "<br>";
+document.getElementById("tlsh_simple_test").innerHTML += "difference (same strings) = " + diff_same_str;
+document.getElementById("tlsh_simple_test").innerHTML += "<br>";
+document.getElementById("tlsh_simple_test").innerHTML += "difference (with len) = " + diff_with_len;
+document.getElementById("tlsh_simple_test").innerHTML += "<br>";
+document.getElementById("tlsh_simple_test").innerHTML += "difference (without len) = " + diff_without_len;
+document.getElementById("tlsh_simple_test").innerHTML += "<br>";
+
+/***************************************************************************************************
+ * Create Tlsh from substrings of str1 and verify that the hash values are the same
+ */
+debug && console.log("Testing Tlsh with multiple update calls");
+document.getElementById("tlsh_simple_test").innerHTML += "Testing Tlsh with multiple update calls";
+document.getElementById("tlsh_simple_test").innerHTML += "<br>";
+var tlsh3 = new Tlsh();
+tlsh3.update(str_1_a);
+tlsh3.update(str_1_b, str_1_b.length+1);
+tlsh3.finale();
+var hash3 = tlsh3.hash();
+if (hash1 != hash3) {
+    document.getElementById("tlsh_simple_test").innerHTML  = "ERROR: tlsh1 != tlsh3";
+	throw("ERROR: tlsh1 != tlsh3");
+}
+debug && console.log("hash3 = " + hash4);
+document.getElementById("tlsh_simple_test").innerHTML += "hash3 = " + hash3;
+document.getElementById("tlsh_simple_test").innerHTML += "<br>";
+
+/***************************************************************************************************
+ * Create Tlsh from substrings of str2 and verify that the hash values are the same
+ */
+var tlsh4 = new Tlsh();
+tlsh4.update(str_2_a);
+tlsh4.finale(str_2_b, str_2_b.length + 1);
+var hash4 = tlsh4.hash();
+if (hash2 != hash4) {
+    document.getElementById("tlsh_simple_test").innerHTML  = "ERROR: tlsh2 != tlsh4";
+	throw("ERROR: tlsh2 != tlsh4");
+}
+debug && console.log("hash4 = " + hash4);
+document.getElementById("tlsh_simple_test").innerHTML += "hash4 = " + hash4;
+document.getElementById("tlsh_simple_test").innerHTML += "<br>";
+
+/***************************************************************************************************
+ * Create Tlsh fromTlshStr() method of hash1 and verify that the hash values are the same
+ */
+debug && console.log("Testing Tlsh.fromTlshStr()");
+debug && console.log("Recreating tlsh3 from "+hash1);
+document.getElementById("tlsh_simple_test").innerHTML += "Testing Tlsh.fromTlshStr()";
+document.getElementById("tlsh_simple_test").innerHTML += "<br>";
+document.getElementById("tlsh_simple_test").innerHTML += "Recreating tlsh3 from " + hash1;
+document.getElementById("tlsh_simple_test").innerHTML += "<br>";
+
+tlsh3.reset();
+tlsh3.fromTlshStr(hash1);
+hash3 = tlsh3.hash();
+if (hash1 != hash3) {
+    document.getElementById("tlsh_simple_test").innerHTML  = "ERROR: hash1 != tlsh3.hash()";
+	throw("ERROR: hash1 != tlsh3.hash()");
+}
+
+debug && console.log("hash3 = " + hash3);
+document.getElementById("tlsh_simple_test").innerHTML += "hash3 = " + hash3;
+document.getElementById("tlsh_simple_test").innerHTML += "<br>";
+
+debug && console.log("Recreating tlsh4 from "+hash1);
+document.getElementById("tlsh_simple_test").innerHTML += "Recreating tlsh4 from " + hash2;
+document.getElementById("tlsh_simple_test").innerHTML += "<br>";
+
+tlsh4.reset();
+tlsh4.fromTlshStr(hash2);
+debug && console.log("hash4 = " + hash4);
+document.getElementById("tlsh_simple_test").innerHTML += "hash4 = " + hash4;
+document.getElementById("tlsh_simple_test").innerHTML += "<br>";
+
+diff_with_len = tlsh3.totalDiff(tlsh4);
+diff_without_len = tlsh3.totalDiff(tlsh4, false);
+diff_same_str = tlsh3.totalDiff(tlsh3); 
+debug && console.log("difference (same strings) = " + diff_same_str);
+debug && console.log("difference (with len) = " + diff_with_len);
+debug && console.log("difference (without len) = " + diff_without_len);
+
+document.getElementById("tlsh_simple_test").innerHTML += "difference (same strings) = " + diff_same_str;
+document.getElementById("tlsh_simple_test").innerHTML += "<br>";
+document.getElementById("tlsh_simple_test").innerHTML += "difference (with len) = " + diff_with_len;
+document.getElementById("tlsh_simple_test").innerHTML += "<br>";
+document.getElementById("tlsh_simple_test").innerHTML += "difference (without len) = " + diff_without_len;
+document.getElementById("tlsh_simple_test").innerHTML += "<br>";
+
+</script>
+</body>
+</html>
+

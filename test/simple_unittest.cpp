@@ -24,6 +24,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <assert.h>
 
 #include "tlsh.h"
 
@@ -62,4 +63,44 @@ int main(int argc, char *argv[])
 	printf("difference (same strings) = %d\n", t1.totalDiff(&t1) );
 	printf("difference (with len) = %d\n", t1.totalDiff(&t2) );
 	printf("difference (without len) = %d\n", t1.totalDiff(&t2, false) );
+
+	printf("Testing Tlsh with multiple update calls\n");
+    Tlsh t3, t4;
+    snprintf(minSizeBuffer1, sizeof(minSizeBuffer1), "%s", str1);
+	t3.update( (const unsigned char*) minSizeBuffer1, len1);
+	for (int i = 0; i < 511; i++) {
+		minSizeBuffer1[i] = i % 26 + 'A';
+	}
+	minSizeBuffer1[511] = 0;
+	t3.update( (const unsigned char*) minSizeBuffer1+len1, 512-len1);
+	t3.final();
+	assert(strcmp(t1.getHash(), t3.getHash()) == 0);
+
+    snprintf(minSizeBuffer2, sizeof(minSizeBuffer2), "%s", str2);
+	t4.update( (const unsigned char*) minSizeBuffer2, len2);
+	for (int i = 0; i < 1023; i++) {
+		minSizeBuffer2[i] = i % 26 + 'A';
+	}
+	minSizeBuffer1[1023] = 0;
+	t4.final( (const unsigned char*) minSizeBuffer2+len2, 1024-len2);
+	assert(strcmp(t2.getHash(), t4.getHash()) == 0);
+
+	printf("hash3 = %s\n", t3.getHash() );
+	printf("hash4 = %s\n", t4.getHash() );
+
+	printf("Testing Tlsh.fromTlshStr()\n");
+	printf("Recreating tlsh3 from %s\n", t1.getHash(minSizeBuffer1, sizeof(minSizeBuffer1)));
+	t3.reset();
+	t3.fromTlshStr(minSizeBuffer1);
+	printf("hash3 = %s\n", t3.getHash(minSizeBuffer2, sizeof(minSizeBuffer2)));
+	assert(strcmp(minSizeBuffer1, minSizeBuffer2) == 0);
+	
+	printf("Recreating tlsh4 from %s\n", t2.getHash(minSizeBuffer1, sizeof(minSizeBuffer1)));
+	t4.reset();
+	t4.fromTlshStr(minSizeBuffer1);
+	printf("hash4 = %s\n", t4.getHash(minSizeBuffer2, sizeof(minSizeBuffer2)));
+	assert(strcmp(minSizeBuffer1, minSizeBuffer2) == 0);
+	printf("difference (same strings) = %d\n", t3.totalDiff(&t3) );
+	printf("difference (with len) = %d\n", t3.totalDiff(&t4) );
+	printf("difference (without len) = %d\n", t3.totalDiff(&t4, false) );
 }

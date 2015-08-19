@@ -27,6 +27,9 @@
 
 #include "tlsh_impl.h"
 
+// changed the minimum data length to 256 for version 3.3
+#define MIN_DATA_LENGTH	256
+
 class TLSH_API Tlsh{
 
 public:
