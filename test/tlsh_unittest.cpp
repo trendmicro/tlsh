@@ -504,7 +504,7 @@ static void usage(const char *fullPathName)
 	printf("  -xlen:              Passed as the len_diff parameter to Tlsh::totalDiff().  If not specified, len_diff will be true, else false.  Determines if the lengths\n");
 	printf("                      of the compared files is to be included in determining the distance.  See tlsh.h for details.\n");
 	printf("  -details:           Results in extra detailed output.\n");
-	printf("  -T threshold_value: Used only during comparisons (-c file|digset or -xref).  Specifies the maximun distance that a comparison must\n"); 
+	printf("  -T threshold_value: Used only during comparisons (-c file|digset or -xref).  Specifies the maximum distance that a comparison must\n"); 
 	printf("                      generate before it is reported. (defaults to %d)\n", DEFAULT_THRESHOLD);
 	printf("\n");
 	printf("Example usages:\n");
