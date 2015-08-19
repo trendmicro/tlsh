@@ -24,6 +24,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <assert.h>
 
 #ifdef WINDOWS
 #include <WinFunctions.h>
@@ -41,6 +42,71 @@
 #define	ERROR_READING_FILE	1
 #define	WARNING_FILE_TOO_SMALL	2
 #define	WARNING_CANNOT_HASH	3
+
+#define CONVERT_TAB "_<tlsh_convert_tab>_"
+#define CONVERT_NEWLINE "_<tlsh_convert_newline>_"
+#define CONVERT_LINEFEED "_<tlsh_convert_linefeed>_"
+
+typedef enum {
+	TAB,
+	NEWLINE,
+	LINEFEED
+} SpecialChar;
+
+SpecialChar getSpecialChar(const char *tab, const char *newline, const char *linefeed)
+{
+    // To call this function, there has to be at least 1 special character
+	assert (tab != NULL || newline != NULL || linefeed != NULL);  
+
+	if (tab == NULL) return (newline == NULL) ? LINEFEED : (linefeed == NULL) ? NEWLINE : (newline < linefeed) ? NEWLINE : LINEFEED;
+	if (newline == NULL) return (tab == NULL) ? LINEFEED : (linefeed == NULL) ? TAB : (tab < linefeed) ? TAB : LINEFEED;
+	if (linefeed == NULL) return (tab == NULL) ? NEWLINE : (newline == NULL) ? TAB : (tab < newline) ? TAB : NEWLINE;
+}
+
+static const char *convert_special_chars(char *filename, char *buf, size_t bufSize, 
+                                         const char *curTab, const char *replaceTab,
+                                         const char *curNewline, const char *replaceNewline,
+                                         const char *curLinefeed, const char *replaceLinefeed)
+{
+	size_t fname_offset = 0;
+	size_t buf_offset = 0;
+
+	while (true) {
+		char *tab = strstr(filename+fname_offset, curTab);
+		char *newline = strstr(filename+fname_offset, curNewline);
+		char *linefeed = strstr(filename+fname_offset, curLinefeed);
+
+		// when no more special characters to replace, copy the remaining part of filename and then return.
+		if (tab == NULL && newline == NULL && linefeed == NULL) {
+			snprintf(buf+buf_offset, bufSize-buf_offset, "%s", filename+fname_offset);
+			return buf;
+		}
+
+		SpecialChar sp = getSpecialChar(tab, newline, linefeed);
+		if (sp == TAB) {
+			char save = *tab;
+			*tab = '\0';  // terminate for snprintf
+			buf_offset += snprintf(buf+buf_offset, bufSize-buf_offset, "%s%s", filename+fname_offset, replaceTab);
+			fname_offset = tab - filename + strlen(curTab);
+			*tab = save;  // replace tab
+		}
+		else if (sp == NEWLINE) {
+			char save = *newline;
+			*newline = '\0';  // terminate for snprintf
+			buf_offset += snprintf(buf+buf_offset, bufSize-buf_offset, "%s%s", filename+fname_offset, replaceNewline);
+			fname_offset = newline - filename + strlen(curNewline);
+			*newline = save;  // replace newline
+		}
+		else {
+			assert (sp == LINEFEED);
+			char save = *linefeed;
+			*linefeed = '\0';  // terminate for snprintf
+			buf_offset += snprintf(buf+buf_offset, bufSize-buf_offset, "%s%s", filename+fname_offset, replaceLinefeed);
+			fname_offset = linefeed - filename + strlen(curLinefeed);
+			*linefeed = save;  // replace linefeed
+		}
+	}
+}
 
 static int read_file_eval_tlsh(char *fname, Tlsh *th, int show_details)
 {
@@ -319,7 +385,7 @@ int max_files;
 			}
 
 			fnames[count].tlsh = strdup(buf);
-			fnames[count].name = strdup(x);
+			fnames[count].name = strdup(convert_special_chars(x, buf, sizeof(buf), CONVERT_TAB, "\t", CONVERT_NEWLINE, "\n", CONVERT_LINEFEED, "\r"));
 
 			count ++;
 
@@ -411,6 +477,8 @@ int max_files;
 		}
 	}
 
+	char buf1[2000];
+	char buf2[2000];
 	if (xref) {
 		for (int ti=0; ti<n_file; ti++) {
 			Tlsh *th = tptr[ti];
@@ -423,7 +491,10 @@ int max_files;
 							if (show_details)
 								printf("%s	[%s]	%s	[%s]	%d\n", fnames[ti].name, th->getHash(), fnames[xi].name, xh->getHash(), tdiff);
 							else
-								printf("%s	%s	%d\n", fnames[ti].name, fnames[xi].name, tdiff);
+								printf("%s	%s	%d\n", convert_special_chars(fnames[ti].name, buf1, sizeof(buf1), 
+							 	                                             "\t", CONVERT_TAB, "\n", CONVERT_NEWLINE, "\r", CONVERT_LINEFEED), 
+							   	                       convert_special_chars(fnames[xi].name, buf2, sizeof(buf2),
+								                                             "\t", CONVERT_TAB, "\n", CONVERT_NEWLINE, "\r", CONVERT_LINEFEED), tdiff);
 						}
 					}
 				}
@@ -437,13 +508,18 @@ int max_files;
 					int tdiff = comp_th->totalDiff(th, xlen);
 					if (tdiff <= threshold) {
 						if (dirname || listname) {
-							printf("%s	%s	%d\n", compare_fname, fnames[ti].name, tdiff);
+							printf("%s	%s	%d\n", convert_special_chars(compare_fname, buf1, sizeof(buf1), 
+						 	                                             "\t", CONVERT_TAB, "\n", CONVERT_NEWLINE, "\r", CONVERT_LINEFEED), 
+							                       convert_special_chars(fnames[ti].name, buf2, sizeof(buf2),
+						 	                                             "\t", CONVERT_TAB, "\n", CONVERT_NEWLINE, "\r", CONVERT_LINEFEED), tdiff);
 						} else {
-							printf("%4d	%s\n", tdiff, fnames[ti].name);
+							printf("%4d	%s\n", tdiff, convert_special_chars(fnames[ti].name, buf1, sizeof(buf1),
+							                                                "\t", CONVERT_TAB, "\n", CONVERT_NEWLINE, "\r", CONVERT_LINEFEED)); 
 						}
 					}
 				} else {
-					printf("%s	%s\n", th->getHash(), fnames[ti].name);
+					printf("%s	%s\n", th->getHash(), convert_special_chars(fnames[ti].name, buf1, sizeof(buf1),
+							                                                "\t", CONVERT_TAB, "\n", CONVERT_NEWLINE, "\r", CONVERT_LINEFEED)); 
 				}
 			}
 		}
