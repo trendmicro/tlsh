@@ -177,3 +177,5 @@ Changes
         calls to Tlsh::update as opposed to a single call to Tlsh::update.
 3.4.0 - Add javascript implementation (see directory js_ext) - required for 
         Blackhat presentation - https://www.blackhat.com/us-15/speakers/Sean-Park.html
+		Modify tlsh_unittest so that it can output tlsh values and filenames correctly,
+		when the filenames contain embedded newline, linefeed or tab characters.
