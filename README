@@ -179,8 +179,8 @@ Changes
         Blackhat presentation - https://www.blackhat.com/us-15/speakers/Sean-Park.html
 		Modify tlsh_unittest so that it can output tlsh values and filenames correctly,
 		when the filenames contain embedded newline, linefeed or tab characters.
-3.4.1 - Incorporated py_ext patch from Jeremy Bobbio.
-      	Instead of using a big memory blob, TLSH will calculate the hash incrementally.
+3.4.1 - Thanks to Jeremy Bobbio's py_ext patch. TLSH has these enhancements.
+      	Instead of using a big memory blob, It will calculate the hash incrementally.
 	A hashlib like object-oriented interface has been added to the Python
 	module. See test.py.
 	Restrict the function to be fed bytes-like object to remove surprises
