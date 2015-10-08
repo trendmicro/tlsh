@@ -1,14 +1,25 @@
+#define PY_SSIZE_T_CLEAN 1
 #include <Python.h>
+#include <bytesobject.h>
 #include "tlsh.h"
 
-#define TLSH_VERSION "0.1.0"
+#define TLSH_VERSION "0.2.0"
 #define AUTHOR "Chun Cheng"
+
+/* We want to update the hash using bytes object in Python 3 */
+#if PY_MAJOR_VERSION >= 3
+# define BYTES_VALUE_CHAR "y"
+#else
+# define BYTES_VALUE_CHAR "s"
+#endif
+
+#define MIN_TLSH_LEN 512
 
 static char tlsh_doc[] =
   "TLSH C version - similarity matching and searching";
 static char tlsh_hash_doc[] =
   "tlsh.hash(data)\n\n\
-  returns tlsh hash (string)";
+  returns tlsh hexadecimal representation (string)";
 static char tlsh_diff_doc[] =
   "tlsh.diff(hash1, hash2)\n\n\
   returns tlsh score (integer)";
@@ -20,7 +31,7 @@ static char tlsh_diffxlen_doc[] =
 static PyObject* hash_py(PyObject* self, PyObject* args) {
   unsigned char* pBuffer;
   int len;
-  if (!PyArg_ParseTuple(args, "s#", &pBuffer, &len)) {
+  if (!PyArg_ParseTuple(args, BYTES_VALUE_CHAR "#", &pBuffer, &len)) {
     return NULL;
   }
   
@@ -73,6 +84,179 @@ static PyMethodDef tlsh_methods[] =
   { NULL, NULL } /* sentinel */
 };
 
+typedef struct {
+    PyObject_HEAD
+    unsigned short required_data;
+    bool finalized;
+    Tlsh tlsh;
+} tlsh_TlshObject;
+
+static PyObject * Tlsh_update(tlsh_TlshObject *, PyObject *);
+static PyObject * Tlsh_final(tlsh_TlshObject *);
+static PyObject * Tlsh_hexdigest(tlsh_TlshObject *);
+static PyObject * Tlsh_diff(tlsh_TlshObject *, PyObject *);
+
+static PyMethodDef Tlsh_methods[] = {
+    {"update", (PyCFunction) Tlsh_update, METH_VARARGS,
+     "Update the TLSH with the given string."
+    },
+    {"final", (PyCFunction) Tlsh_final, METH_NOARGS,
+     "Signal that no more data will be added. This is required before reading the hash."
+    },
+    {"hexdigest", (PyCFunction) Tlsh_hexdigest, METH_NOARGS,
+     "Get the computed TLSH as a string object containing only hexadecimal digits."
+    },
+    {"diff", (PyCFunction) Tlsh_diff, METH_VARARGS,
+     "Returns the TLSH score compared to the given Tlsh object or hexadecimal string."
+    },
+    {NULL} /* Sentinel */
+};
+
+static PyTypeObject tlsh_TlshType = {
+    PyObject_HEAD_INIT(NULL)
+#if PY_MAJOR_VERSION < 3
+    0,                         /* ob_size */
+#endif
+    "tlsh.Tlsh",               /* tp_name */
+    sizeof(tlsh_TlshObject),   /* tp_basicsize */
+    0,                         /* tp_itemsize */
+    0,                         /* tp_dealloc */
+    0,                         /* tp_print */
+    0,                         /* tp_getattr */
+    0,                         /* tp_setattr */
+    0,                         /* tp_compare */
+    0,                         /* tp_repr */
+    0,                         /* tp_as_number */
+    0,                         /* tp_as_sequence */
+    0,                         /* tp_as_mapping */
+    0,                         /* tp_hash  */
+    0,                         /* tp_call */
+    0,                         /* tp_str */
+    0,                         /* tp_getattro */
+    0,                         /* tp_setattro */
+    0,                         /* tp_as_buffer */
+    Py_TPFLAGS_DEFAULT,        /* tp_flags */
+    "TLSH objects",            /* tp_doc */
+    0,                         /* tp_traverse */
+    0,                         /* tp_clear */
+    0,                         /* tp_richcompare */
+    0,                         /* tp_weaklistoffset */
+    0,                         /* tp_iter */
+    0,                         /* tp_iternext */
+    Tlsh_methods,              /* tp_methods */
+    0,                         /* tp_members */
+    0,                         /* tp_getset */
+    0,                         /* tp_base */
+    0,                         /* tp_dict */
+    0,                         /* tp_descr_get */
+    0,                         /* tp_descr_set */
+    0,                         /* tp_dictoffset */
+    0,                         /* tp_init */
+    0,                         /* tp_alloc */
+    0,                         /* tp_new */
+};
+
+static PyObject *
+Tlsh_update(tlsh_TlshObject *self, PyObject *args)
+{
+    const char *str;
+    Py_ssize_t len;
+
+    if (!PyArg_ParseTuple(args, BYTES_VALUE_CHAR "#", &str, &len))
+        return NULL;
+
+    if (self->finalized) {
+        PyErr_SetString(PyExc_ValueError, "final() has already been called");
+        return NULL;
+    }
+    if (self->required_data < MIN_TLSH_LEN) {
+        self->required_data += len > MIN_TLSH_LEN ? MIN_TLSH_LEN : len;
+    }
+
+    self->tlsh.update((unsigned char *) str, (unsigned int) len);
+
+    Py_RETURN_NONE;
+}
+
+static PyObject *
+Tlsh_final(tlsh_TlshObject *self)
+{
+    if (self->finalized) {
+        PyErr_SetString(PyExc_ValueError, "final() has already been called");
+        return NULL;
+    }
+    if (self->required_data < MIN_TLSH_LEN) {
+        return PyErr_Format(PyExc_ValueError, "less than %u of input", MIN_TLSH_LEN);
+    }
+    self->finalized = true;
+    self->tlsh.final();
+
+    Py_RETURN_NONE;
+}
+
+static PyObject *
+Tlsh_hexdigest(tlsh_TlshObject *self)
+{
+    char hash[TLSH_STRING_LEN + 1];
+
+    if (!self->finalized) {
+        PyErr_SetString(PyExc_ValueError, "final() has not been called");
+        return NULL;
+    }
+    self->tlsh.getHash(hash, TLSH_STRING_LEN + 1);
+    if (hash[0] == '\0') {
+        PyErr_SetString(PyExc_ValueError, "error while getting hash (not enough entropy?)");
+        return NULL;
+    }
+    return Py_BuildValue("s", hash);
+}
+
+static PyObject *
+Tlsh_diff(tlsh_TlshObject *self, PyObject *args)
+{
+    PyObject *arg;
+    int score;
+
+    if (PyTuple_Size(args) != 1)
+        return PyErr_Format(PyExc_TypeError, "function takes exactly 1 argument (%lu given)", PyTuple_Size(args));
+
+    arg = PyTuple_GetItem(args, 0);
+#if PY_MAJOR_VERSION >= 3
+    if (PyUnicode_Check(arg)) {
+      if ((arg = PyUnicode_AsASCIIString(arg)) == NULL) {
+        PyErr_SetString(PyExc_ValueError, "argument is not a TLSH hex string");
+        return NULL;
+      }
+#else
+    if (PyString_Check(arg)) {
+#endif
+      char *str;
+      Py_ssize_t len;
+      Tlsh other;
+      if (PyBytes_AsStringAndSize(arg, &str, &len) == -1) {
+        PyErr_SetString(PyExc_ValueError, "argument is not a TLSH hex string");
+        return NULL;
+      }
+      if (len != TLSH_STRING_LEN) {
+        PyErr_SetString(PyExc_ValueError, "argument is not a TLSH hex string");
+        return NULL;
+      }
+      if (other.fromTlshStr(str) != 0) {
+        PyErr_SetString(PyExc_ValueError, "argument is not a TLSH hex string");
+        return NULL;
+      }
+      score = self->tlsh.totalDiff(&other);
+    } else if (PyObject_TypeCheck(arg, &tlsh_TlshType)) {
+      tlsh_TlshObject * other_tlsh = (tlsh_TlshObject *) arg;
+      score = self->tlsh.totalDiff(&other_tlsh->tlsh);
+    } else {
+      PyErr_SetString(PyExc_ValueError, "argument is neither a Tlsh object nor a TLSH hex string");
+      return NULL;
+    }
+
+    return Py_BuildValue("i", score);
+}
+
 // Initializes the module
 #if PY_MAJOR_VERSION >= 3
     static struct PyModuleDef moduledef = {
@@ -89,20 +273,36 @@ static PyMethodDef tlsh_methods[] =
     
     PyMODINIT_FUNC PyInit_tlsh(void)
     {
-        PyObject *module = PyModule_Create(&moduledef);
+        PyObject *module;
+
+        tlsh_TlshType.tp_new = PyType_GenericNew;
+        if (PyType_Ready(&tlsh_TlshType) < 0)
+            return NULL;
+
+        module = PyModule_Create(&moduledef);
         PyModule_AddStringConstant(module,
         "__version__",
         TLSH_VERSION);
         PyModule_AddStringConstant(module,
         "__author__",
         AUTHOR);
+
+        Py_INCREF(&tlsh_TlshType);
+        PyModule_AddObject(module, "Tlsh", (PyObject *) &tlsh_TlshType);
+
         return module;
     }
 #else
 
     PyMODINIT_FUNC inittlsh(void)
     {
-        PyObject *module = Py_InitModule3("tlsh",
+        PyObject *module;
+
+        tlsh_TlshType.tp_new = PyType_GenericNew;
+        if (PyType_Ready(&tlsh_TlshType) < 0)
+            return;
+
+        module = Py_InitModule3("tlsh",
         tlsh_methods,
         tlsh_doc);
         PyModule_AddStringConstant(module,
@@ -111,5 +311,8 @@ static PyMethodDef tlsh_methods[] =
         PyModule_AddStringConstant(module,
         "__author__",
         AUTHOR);
+
+        Py_INCREF(&tlsh_TlshType);
+        PyModule_AddObject(module, "Tlsh", (PyObject *) &tlsh_TlshType);
     }
 #endif

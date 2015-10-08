@@ -34,12 +34,21 @@ description = """A C++ extension for TLSH
 
 Usage:
 import tlsh
-h = tlsh.hash(data)
-score = tlsh.diffscore(h1, h2)
+h1 = tlsh.hash(data)
+h2 = tlsh.hash(similar_data)
+score = tlsh.diff(h1, h2)
+
+h3 = tlsh.Tlsh()
+with open('file', 'rb') as f:
+    for buf in iter(lambda: f.read(512), b''):
+        h3.update(buf)
+    h3.final()
+assert h3.diff(h) == 0
+score = h3.diff(h1)
 """
 
 setup (name = 'tlsh',
-  version = '0.1.0',
+  version = '0.2.0',
   description = 'TLSH (C++ version)',
     long_description = description,
     author = "Chun Cheng",
