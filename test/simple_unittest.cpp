@@ -81,7 +81,7 @@ int main(int argc, char *argv[])
 	for (int i = 0; i < 1023; i++) {
 		minSizeBuffer2[i] = i % 26 + 'A';
 	}
-	minSizeBuffer1[1023] = 0;
+	minSizeBuffer2[1023] = 0;
 	t4.final( (const unsigned char*) minSizeBuffer2+len2, 1024-len2);
 	assert(strcmp(t2.getHash(), t4.getHash()) == 0);
 
