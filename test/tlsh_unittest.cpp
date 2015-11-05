@@ -61,6 +61,9 @@ SpecialChar getSpecialChar(const char *tab, const char *newline, const char *lin
 	if (tab == NULL) return (newline == NULL) ? LINEFEED : (linefeed == NULL) ? NEWLINE : (newline < linefeed) ? NEWLINE : LINEFEED;
 	if (newline == NULL) return (tab == NULL) ? LINEFEED : (linefeed == NULL) ? TAB : (tab < linefeed) ? TAB : LINEFEED;
 	if (linefeed == NULL) return (tab == NULL) ? NEWLINE : (newline == NULL) ? TAB : (tab < newline) ? TAB : NEWLINE;
+
+	assert (false);  // We should never get here
+	return TAB;      // To remove compiler warning about reaching end of non-void function
 }
 
 static const char *convert_special_chars(char *filename, char *buf, size_t bufSize, 
