@@ -1,4 +1,4 @@
-// #define PY_SSIZE_T_CLEAN 1
+#define PY_SSIZE_T_CLEAN 1
 #include <Python.h>
 #include <bytesobject.h>
 #include "tlsh.h"
@@ -30,7 +30,7 @@ static char tlsh_diffxlen_doc[] =
 // hash(data) returns byte buffer
 static PyObject* hash_py(PyObject* self, PyObject* args) {
   unsigned char* pBuffer;
-  int len;
+  Py_ssize_t len;
   if (!PyArg_ParseTuple(args, BYTES_VALUE_CHAR "#", &pBuffer, &len)) {
     return NULL;
   }
