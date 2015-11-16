@@ -34,3 +34,10 @@ print('h1.diff(h2)', h1.diff(h2))
 print('h2.diff(h1)', h2.diff(h1))
 print('h1.diff(hex2)', h1.diff(hex2))
 print('h2.diff(hex1)', h2.diff(hex1))
+
+h3 = tlsh.Tlsh()
+h3.fromTlshStr(hex2)
+print('tlsh.Tlsh.fromTlshStr', hex2)
+print('h3.diff(h2)', h3.diff(h2))
+
+

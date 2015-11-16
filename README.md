@@ -91,6 +91,7 @@ import tlsh
 tlsh.hash(data)
 ```
 
+
 Note that the data must contain at least 256 bytes to generate a hash value and that
 it must have a certain amount of randomness. 
 For example, `tlsh.hash(str(os.urandom(256)))`, should always generate a hash.  
@@ -106,6 +107,9 @@ the comparison.  If a file with a repeating pattern is compared to a file
 with only a single instance of the pattern, then the difference will be increased
 if the file lenght is included.  But by using the `diffxlen` function, the file
 length will be removed from consideration.
+
+Note that the python API has been extended to miror the C++ API.  See 
+py_ext/tlshmodule.cpp and the py_ext/test.py script to see the full API set.
 
 # Design Choices
 

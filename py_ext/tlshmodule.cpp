@@ -13,8 +13,6 @@
 # define BYTES_VALUE_CHAR "s"
 #endif
 
-#define MIN_TLSH_LEN 512
-
 static char tlsh_doc[] =
   "TLSH C version - similarity matching and searching";
 static char tlsh_hash_doc[] =
@@ -51,8 +49,12 @@ static PyObject* diff_py(PyObject* self, PyObject* args) {
   }
   
   Tlsh tlsh1, tlsh2;
-  tlsh1.fromTlshStr(hash1);
-  tlsh2.fromTlshStr(hash2);
+  if (tlsh1.fromTlshStr(hash1) != 0) {
+    return PyErr_Format(PyExc_ValueError, "argument %s is not a TLSH hex string", hash1);
+  }
+  if (tlsh2.fromTlshStr(hash2) != 0) {
+    return PyErr_Format(PyExc_ValueError, "argument %s is not a TLSH hex string", hash2);
+  }
 
   int score = tlsh1.totalDiff(&tlsh2);
 
@@ -67,8 +69,12 @@ static PyObject* diffxlen_py(PyObject* self, PyObject* args) {
   }
 
   Tlsh tlsh1, tlsh2;
-  tlsh1.fromTlshStr(hash1);
-  tlsh2.fromTlshStr(hash2);
+  if (tlsh1.fromTlshStr(hash1) != 0) {
+    return PyErr_Format(PyExc_ValueError, "argument %s is not a TLSH hex string", hash1);
+  }
+  if (tlsh2.fromTlshStr(hash2) != 0) {
+    return PyErr_Format(PyExc_ValueError, "argument %s is not a TLSH hex string", hash2);
+  }
 
   int score = tlsh1.totalDiff(&tlsh2, false);
 
@@ -91,12 +97,16 @@ typedef struct {
     Tlsh tlsh;
 } tlsh_TlshObject;
 
+static PyObject * Tlsh_fromTlshStr(tlsh_TlshObject *, PyObject *);
 static PyObject * Tlsh_update(tlsh_TlshObject *, PyObject *);
 static PyObject * Tlsh_final(tlsh_TlshObject *);
 static PyObject * Tlsh_hexdigest(tlsh_TlshObject *);
 static PyObject * Tlsh_diff(tlsh_TlshObject *, PyObject *);
 
 static PyMethodDef Tlsh_methods[] = {
+    {"fromTlshStr", (PyCFunction) Tlsh_fromTlshStr, METH_VARARGS,
+     "Create a TLSH instance from a hex string."
+    },
     {"update", (PyCFunction) Tlsh_update, METH_VARARGS,
      "Update the TLSH with the given string."
     },
@@ -157,6 +167,37 @@ static PyTypeObject tlsh_TlshType = {
 };
 
 static PyObject *
+Tlsh_fromTlshStr(tlsh_TlshObject *self, PyObject *args)
+{
+    char *str;
+    Py_ssize_t len;
+
+    PyObject *arg;
+
+    if (PyTuple_Size(args) != 1)
+        return PyErr_Format(PyExc_TypeError, "function takes exactly 1 argument (%lu given)", PyTuple_Size(args));
+
+    arg = PyTuple_GetItem(args, 0);
+    if (PyBytes_AsStringAndSize(arg, &str, &len) == -1) {
+        PyErr_SetString(PyExc_ValueError, "argument is not a TLSH hex string");
+        return NULL;
+    }
+
+    if (len != TLSH_STRING_LEN) {
+        PyErr_SetString(PyExc_ValueError, "argument length incorrect: not a TLSH hex string");
+        return NULL;
+    }
+
+    if (self->tlsh.fromTlshStr(str) != 0) {
+        PyErr_SetString(PyExc_ValueError, "argument value incorrect: not a TLSH hex string");
+        return NULL;
+    }
+    self->finalized = true;
+
+    Py_RETURN_NONE;
+}
+
+static PyObject *
 Tlsh_update(tlsh_TlshObject *self, PyObject *args)
 {
     const char *str;
@@ -169,8 +210,8 @@ Tlsh_update(tlsh_TlshObject *self, PyObject *args)
         PyErr_SetString(PyExc_ValueError, "final() has already been called");
         return NULL;
     }
-    if (self->required_data < MIN_TLSH_LEN) {
-        self->required_data += len > MIN_TLSH_LEN ? MIN_TLSH_LEN : len;
+    if (self->required_data < MIN_DATA_LENGTH) {
+        self->required_data += len > MIN_DATA_LENGTH ? MIN_DATA_LENGTH : len;
     }
 
     self->tlsh.update((unsigned char *) str, (unsigned int) len);
@@ -185,8 +226,8 @@ Tlsh_final(tlsh_TlshObject *self)
         PyErr_SetString(PyExc_ValueError, "final() has already been called");
         return NULL;
     }
-    if (self->required_data < MIN_TLSH_LEN) {
-        return PyErr_Format(PyExc_ValueError, "less than %u of input", MIN_TLSH_LEN);
+    if (self->required_data < MIN_DATA_LENGTH) {
+        return PyErr_Format(PyExc_ValueError, "less than %u of input", MIN_DATA_LENGTH);
     }
     self->finalized = true;
     self->tlsh.final();
