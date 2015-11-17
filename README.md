@@ -208,3 +208,6 @@ TLSH similarity is expressed as a difference score:
 - Instead of using a big memory blob, it will calculate the hash incrementally.
 - A hashlib like object-oriented interface has been added to the Python module. See `test.py`.
 - Restrict the function to be fed bytes-like object to remove surprises like silent UTF-8 decoding.
+
+**3.4.2**
+- Back out python regression test as part of the test.sh script, so that the python module does not need to be installed in order to successfully pass the tests run by make.sh
