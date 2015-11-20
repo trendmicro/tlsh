@@ -6,8 +6,8 @@ BASEDIR=$(dirname $0)
 pushd $BASEDIR > /dev/null
 
 TMP="tmp"
-HASH=`../test/tlsh_version | head -1 | cut -f1`
-CHKSUM=`../test/tlsh_version | tail -1 | cut -f1`
+HASH=`../bin/tlsh_version | head -1 | cut -f1`
+CHKSUM=`../bin/tlsh_version | tail -1 | cut -f1`
 echo "HASH is $HASH"
 echo "CHKSUM is $CHKSUM"
 
@@ -18,9 +18,9 @@ then
 	exit 127
 fi
 
-if test ! -f ../test/simple_unittest
+if test ! -f ../bin/simple_unittest
 then
-	echoerr "error: (127), you must compile ../test/simple_unittest"
+	echoerr "error: (127), you must compile ../bin/simple_unittest"
         popd > /dev/null
 	exit 127
 fi
@@ -185,8 +185,9 @@ echo "passed"
 runit 
 runit "-xlen"
 
+echo
 echo "Running simple_unittest"
-../test/simple_unittest > $TMP/simple_unittest.out
+../bin/simple_unittest > $TMP/simple_unittest.out
 diff --ignore-all-space $TMP/simple_unittest.out exp/simple_unittest_EXP > /dev/null 2>/dev/null
 if [ $? -ne 0 ]; then
 	echoerr "error: diff $TMP/simple_unittest.out exp/simple_unittest_EXP"
@@ -197,3 +198,7 @@ fi
 echo "passed"
 
 popd > /dev/null
+
+echo
+echo "If you have made changes to the Tlsh python module, build and install it, and run python_test.sh"
+echo

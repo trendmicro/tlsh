@@ -14,12 +14,12 @@
 
 add_executable(tlsh_version tlsh_version.cpp)
 target_link_libraries(tlsh_version tlsh)
-set_target_properties(tlsh_version PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/test)
+set_target_properties(tlsh_version PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
 set_target_properties(tlsh_version PROPERTIES OUTPUT_NAME tlsh_version${BUILD_POSTFIX})
 
 add_executable(simple_unittest simple_unittest.cpp)
 target_link_libraries(simple_unittest tlsh)
-set_target_properties(simple_unittest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/test)
+set_target_properties(simple_unittest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
 set_target_properties(simple_unittest PROPERTIES OUTPUT_NAME simple_unittest${BUILD_POSTFIX})
 
 add_executable(tlsh_unittest tlsh_unittest.cpp)

@@ -16,5 +16,9 @@ if EXIST tlsh_version\Debug rmdir /S /Q tlsh_version\Debug
 if EXIST tlsh_version\Release rmdir /S /Q tlsh_version\Release
 if EXIST tlsh_version\tlsh_version.VC*.vcproj.TREND* del tlsh_version\tlsh_version.VC*.vcproj.TREND*
 
+if EXIST simple_unittest\Debug rmdir /S /Q simple_unittest\Debug
+if EXIST simple_unittest\Release rmdir /S /Q simple_unittest\Release
+if EXIST simple_unittest\simple_unittest.vcproj.TREND* del simple_unittest\simple_unittest.vcproj.TREND*
+
 if EXIST ..\bin\*.dll del ..\bin\*.dll
 if EXIST ..\bin\*.exe del ..\bin\*.exe

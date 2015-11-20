@@ -204,10 +204,13 @@ TLSH similarity is expressed as a difference score:
 - Modify `tlsh_unittest` so that it can output tlsh values and filenames correctly, when the filenames contain embedded newline, linefeed or tab characters.
  
 **3.4.1**
-- Thanks to Jeremy Bobbio's `py_ext` patch. TLSH has these enhancements.
+- Thanks to Jeremy Bobbios `py_ext` patch. TLSH has these enhancements.
 - Instead of using a big memory blob, it will calculate the hash incrementally.
 - A hashlib like object-oriented interface has been added to the Python module. See `test.py`.
 - Restrict the function to be fed bytes-like object to remove surprises like silent UTF-8 decoding.
 
 **3.4.2**
 - Back out python regression test as part of the test.sh script, so that the python module does not need to be installed in order to successfully pass the tests run by make.sh
+
+**3.4.3**
+- Fix regression tests running on Windows
