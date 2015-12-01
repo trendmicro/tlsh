@@ -25,10 +25,34 @@
 
 #ifdef __cplusplus
 
-#include "tlsh_impl.h"
+class TlshImpl;
 
 // changed the minimum data length to 256 for version 3.3
 #define MIN_DATA_LENGTH	256
+
+// Define TLSH_STRING_LEN, which is the string lenght of the hex value of the Tlsh hash.  
+// BUCKETS_256 & CHECKSUM_3B are compiler switches defined in CMakeLists.txt
+#if defined BUCKETS_256
+  #if defined CHECKSUM_3B
+    #define TLSH_STRING_LEN 138
+  #else
+    #define TLSH_STRING_LEN 134
+  #endif
+#else
+  #if defined CHECKSUM_3B
+    #define TLSH_STRING_LEN 74
+  #else
+    #define TLSH_STRING_LEN 70
+  #endif
+#endif
+
+#define TLSH_STRING_BUFFER_LEN (TLSH_STRING_LEN+1)
+
+#ifdef WINDOWS
+#include <WinFunctions.h>
+#else 
+#define TLSH_API
+#endif
 
 class TLSH_API Tlsh{
 
@@ -70,8 +94,7 @@ public:
     ~Tlsh();
 
 private:
-    /* impl changed from pointer to instance, so save 8 bytes (sizeof TlshImpl*) in the size of Tlsh/TlshImpl */
-    TlshImpl impl;
+    TlshImpl* impl;
 };
 #endif
 

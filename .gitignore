@@ -1,4 +1,5 @@
 # Ignore binary, cmake and test generated files
+*~
 bin/
 lib/
 build/
@@ -19,8 +20,11 @@ Windows/tlsh.VC2008.ncb
 Windows/tlsh_dll/Debug/
 Windows/tlsh_unittest/Debug/
 Windows/tlsh_version/Debug/
-Windows/simple_unittest/simple_unittest.vcproj.TRENDUS.lanef.user
+Windows/simple_unittest/simple_unittest.vcproj.*
 Windows/tlsh.VC2008.suo
-Windows/tlsh_dll/tlsh.VC2008.vcproj.TRENDUS.lanef.user
-Windows/tlsh_unittest/tlsh_unittest.VC2008.vcproj.TRENDUS.lanef.user
-Windows/tlsh_version/tlsh_version.VC2008.vcproj.TRENDUS.lanef.user
+Windows/tlsh_dll/tlsh.VC2008.vcproj.*
+Windows/tlsh_unittest/tlsh_unittest.VC2008.vcproj.*
+Windows/tlsh_version/tlsh_version.VC2008.vcproj.*
+Windows/rand_tags/rand_tags.VC2008.vcproj.*
+Windows/rand_tags/Debug/
+Windows/rand_tags/Release/

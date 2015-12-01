@@ -15,6 +15,7 @@
  */
 
 #include "tlsh.h"
+#include "tlsh_impl.h"
 #include "stdio.h"
 #include "version.h"
 #include <errno.h>
@@ -23,12 +24,14 @@
 /////////////////////////////////////////////////////
 // C++ Implementation
 
-Tlsh::Tlsh()
+Tlsh::Tlsh():impl(NULL)
 {
+    impl = new TlshImpl();
 }
 
 Tlsh::~Tlsh()
 {
+    delete impl;
 }
 
 const char *Tlsh::version()
@@ -41,37 +44,59 @@ const char *Tlsh::version()
 
 void Tlsh::update(const unsigned char* data, unsigned int len)
 {
-    impl.update(data, len);
+    // The python module does not call the Tlsh constructor, so allocate impl if NULL
+    if ( NULL == impl )
+        impl = new TlshImpl();
+
+    if ( NULL != impl )
+        impl->update(data, len);
 }
 
 void Tlsh::final(const unsigned char* data, unsigned int len)
 {
-    if ( NULL != data && len > 0 )
-        impl.update(data, len);
-    impl.final();
+    // The python module does not call the Tlsh constructor, so allocate impl if NULL
+    if ( NULL == impl )
+        impl = new TlshImpl();
+
+    if ( NULL != impl ){
+        if ( NULL != data && len > 0 )
+            impl->update(data, len);
+        impl->final();
+    }
 }
 
 const char* Tlsh::getHash()
 {
-    return impl.hash();
+    if ( NULL != impl )
+        return impl->hash();
+    else
+        return "";
 }
 
 const char* Tlsh::getHash(char *buffer, unsigned int bufSize)  
 {
-    return impl.hash(buffer, bufSize);
+    if ( NULL != impl )
+        return impl->hash(buffer, bufSize);
+    else {
+        buffer[0] = '\0';
+        return buffer;
+    }
 }
 
 void Tlsh::reset()
 {
-    impl.reset();
+    if ( NULL != impl )
+        impl->reset();
 }
 
 bool Tlsh::operator==(const Tlsh& other) const
 {
     if( this == &other )
         return true;
+    else if( NULL == impl || NULL == other.impl )
+        return false;
     else
-        return ( 0 == impl.compare(other.impl) );
+        return ( 0 == impl->compare(*other.impl) );
 }
 
 bool Tlsh::operator!=(const Tlsh& other) const 
@@ -81,17 +106,25 @@ bool Tlsh::operator!=(const Tlsh& other) const
 
 int Tlsh::totalDiff(Tlsh *other, bool len_diff)
 {
-    if ( this == other )
+    if( NULL==impl || NULL == other || NULL == other->impl )
+        return -(EINVAL);
+    else if ( this == other )
         return 0;
     else
-        return (impl.totalDiff(other->impl, len_diff));
+        return (impl->totalDiff(*other->impl, len_diff));
 }
 
 int Tlsh::fromTlshStr(const char* str)
 {
-    if ( NULL == str )
+    // The python module does not call the Tlsh constructor, so allocate impl if NULL
+    if ( NULL == impl )
+        impl = new TlshImpl();
+
+    if ( NULL == impl )
+        return -(ENOMEM);
+    else if ( NULL == str )
         return -(EINVAL);
     else
-        return impl.fromTlshStr(str);
+        return impl->fromTlshStr(str);
 }
 

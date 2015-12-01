@@ -14,12 +14,6 @@
  * limitations under the License.
  */
 
-#ifdef WINDOWS
-#include <WinFunctions.h>
-#else 
-#define TLSH_API
-#endif
-
 #ifndef _TLSH_IMPL_H
 #define _TLSH_IMPL_H
     
@@ -34,26 +28,24 @@
   #define CODE_SIZE           64   // 256 * 2 bits = 64 bytes
   #if defined CHECKSUM_3B
     #define TLSH_CHECKSUM_LEN 3
-    #define TLSH_STRING_LEN   138  // 2 + 3 + 64 bytes = 138 hexidecimal chars
+    // defined in tlsh.h   #define TLSH_STRING_LEN   138  // 2 + 3 + 64 bytes = 138 hexidecimal chars
   #else
     #define TLSH_CHECKSUM_LEN 1
-    #define TLSH_STRING_LEN   134  // 2 + 1 + 64 bytes = 134 hexidecimal chars
+    // defined in tlsh.h   #define TLSH_STRING_LEN   134  // 2 + 1 + 64 bytes = 134 hexidecimal chars
   #endif
 #else
   #define EFF_BUCKETS         128
   #define CODE_SIZE           32   // 128 * 2 bits = 32 bytes
   #if defined CHECKSUM_3B
     #define TLSH_CHECKSUM_LEN 3
-    #define TLSH_STRING_LEN   74   // 2 + 3 + 32 bytes = 74 hexidecimal chars
+    // defined in tlsh.h   #define TLSH_STRING_LEN   74   // 2 + 3 + 32 bytes = 74 hexidecimal chars
   #else
     #define TLSH_CHECKSUM_LEN 1
-    #define TLSH_STRING_LEN   70   // 2 + 1 + 32 bytes = 70 hexidecimal chars
+    // defined in tlsh.h   #define TLSH_STRING_LEN   70   // 2 + 1 + 32 bytes = 70 hexidecimal chars
   #endif
 #endif
 
-#define TLSH_STRING_BUFFER_LEN TLSH_STRING_LEN + 1
-
-class TLSH_API TlshImpl
+class TlshImpl
 {
 public:
     TlshImpl();
