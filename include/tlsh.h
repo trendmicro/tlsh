@@ -66,10 +66,10 @@ public:
     void final(const unsigned char* data = NULL, unsigned int len = 0);
 
     /* to get the hex-encoded hash code */
-    const char* getHash();
+    const char* getHash() const ;
 
     /* to get the hex-encoded hash code without allocating buffer in TlshImpl - bufSize should be TLSH_STRING_BUFFER_LEN */
-    const char* getHash(char *buffer, unsigned int bufSize);  
+    const char* getHash(char *buffer, unsigned int bufSize) const;  
 
     /* to bring to object back to the initial state */
     void reset();
@@ -79,7 +79,7 @@ public:
     /* is to be excluded (len_diff=false).  In general, the length should be considered in the difference calculation, but there */
     /* could be applications where a part of the adversarial activity might be to add a lot of content.  For example to add 1 million */
     /* zero bytes at the end of a file.  In that case, the caller would want to exclude the length from the calculation. */
-    int totalDiff(Tlsh *, bool len_diff=true);
+    int totalDiff(const Tlsh *, bool len_diff=true) const;
     
     /* validate TrendLSH string and reset the hash according to it */
     int fromTlshStr(const char* str);

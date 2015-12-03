@@ -65,7 +65,7 @@ void Tlsh::final(const unsigned char* data, unsigned int len)
     }
 }
 
-const char* Tlsh::getHash()
+const char* Tlsh::getHash() const
 {
     if ( NULL != impl )
         return impl->hash();
@@ -73,7 +73,7 @@ const char* Tlsh::getHash()
         return "";
 }
 
-const char* Tlsh::getHash(char *buffer, unsigned int bufSize)  
+const char* Tlsh::getHash (char *buffer, unsigned int bufSize) const
 {
     if ( NULL != impl )
         return impl->hash(buffer, bufSize);
@@ -104,7 +104,7 @@ bool Tlsh::operator!=(const Tlsh& other) const
     return !(*this==other);
 }
 
-int Tlsh::totalDiff(Tlsh *other, bool len_diff)
+int Tlsh::totalDiff(const Tlsh *other, bool len_diff) const
 {
     if( NULL==impl || NULL == other || NULL == other->impl )
         return -(EINVAL);

@@ -196,7 +196,7 @@ int TlshImpl::fromTlshStr(const char* str)
     return 0;
 }
 
-const char* TlshImpl::hash(char *buffer, unsigned int bufSize)
+const char* TlshImpl::hash(char *buffer, unsigned int bufSize) const
 {
     if (bufSize < TLSH_STRING_LEN + 1) {
         strncpy(buffer, "", bufSize);
@@ -222,7 +222,7 @@ const char* TlshImpl::hash(char *buffer, unsigned int bufSize)
 }
 
 /* to get the hex-encoded hash code */
-const char* TlshImpl::hash() 
+const char* TlshImpl::hash() const
 {
     if (this->lsh_code != NULL) {
         // lsh_code has been previously calculated, so just return it

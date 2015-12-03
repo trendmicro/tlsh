@@ -54,8 +54,8 @@ public:
     void update(const unsigned char* data, unsigned int len);
     void final();
     void reset();
-    const char* hash();
-    const char* hash(char *buffer, unsigned int bufSize);  // saves allocating hash string in TLSH instance - bufSize should be TLSH_STRING_LEN + 1
+    const char* hash() const;
+    const char* hash(char *buffer, unsigned int bufSize) const;  // saves allocating hash string in TLSH instance - bufSize should be TLSH_STRING_LEN + 1
     int compare(const TlshImpl& other) const;
     int totalDiff(const TlshImpl& other, bool len_diff=true) const;
     int fromTlshStr(const char* str);
@@ -78,7 +78,7 @@ private:
         unsigned char tmp_code[CODE_SIZE];          // 32/64 bytes
     } lsh_bin;
     
-    char *lsh_code;       // allocated when hash() function without buffer is called - 70/134 bytes or 74/138 bytes
+    mutable char *lsh_code;       // allocated when hash() function without buffer is called - 70/134 bytes or 74/138 bytes
     bool lsh_code_valid;  // true iff final() or fromTlshStr complete successfully
 };
 

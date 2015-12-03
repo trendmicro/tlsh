@@ -18,7 +18,7 @@ project(TLSH)
 
 set(VERSION_MAJOR 3)
 set(VERSION_MINOR 4)
-set(VERSION_PATCH 3)
+set(VERSION_PATCH 4)
 
 # TLSH uses only half the counting buckets.
 # It can use all the buckets now.

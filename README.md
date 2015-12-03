@@ -214,3 +214,6 @@ TLSH similarity is expressed as a difference score:
 
 **3.4.3**
 - Fix regression tests running on Windows
+
+**3.4.4**
+- Specify Tlsh::getHash() is a const method
