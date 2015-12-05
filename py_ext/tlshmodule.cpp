@@ -178,6 +178,18 @@ Tlsh_fromTlshStr(tlsh_TlshObject *self, PyObject *args)
         return PyErr_Format(PyExc_TypeError, "function takes exactly 1 argument (%lu given)", PyTuple_Size(args));
 
     arg = PyTuple_GetItem(args, 0);
+#if PY_MAJOR_VERSION >= 3
+    if (!PyUnicode_Check(arg) || (arg = PyUnicode_AsASCIIString(arg)) == NULL) {
+      PyErr_SetString(PyExc_ValueError, "argument is not a TLSH hex string");
+      return NULL;
+    }
+#else
+    if (!PyString_Check(arg)) {
+      PyErr_SetString(PyExc_ValueError, "argument is not a TLSH hex string");
+      return NULL;
+    }
+#endif
+
     if (PyBytes_AsStringAndSize(arg, &str, &len) == -1) {
         PyErr_SetString(PyExc_ValueError, "argument is not a TLSH hex string");
         return NULL;
