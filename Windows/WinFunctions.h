@@ -6,10 +6,14 @@
 #include <stdio.h>
 #include <time.h>
 
-#ifdef TLSH_EXPORTS
-#define TLSH_API __declspec(dllexport)
+#ifndef TLSH_LIB
+#  ifdef TLSH_EXPORTS
+#  define TLSH_API __declspec(dllexport)
+#  else
+#  define TLSH_API __declspec(dllimport)
+#  endif
 #else
-#define TLSH_API __declspec(dllimport)
+#  define TLSH_API
 #endif
 
 #define strdup _strdup
