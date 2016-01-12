@@ -84,6 +84,9 @@ public:
     /* validate TrendLSH string and reset the hash according to it */
     int fromTlshStr(const char* str);
 
+    /* check if Tlsh object is valid to operate */
+    bool isValid() const { return (impl ? impl->isValid() : false); }
+
     /* Return the version information used to build this library */
     static const char *version();
 

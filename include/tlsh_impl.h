@@ -59,6 +59,7 @@ public:
     int compare(const TlshImpl& other) const;
     int totalDiff(const TlshImpl& other, bool len_diff=true) const;
     int fromTlshStr(const char* str);
+    bool isValid() const { return lsh_code_valid; }
 
 private:
     unsigned int *a_bucket;  
