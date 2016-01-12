@@ -128,3 +128,7 @@ int Tlsh::fromTlshStr(const char* str)
         return impl->fromTlshStr(str);
 }
 
+bool Tlsh::isValid() const
+{
+    return (impl ? impl->isValid() : false);
+}

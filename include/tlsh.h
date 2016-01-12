@@ -85,7 +85,7 @@ public:
     int fromTlshStr(const char* str);
 
     /* check if Tlsh object is valid to operate */
-    bool isValid() const { return (impl ? impl->isValid() : false); }
+    bool isValid() const;
 
     /* Return the version information used to build this library */
     static const char *version();
