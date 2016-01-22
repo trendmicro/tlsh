@@ -217,3 +217,10 @@ TLSH similarity is expressed as a difference score:
 
 **3.4.4**
 - Specify Tlsh::getHash() is a const method
+
+**3.4.5**
+- Pick up Jeremy Bobbios patches for: 
+  - Build shared library (libtlsh.so), in addition to static library, on Linux and have tlsh_unittest link to it.
+  - Remove TlshImpl symbols from libtlsh.so
+  - Add Tlsh_init to py_ext/tlshmodule.cpp, which ensures Tlsh constructor will be called from Tlsh python module
+  - Create symbolic link for tlsh -> tlsh_unittest

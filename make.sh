@@ -11,4 +11,8 @@ else
 fi
 
 make
+cd ../../bin
+cmake -E create_symlink tlsh_unittest tlsh
+cd -
+
 make test

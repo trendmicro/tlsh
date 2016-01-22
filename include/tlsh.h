@@ -51,7 +51,7 @@ class TlshImpl;
 #ifdef WINDOWS
 #include <WinFunctions.h>
 #else 
-#define TLSH_API
+#define TLSH_API __attribute__ ((visibility("default")))
 #endif
 
 class TLSH_API Tlsh{

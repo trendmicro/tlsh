@@ -23,6 +23,6 @@ set_target_properties(simple_unittest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAK
 set_target_properties(simple_unittest PROPERTIES OUTPUT_NAME simple_unittest${BUILD_POSTFIX})
 
 add_executable(tlsh_unittest tlsh_unittest.cpp)
-target_link_libraries(tlsh_unittest tlsh)
+target_link_libraries(tlsh_unittest tlsh_shared)
 set_target_properties(tlsh_unittest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
 set_target_properties(tlsh_unittest PROPERTIES OUTPUT_NAME tlsh_unittest${BUILD_POSTFIX})
