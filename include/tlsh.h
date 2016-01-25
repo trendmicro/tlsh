@@ -51,7 +51,7 @@ class TlshImpl;
 #ifdef WINDOWS
 #include <WinFunctions.h>
 #else 
-#define TLSH_API
+#define TLSH_API __attribute__ ((visibility("default")))
 #endif
 
 class TLSH_API Tlsh{
@@ -83,6 +83,9 @@ public:
     
     /* validate TrendLSH string and reset the hash according to it */
     int fromTlshStr(const char* str);
+
+    /* check if Tlsh object is valid to operate */
+    bool isValid() const;
 
     /* Return the version information used to build this library */
     static const char *version();

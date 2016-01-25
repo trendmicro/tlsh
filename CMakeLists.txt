@@ -18,7 +18,7 @@ project(TLSH)
 
 set(VERSION_MAJOR 3)
 set(VERSION_MINOR 4)
-set(VERSION_PATCH 4)
+set(VERSION_PATCH 5)
 
 # TLSH uses only half the counting buckets.
 # It can use all the buckets now.
@@ -64,6 +64,7 @@ if (CMAKE_BUILD_TYPE STREQUAL Debug)
 else(CMAKE_BUILD_TYPE STREQUAL Debug)
     if(CMAKE_COMPILER_IS_GNUCXX)
         set(CMAKE_CXX_FLAGS "-O2")        ## Optimize
+        set(CMAKE_CXX_FLAGS "-fvisibility=internal")  ## Remove TlshImpl symbols
     endif()
     if(MSVC)
         set(CMAKE_CXX_FLAGS "/O2")        ## Optimize

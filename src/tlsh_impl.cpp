@@ -29,14 +29,8 @@
 #define RANGE_LVALUE 256
 #define RANGE_QRATIO 16
 
-#ifdef UNITTEST
-#define LOCAL_FUNCTION
-#else
-#define LOCAL_FUNCTION static
-#endif
-
-LOCAL_FUNCTION void find_quartile(unsigned int *q1, unsigned int *q2, unsigned int *q3, const unsigned int * a_bucket);
-LOCAL_FUNCTION unsigned int partition(unsigned int * buf, unsigned int left, unsigned int right);
+static void find_quartile(unsigned int *q1, unsigned int *q2, unsigned int *q3, const unsigned int * a_bucket);
+static unsigned int partition(unsigned int * buf, unsigned int left, unsigned int right);
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
 

@@ -1,3 +1,4 @@
+#include <new>
 #define PY_SSIZE_T_CLEAN 1
 #include <Python.h>
 #include <bytesobject.h>
@@ -97,6 +98,7 @@ typedef struct {
     Tlsh tlsh;
 } tlsh_TlshObject;
 
+static int Tlsh_init(PyObject *, PyObject *, PyObject *);
 static PyObject * Tlsh_fromTlshStr(tlsh_TlshObject *, PyObject *);
 static PyObject * Tlsh_update(tlsh_TlshObject *, PyObject *);
 static PyObject * Tlsh_final(tlsh_TlshObject *);
@@ -161,10 +163,36 @@ static PyTypeObject tlsh_TlshType = {
     0,                         /* tp_descr_get */
     0,                         /* tp_descr_set */
     0,                         /* tp_dictoffset */
-    0,                         /* tp_init */
+    Tlsh_init,                 /* tp_init */
     0,                         /* tp_alloc */
     0,                         /* tp_new */
 };
+
+static int
+Tlsh_init(PyObject *self, PyObject *args, PyObject *kwds)
+{
+    tlsh_TlshObject * tlsh_object = (tlsh_TlshObject *) self;
+
+    if (PyTuple_Size(args) > 1) {
+        PyErr_Format(PyExc_TypeError, "Tlsh() takes at most 1 argument (%lu given)", PyTuple_Size(args));
+        return -1;
+    }
+    if (kwds) {
+        PyErr_SetString(PyExc_TypeError, "Tlsh() takes no keyword arguments");
+        return -1;
+    }
+
+   /* Call Tlsh() constructor. */
+   new (&tlsh_object->tlsh) Tlsh();
+
+   if (PyTuple_Size(args) == 1) {
+        Tlsh_update(tlsh_object, args);
+        if (PyErr_Occurred())
+            return -1;
+   }
+
+    return 0;
+}
 
 static PyObject *
 Tlsh_fromTlshStr(tlsh_TlshObject *self, PyObject *args)

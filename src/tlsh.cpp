@@ -44,20 +44,12 @@ const char *Tlsh::version()
 
 void Tlsh::update(const unsigned char* data, unsigned int len)
 {
-    // The python module does not call the Tlsh constructor, so allocate impl if NULL
-    if ( NULL == impl )
-        impl = new TlshImpl();
-
     if ( NULL != impl )
         impl->update(data, len);
 }
 
 void Tlsh::final(const unsigned char* data, unsigned int len)
 {
-    // The python module does not call the Tlsh constructor, so allocate impl if NULL
-    if ( NULL == impl )
-        impl = new TlshImpl();
-
     if ( NULL != impl ){
         if ( NULL != data && len > 0 )
             impl->update(data, len);
@@ -116,10 +108,6 @@ int Tlsh::totalDiff(const Tlsh *other, bool len_diff) const
 
 int Tlsh::fromTlshStr(const char* str)
 {
-    // The python module does not call the Tlsh constructor, so allocate impl if NULL
-    if ( NULL == impl )
-        impl = new TlshImpl();
-
     if ( NULL == impl )
         return -(ENOMEM);
     else if ( NULL == str )
@@ -128,3 +116,7 @@ int Tlsh::fromTlshStr(const char* str)
         return impl->fromTlshStr(str);
 }
 
+bool Tlsh::isValid() const
+{
+    return (impl ? impl->isValid() : false);
+}
