@@ -135,10 +135,10 @@ TLSH similarity is expressed as a difference score:
 
 # Publications
 
-- Jonathan Oliver, Chun Cheng and Yanggui Chen, “TLSH - A Locality Sensitive Hash”
-  4th Cybercrime and Trustworthy Computing Workshop, Sydney, November 2013
-  https://drive.google.com/file/d/0B6FS3SVQ1i0GTXk5eDl3Y29QWlk/edit?usp=sharing
-  (included in distribution as TLSH_CTC_final.pdf)
+- Jonathan Oliver, Chun Cheng, and Yanggui Chen, [TLSH - A Locality Sensitive Hash](https://github.com/trendmicro/tlsh/blob/master/TLSH_CTC_final.pdf).
+4th Cybercrime and Trustworthy Computing Workshop, Sydney, November 2013
+- Jonathan Oliver, Scott Forman, and Chun Cheng, [Using Randomization to Attack Similarity Digests](https://github.com/trendmicro/tlsh/blob/master/Attacking_LSH_and_Sim_Dig.pdf).
+ATIS 2014, November, 2014, pages 199-210
     
 # Changes
 
