@@ -21,3 +21,7 @@ set_target_properties(tlsh_shared PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SO
 set_target_properties(tlsh_shared PROPERTIES OUTPUT_NAME tlsh${BUILD_POSTFIX})
 set_target_properties(tlsh_shared PROPERTIES VERSION "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}"
                                              SOVERSION "0")
+
+include(GNUInstallDirs)
+install(TARGETS tlsh tlsh_shared DESTINATION ${CMAKE_INSTALL_LIBDIR})
+install(FILES ../include/tlsh.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
