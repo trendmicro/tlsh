@@ -2,6 +2,8 @@
 
 echoerr() { echo "$@" 1>&2; }
 
+## Set LD_LIBRARY_PATH so that tlsh_unittest can pick up the tlsh shared library
+export LD_LIBRARY_PATH=../lib:$LD_LIBRARY_PATH
 BASEDIR=$(dirname $0)
 pushd $BASEDIR > /dev/null
 
