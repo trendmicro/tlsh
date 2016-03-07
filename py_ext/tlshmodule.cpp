@@ -1,6 +1,6 @@
-#include <new>
 #define PY_SSIZE_T_CLEAN 1
 #include <Python.h>
+#include <new>
 #include <bytesobject.h>
 #include "tlsh.h"
 
