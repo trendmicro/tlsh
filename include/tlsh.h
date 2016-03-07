@@ -28,7 +28,7 @@
 class TlshImpl;
 
 // changed the minimum data length to 256 for version 3.3
-#define MIN_DATA_LENGTH	256
+#define MIN_DATA_LENGTH    256
 
 // Define TLSH_STRING_LEN, which is the string lenght of the hex value of the Tlsh hash.  
 // BUCKETS_256 & CHECKSUM_3B are compiler switches defined in CMakeLists.txt
@@ -58,6 +58,7 @@ class TLSH_API Tlsh{
 
 public:
     Tlsh();
+    Tlsh(const Tlsh& other);
 
     /* allow the user to add data in multiple iterations */
     void update(const unsigned char* data, unsigned int len);
@@ -91,6 +92,7 @@ public:
     static const char *version();
 
     // operators
+    Tlsh& operator=(const Tlsh& other);
     bool operator==(const Tlsh& other) const;
     bool operator!=(const Tlsh& other) const;
 

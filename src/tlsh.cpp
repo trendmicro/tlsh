@@ -29,6 +29,12 @@ Tlsh::Tlsh():impl(NULL)
     impl = new TlshImpl();
 }
 
+Tlsh::Tlsh(const Tlsh& other):impl(NULL)
+{
+    impl = new TlshImpl();
+    *impl = *other.impl;
+}
+
 Tlsh::~Tlsh()
 {
     delete impl;
@@ -79,6 +85,14 @@ void Tlsh::reset()
 {
     if ( NULL != impl )
         impl->reset();
+}
+
+Tlsh& Tlsh::operator=(const Tlsh& other)
+{
+    if (this == &other) 
+        return *this;
+
+    *impl = *other.impl;
 }
 
 bool Tlsh::operator==(const Tlsh& other) const
