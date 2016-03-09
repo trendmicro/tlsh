@@ -93,6 +93,7 @@ Tlsh& Tlsh::operator=(const Tlsh& other)
         return *this;
 
     *impl = *other.impl;
+    return *this;
 }
 
 bool Tlsh::operator==(const Tlsh& other) const
