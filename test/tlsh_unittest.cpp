@@ -340,7 +340,12 @@ int max_files;
 		return;
 
 	struct FileName *fnames;
-	fnames = (struct FileName *) calloc ( max_files+1, sizeof(struct FileName) * (max_files+1) );
+	fnames = (struct FileName *) calloc ( max_files+1, sizeof(struct FileName));
+	if (fnames == NULL) {
+		fprintf(stderr, "error: unable to allocate memory for %d files\n", max_files);
+		exit(1);
+	}
+	
 	int err;
 	int n_file = 0;
 	if (dirname) {
