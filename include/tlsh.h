@@ -4,9 +4,7 @@
  * TLSH is provided for use under two licenses: Apache OR BSD.
  * Users may opt to use either license depending on the license
  * restictions of the systems with which they plan to integrate
- * the TLSH code. For example, the OSSEC Project code is GPL 2
- * licensed which is incompatible with the Apache license, but
- * is compatible with the BSD license.
+ * the TLSH code.
  */ 
 
 /* ==============
