@@ -224,3 +224,7 @@ ATIS 2014, November, 2014, pages 199-210
   - Remove TlshImpl symbols from libtlsh.so
   - Add Tlsh_init to py_ext/tlshmodule.cpp, which ensures Tlsh constructor will be called from Tlsh python module
   - Create symbolic link for tlsh -> tlsh_unittest
+
+**3.5.0**
+- Added the - force option
+  - Allows a user to force the generation of digests for strings down to 50 characters long

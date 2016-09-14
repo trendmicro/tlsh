@@ -68,9 +68,6 @@
 
 class TlshImpl;
 
-// changed the minimum data length to 256 for version 3.3
-#define MIN_DATA_LENGTH    256
-
 // Define TLSH_STRING_LEN, which is the string lenght of the hex value of the Tlsh hash.  
 // BUCKETS_256 & CHECKSUM_3B are compiler switches defined in CMakeLists.txt
 #if defined BUCKETS_256
@@ -79,12 +76,31 @@ class TlshImpl;
   #else
     #define TLSH_STRING_LEN 134
   #endif
-#else
+  // changed the minimum data length to 256 for version 3.3
+  #define MIN_DATA_LENGTH		256
+  // added the -force option for version 3.5
+  #define MIN_FORCE_DATA_LENGTH	50
+#endif
+
+#if defined BUCKETS_128
   #if defined CHECKSUM_3B
     #define TLSH_STRING_LEN 74
   #else
     #define TLSH_STRING_LEN 70
   #endif
+  // changed the minimum data length to 256 for version 3.3
+  #define MIN_DATA_LENGTH		256
+  // added the -force option for version 3.5
+  #define MIN_FORCE_DATA_LENGTH	50
+#endif
+
+#if defined BUCKETS_48
+  // No 3 Byte checksum option for 48 Bucket min hash
+  #define TLSH_STRING_LEN 30
+  // changed the minimum data length to 256 for version 3.3
+  #define MIN_DATA_LENGTH		10
+  // added the -force option for version 3.5
+  #define MIN_FORCE_DATA_LENGTH		10
 #endif
 
 #define TLSH_STRING_BUFFER_LEN (TLSH_STRING_LEN+1)
@@ -105,7 +121,7 @@ public:
     void update(const unsigned char* data, unsigned int len);
 
     /* to signal the class there is no more data to be added */
-    void final(const unsigned char* data = NULL, unsigned int len = 0);
+    void final(const unsigned char* data = NULL, unsigned int len = 0, int force_option = 0);
 
     /* to get the hex-encoded hash code */
     const char* getHash() const ;

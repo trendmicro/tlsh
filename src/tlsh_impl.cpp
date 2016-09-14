@@ -150,10 +150,15 @@ void TlshImpl::update(const unsigned char* data, unsigned int len)
 }
 
 /* to signal the class there is no more data to be added */
-void TlshImpl::final() 
+void TlshImpl::final(int force_option) 
 {
     // incoming data must more than or equal to MIN_DATA_LENGTH bytes
-    if (this->data_len < MIN_DATA_LENGTH) {
+    if ((force_option == 0) && (this->data_len < MIN_DATA_LENGTH)) {
+      // this->lsh_code be empty
+      delete [] this->a_bucket; this->a_bucket = NULL;
+      return;
+    }
+    if ((force_option) && (this->data_len < MIN_FORCE_DATA_LENGTH)) {
       // this->lsh_code be empty
       delete [] this->a_bucket; this->a_bucket = NULL;
       return;
@@ -171,10 +176,18 @@ void TlshImpl::final()
         }
       }
     }
+#if defined BUCKETS_48
+    if (nonzero < 18) {
+      // printf("nonzero=%d\n", nonzero);
+      delete [] this->a_bucket; this->a_bucket = NULL;
+      return;
+    }
+#else
     if (nonzero <= 4*CODE_SIZE/2) {
       delete [] this->a_bucket; this->a_bucket = NULL;
       return;
     }
+#endif
     
     for(unsigned int i=0; i<CODE_SIZE; i++) {
         unsigned char h=0;
