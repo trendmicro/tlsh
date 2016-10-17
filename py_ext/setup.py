@@ -3,6 +3,7 @@ from os.path import join, realpath
 import re
 
 tlsh_256 = '-DBUCKETS_256'
+tlsh_128 = '-DBUCKETS_128'
 tlsh_3b = '-DCHECKSUM_3B'
 
 with open(join(realpath('..'), 'CMakeLists.txt'), 'r') as f:
@@ -27,6 +28,8 @@ tlsh_module = Extension('tlsh', \
 
 if tlsh_256 != '':
   tlsh_module.extra_compile_args.append(tlsh_256)
+else:
+  tlsh_module.extra_compile_args.append(tlsh_128)
 if tlsh_3b != '':
   tlsh_module.extra_compile_args.append(tlsh_3b)
 

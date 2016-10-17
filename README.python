@@ -1,0 +1,21 @@
+17/Oct/2016
+
+Sorry everyone for me breaking the Python implementation of TLSH
+The --force option meant that I changed the CMakeLists.txt
+And I did not test the Python (I am an algorithm / C++ guy - not really a Python guy).
+
+Anyway - I dug through it and did the following
+	$ cd py_ext/
+	$ python ./setup.py build
+	$ python ./setup.py install
+	$ cd ../Testing
+	$ ./python_test.sh
+I fixed setup.py to process the new CMakeLists.txt properly
+And now it passes
+
+I am going to incorporate this into the regression test - with a -python option
+So that this does not occur again
+
+Sorry once again...
+
+

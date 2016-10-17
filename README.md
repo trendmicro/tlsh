@@ -228,3 +228,6 @@ ATIS 2014, November, 2014, pages 199-210
 **3.5.0**
 - Added the - force option
   - Allows a user to force the generation of digests for strings down to 50 characters long
+
+**3.5.1**
+- Fixed the error in the Python extension
