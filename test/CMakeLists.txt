@@ -50,18 +50,23 @@
 # LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
 # OF THE POSSIBILITY OF SUCH DAMAGE.
+set(winfunction "")
 
-add_executable(tlsh_version tlsh_version.cpp)
+
+if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
+	set(winfunction ../Windows/WinFunctions.cpp)
+endif()
+add_executable(tlsh_version tlsh_version.cpp ${winfunction})
 target_link_libraries(tlsh_version tlsh)
 set_target_properties(tlsh_version PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
 set_target_properties(tlsh_version PROPERTIES OUTPUT_NAME tlsh_version${BUILD_POSTFIX})
 
-add_executable(simple_unittest simple_unittest.cpp)
+add_executable(simple_unittest simple_unittest.cpp ${winfunction})
 target_link_libraries(simple_unittest tlsh)
-set_target_properties(simple_unittest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
-set_target_properties(simple_unittest PROPERTIES OUTPUT_NAME simple_unittest${BUILD_POSTFIX})
+#set_target_properties(simple_unittest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
+#set_target_properties(simple_unittest PROPERTIES OUTPUT_NAME simple_unittest${BUILD_POSTFIX})
 
-add_executable(tlsh_unittest tlsh_unittest.cpp)
+add_executable(tlsh_unittest tlsh_unittest.cpp ${winfunction} )
 target_link_libraries(tlsh_unittest tlsh)
 set_target_properties(tlsh_unittest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
 set_target_properties(tlsh_unittest PROPERTIES OUTPUT_NAME tlsh_unittest${BUILD_POSTFIX})

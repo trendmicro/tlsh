@@ -51,13 +51,15 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
 # OF THE POSSIBILITY OF SUCH DAMAGE.
 
-cmake_minimum_required(VERSION 2.6)
+cmake_minimum_required(VERSION 3.6)
 
 project(TLSH)
 
 set(VERSION_MAJOR 3)
 set(VERSION_MINOR 9)
 set(VERSION_PATCH 1)
+
+#
 
 # TLSH uses only half the counting buckets.
 # It can use all the buckets now.
@@ -122,6 +124,8 @@ else(CMAKE_BUILD_TYPE STREQUAL Debug)
     endif()
     if(MSVC)
         set(CMAKE_CXX_FLAGS "/O2")        ## Optimize
+	add_definitions(-DWINDOWS)
+	include_directories(Windows)
     endif()
 endif(CMAKE_BUILD_TYPE STREQUAL Debug)
 
@@ -132,6 +136,10 @@ add_subdirectory(src)
 add_subdirectory(test)
 add_subdirectory(utils)
 add_subdirectory(Testing)
+
+if(MSVC)
+	add_subdirectory(Windows)
+endif()
 
 set(CPACK_GENERATOR "TGZ")
 set(CPACK_SOURCE_GENERATOR "TGZ")
