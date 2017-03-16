@@ -235,11 +235,26 @@ DIR	  *dip;
 	if (dirname == NULL) {
 		return(false);
 	}
+#ifndef WINDOWS
 	dip = opendir(dirname);
+#else
+	WIN32_FIND_DATA data;
+	HANDLE h = FindFirstFile(dirname, &data);
+	if (h != nullptr)
+	{
+		dip = new DIR();
+		dip->hFind = h;
+	}
+#endif
 	if (dip == NULL) {
 		return(false);
 	}
+#ifndef WINDOWS
 	closedir(dip);
+#else
+	FindClose(dip->hFind);
+	delete dip;
+#endif
 	return(true);
 }
 
@@ -253,7 +268,17 @@ static int count_files_in_dir(char *dirname)
 DIR     *dip;
 struct dirent   *dit;
 
+#ifndef WINDOWS
 	dip = opendir(dirname);
+#else
+	WIN32_FIND_DATA data;
+	HANDLE h = FindFirstFile(dirname, &data);
+	if (h != nullptr)
+	{
+		dip = new DIR();
+		dip->hFind = h;
+	}
+#endif
 	if (dip == NULL) {
 		return(0);
 	}
@@ -276,7 +301,12 @@ struct dirent   *dit;
 		}
 		dit = readdir(dip);
 	}
+#ifndef WINDOWS
 	closedir(dip);
+#else
+	FindClose(dip->hFind);
+	delete dip;
+#endif
 	return(n_file);
 }
 
