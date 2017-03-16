@@ -1,0 +1,5 @@
+simplejson
+requests
+pefile
+m2crypto
+pyOpenSSL
