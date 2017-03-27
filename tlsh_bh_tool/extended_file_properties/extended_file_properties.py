@@ -1,4 +1,4 @@
-import os, sys, pefile, M2Crypto, OpenSSL, logging
+import os, sys, pefile, M2Crypto, logging
 from M2Crypto import BIO, SMIME, X509, m2
 
 class self:
@@ -46,6 +46,8 @@ def getCertificateDetails(filename):
             cert_details["cert_issued_to"] = signers[0].get_subject().CN
             validity = signers[0].get_not_after().get_datetime()
             cert_details["cert_expiration"] = "%s-%s-%s" % (validity.year, validity.month, validity.day)
+            bio.close()
+            del bio
     except Exception, ex:
         print "ERROR: Problem in retrieving certificate details : %s" % ex
     finally:
