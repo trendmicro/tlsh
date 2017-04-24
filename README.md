@@ -231,3 +231,6 @@ ATIS 2014, November, 2014, pages 199-210
 
 **3.5.1**
 - Fixed the error in the Python extension
+
+**3.5.2**
+- Added the BlackHat Asia tool (presented at Arsenal)

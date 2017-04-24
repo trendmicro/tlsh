@@ -21,6 +21,16 @@
      Applications and Techniques in Information Security. Springer Berlin Heidelberg, 2014. 199-210.
      https://github.com/trendmicro/tlsh/blob/master/Attacking_LSH_and_Sim_Dig.pdf
 
+     Jonathan Oliver and Jayson Pryde
+     http://blog.trendmicro.com/trendlabs-security-intelligence/smart-whitelisting-using-locality-sensitive-hashing/
+
+
+
+
+
+
+
 
     
+   SHA1(README.md)= f0f5e0b6cda8728cc959ceab33351719a59298aa
 

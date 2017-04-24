@@ -102,7 +102,7 @@ def _sendQuery():
         result = {}
         params = dict(TlshStruct.file_basic_details.items() + TlshStruct.file_prop_details.items() + TlshStruct.file_cert_details.items())
         try:
-                response = requests.get(TlshStruct.query_url, params=params)
+                response = requests.get(TlshStruct.query_url, params=params, verify=False)
                 if response.status_code == 200: result = simplejson.loads(response.content)
         except Exception, ex:
                 TlshStruct.logger.error("Problem in sending query : %s" % ex)
