@@ -79,6 +79,8 @@ TlshImpl::TlshImpl() : a_bucket(NULL), data_len(0), lsh_code(NULL), lsh_code_val
 {
     memset(this->slide_window, 0, sizeof this->slide_window);
     memset(&this->lsh_bin, 0, sizeof this->lsh_bin);
+
+    assert (sizeof (this->lsh_bin.Q.QR) == sizeof (this->lsh_bin.Q.QB));
 }
 
 TlshImpl::~TlshImpl()

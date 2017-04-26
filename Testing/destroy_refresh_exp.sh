@@ -1,3 +1,5 @@
+#!/bin/bash
+
 if test "$1" = "-xlen"
 then
     XLEN="xlen"

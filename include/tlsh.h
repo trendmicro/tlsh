@@ -57,8 +57,8 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef _TLSH_H
-#define _TLSH_H
+#ifndef HEADER_TLSH_H
+#define HEADER_TLSH_H
 
 #ifndef NULL
 #define NULL 0
@@ -108,7 +108,11 @@ class TlshImpl;
 #ifdef WINDOWS
 #include <WinFunctions.h>
 #else 
-#define TLSH_API __attribute__ ((visibility("default")))
+	#if defined(__SPARC) || defined(_AS_MK_OS_RH73)
+	   #define TLSH_API
+	#else
+	   #define TLSH_API __attribute__ ((visibility("default")))
+	#endif
 #endif
 
 class TLSH_API Tlsh{

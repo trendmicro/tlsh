@@ -234,3 +234,11 @@ ATIS 2014, November, 2014, pages 199-210
 
 **3.5.2**
 - Added the BlackHat Asia tool (presented at Arsenal)
+
+**3.7.0
+- merged in various fixes - ifdef for SPARC and RH73
+  corrected TLSH_CTC_final.pdf (see https://github.com/trendmicro/tlsh/issues/31)
+  added a SHA1 to the NOTICE.txt file
+  improved the make.sh so that it calls the test.sh (and does regression tests)
+  improved regression tests to confirm that the hash is calculated correctly in your environment
+  fixed the header file C++ standard violation (reserved identifier violation #21)

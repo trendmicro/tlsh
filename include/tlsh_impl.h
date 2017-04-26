@@ -55,8 +55,8 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef _TLSH_IMPL_H
-#define _TLSH_IMPL_H
+#ifndef HEADER_TLSH_IMPL_H
+#define HEADER_TLSH_IMPL_H
     
 #define SLIDING_WND_SIZE  5
 #define BUCKETS           256
@@ -120,10 +120,18 @@ private:
         unsigned char checksum[TLSH_CHECKSUM_LEN];  // 1 to 3 bytes
         unsigned char Lvalue;                       // 1 byte
         union {
+#if defined(__SPARC) || defined(_AIX)
+		#pragma pack(1)
+#endif
         unsigned char QB;
             struct{
+#if defined(__SPARC) || defined(_AIX)
+		unsigned char Q2ratio : 4;
+		unsigned char Q1ratio : 4;
+#else
                 unsigned char Q1ratio : 4;
                 unsigned char Q2ratio : 4;
+#endif
             } QR;
         } Q;                                        // 1 bytes
         unsigned char tmp_code[CODE_SIZE];          // 32/64 bytes

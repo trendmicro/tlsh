@@ -55,8 +55,8 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef _TLSH_UTIL_H
-#define _TLSH_UTIL_H
+#ifndef HEADER_TLSH_UTIL_H
+#define HEADER_TLSH_UTIL_H
 
 unsigned char b_mapping(unsigned char salt, unsigned char i, unsigned char j, unsigned char k);
 unsigned char l_capturing(unsigned int len);
