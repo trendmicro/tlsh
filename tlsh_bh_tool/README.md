@@ -23,5 +23,5 @@
 	user=bh_user
 
 Note:
-the script demo.sh shows how to use the tool
+the script bh_demo.sh shows how to use the tool
 
