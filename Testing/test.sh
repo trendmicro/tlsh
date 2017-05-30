@@ -246,6 +246,32 @@ echo "passed"
 # END OF test 6
 ############################
 
+############################
+# Test 7
+#	Test the -force option
+############################
+testnum=7
+echo
+echo "test $testnum"
+echo
+
+for file in small small2 ; do
+	echo "../bin/${TLSH_PROG} -force -f example_data/$file.txt > $TMP/$file.tlsh"
+	      ../bin/${TLSH_PROG} -force -f example_data/$file.txt > $TMP/$file.tlsh
+
+	diff --ignore-all-space $TMP/$file.tlsh exp/$file.tlsh_EXP
+	if [ $? -ne 0 ]; then
+		echoerr "error: ($testnum) $TMP/$file.tlsh exp/$file.tlsh_EXP"
+		popd > /dev/null
+		exit $testnum
+	fi
+done
+echo "passed"
+
+############################
+# END OF test 7
+############################
+
 echo
 echo "Running simple_unittest"
 ../bin/simple_unittest > $TMP/simple_unittest.out
