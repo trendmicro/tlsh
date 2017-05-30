@@ -19,6 +19,9 @@ static char tlsh_doc[] =
 static char tlsh_hash_doc[] =
   "tlsh.hash(data)\n\n\
   returns tlsh hexadecimal representation (string)";
+static char tlsh_forcehash_doc[] =
+  "tlsh.forcehash(data)\n\n\
+  returns tlsh hexadecimal representation (string) - allows strings down to 50 char";
 static char tlsh_diff_doc[] =
   "tlsh.diff(hash1, hash2)\n\n\
   returns tlsh score (integer)";
@@ -37,6 +40,22 @@ static PyObject* hash_py(PyObject* self, PyObject* args) {
   Tlsh tlsh;
   tlsh.update(pBuffer, len);
   tlsh.final();
+  const char *s = tlsh.getHash();
+
+  return Py_BuildValue("s", s);
+}
+
+// forcehash(data) returns byte buffer
+static PyObject* forcehash_py(PyObject* self, PyObject* args) {
+  unsigned char* pBuffer;
+  Py_ssize_t len;
+  if (!PyArg_ParseTuple(args, BYTES_VALUE_CHAR "#", &pBuffer, &len)) {
+    return NULL;
+  }
+  
+  Tlsh tlsh;
+  tlsh.update(pBuffer, len);
+  tlsh.final(NULL,0,1);
   const char *s = tlsh.getHash();
 
   return Py_BuildValue("s", s);
@@ -86,6 +105,7 @@ static PyObject* diffxlen_py(PyObject* self, PyObject* args) {
 static PyMethodDef tlsh_methods[] =
 {
   { "hash", hash_py, METH_VARARGS, tlsh_hash_doc },
+  { "forcehash", forcehash_py, METH_VARARGS, tlsh_forcehash_doc },
   { "diff", diff_py, METH_VARARGS, tlsh_diff_doc },
   { "diffxlen", diffxlen_py, METH_VARARGS, tlsh_diffxlen_doc },
   { NULL, NULL } /* sentinel */
