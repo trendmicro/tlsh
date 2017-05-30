@@ -67,13 +67,20 @@ runit() {
 	echo "test 1"
 	echo
 
-	echo "../bin/${TLSH_PROG} -r ../Testing/example_data > $TMP/example_data.out"
-	      ../bin/${TLSH_PROG} -r ../Testing/example_data > $TMP/example_data.out
+	echo "../bin/${TLSH_PROG} -r ../Testing/example_data > $TMP/example_data.out 2> $TMP/example_data.err"
+	      ../bin/${TLSH_PROG} -r ../Testing/example_data > $TMP/example_data.out 2> $TMP/example_data.err
 
 	diffc=`diff --ignore-all-space $TMP/example_data.out exp/example_data.$HASH.$CHKSUM.$XLEN.out_EXP | wc -l`
 	if test ! $diffc = 0
 	then
 		echoerr "error: (1), diff $TMP/example_data.out exp/example_data.$HASH.$CHKSUM.$XLEN.out_EXP"
+		popd > /dev/null
+		exit 1
+	fi
+	diffc=`diff --ignore-all-space $TMP/example_data.err exp/example_data.$HASH.$CHKSUM.$XLEN.err_EXP | wc -l`
+	if test ! $diffc = 0
+	then
+		echoerr "error: (1), diff $TMP/example_data.err exp/example_data.$HASH.$CHKSUM.$XLEN.err_EXP"
 		popd > /dev/null
 		exit 1
 	fi
@@ -91,17 +98,24 @@ runit() {
 
 	if test $XLEN = "xlen"
 	then
-	echo "../bin/${TLSH_PROG} -xlen -r ../Testing/example_data -c ../Testing/example_data/website_course_descriptors06-07.txt > $TMP/example_data.scores"
-	      ../bin/${TLSH_PROG} -xlen -r ../Testing/example_data -c ../Testing/example_data/website_course_descriptors06-07.txt > $TMP/example_data.scores
+	echo "../bin/${TLSH_PROG} -xlen -r ../Testing/example_data -c ../Testing/example_data/website_course_descriptors06-07.txt > $TMP/example_data.scores 2> $TMP/example_data.err2"
+	      ../bin/${TLSH_PROG} -xlen -r ../Testing/example_data -c ../Testing/example_data/website_course_descriptors06-07.txt > $TMP/example_data.scores 2> $TMP/example_data.err2
 	else
-	echo "../bin/${TLSH_PROG} -r ../Testing/example_data -c ../Testing/example_data/website_course_descriptors06-07.txt > $TMP/example_data.scores"
-	      ../bin/${TLSH_PROG} -r ../Testing/example_data -c ../Testing/example_data/website_course_descriptors06-07.txt > $TMP/example_data.scores
+	echo "../bin/${TLSH_PROG} -r ../Testing/example_data -c ../Testing/example_data/website_course_descriptors06-07.txt > $TMP/example_data.scores 2> $TMP/example_data.err2"
+	      ../bin/${TLSH_PROG} -r ../Testing/example_data -c ../Testing/example_data/website_course_descriptors06-07.txt > $TMP/example_data.scores 2> $TMP/example_data.err2
 	fi
 
 	diffc=`diff --ignore-all-space $TMP/example_data.scores exp/example_data.$HASH.$CHKSUM.$XLEN.scores_EXP | wc -l`
 	if test ! $diffc = 0
 	then
 		echoerr "error: (2), diff $TMP/example_data.scores exp/example_data.$HASH.$CHKSUM.$XLEN.scores_EXP"
+		popd > /dev/null
+		exit 2
+	fi
+	diffc=`diff --ignore-all-space $TMP/example_data.err2 exp/example_data.$HASH.$CHKSUM.$XLEN.err2_EXP | wc -l`
+	if test ! $diffc = 0
+	then
+		echoerr "error: (2), diff $TMP/example_data.err2 exp/example_data.$HASH.$CHKSUM.$XLEN.err2_EXP"
 		popd > /dev/null
 		exit 2
 	fi

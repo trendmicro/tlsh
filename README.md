@@ -242,3 +242,6 @@ ATIS 2014, November, 2014, pages 199-210
   improved the make.sh so that it calls the test.sh (and does regression tests)
   improved regression tests to confirm that the hash is calculated correctly in your environment
   fixed the header file C++ standard violation (reserved identifier violation #21)
+**3.7.1
+- work towards issue #29 - the force option for Python
+  Step 1 - adding a regression test for strings approx of length 50
