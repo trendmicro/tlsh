@@ -31,6 +31,7 @@ hash values to determine similarity.  Run it with no parameters for detailed usa
 - A Java port is available [here](https://github.com/triplecheck/TLSH).
 - A JavaScript port available in the `js_ext` directory.
 - A Golang port is available [here](https://github.com/glaslos/tlsh).
+- A Ruby port is available [here](https://github.com/adamliesko/tlsh).
 
 # Downloading TLSH
 
