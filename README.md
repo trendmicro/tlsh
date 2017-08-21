@@ -2,10 +2,13 @@
 
 # TLSH - Trend Micro Locality Sensitive Hash
 
-TLSH is a fuzzy matching library. Given a byte stream with a minimum length 
-of 256 bytes (and a minimum amount of randomness - see note in Python 
-extension below), TLSH generates a hash value which can be used for similarity 
-comparisons.  Similar objects will have similar hash values which allows for 
+TLSH is a fuzzy matching library.
+Given a byte stream with a minimum length of 256 bytes
+	(and a minimum amount of randomness - see note in Python extension below.
+	In addition the -force option allows strings down to length 50.
+	See notes for version 3.5.0 of TLSH)
+TLSH generates a hash value which can be used for similarity comparisons.
+Similar objects will have similar hash values which allows for 
 the detection of similar objects by comparing their hash values.  Note that 
 the byte stream should have a sufficient amount of complexity.  For example, 
 a byte stream of identical bytes will not generate a hash value.
@@ -15,15 +18,15 @@ first 3 bytes are used to capture the information about the file as a whole
 (length, ...), while the last 32 bytes are used to capture information about 
 incremental parts of the file.  (Note that the length of the hash can be 
 increased by changing build parameters described below in [CMakeLists.txt](CMakeLists.txt), 
-which will increase the information stored in the hash, and thus its accuracy 
-in predicting similarities between files.)
+which will increase the information stored in the hash.
+For some applications this might increase the accuracy in predicting similarities between files.)
 
 Building TLSH (see below) will create a static library in the `lib` directory,
 and the `tlsh_unittest` executable, which links to the static library, in the `bin`
 directory.  The library has functionality to generate the hash value from a given 
 file, and to compute the similarity between two hash values.
 
-`tlsh_unittest` is a utility for generating TLSH hash values and comparing TLSH
+`tlsh` is a utility for generating TLSH hash values and comparing TLSH
 hash values to determine similarity.  Run it with no parameters for detailed usage.
 
 ## Ports
@@ -31,6 +34,7 @@ hash values to determine similarity.  Run it with no parameters for detailed usa
 - A Java port is available [here](https://github.com/triplecheck/TLSH).
 - A JavaScript port available in the `js_ext` directory.
 - A Golang port is available [here](https://github.com/glaslos/tlsh).
+- A Ruby port is available [here](https://github.com/adamliesko/tlsh)
 
 # Downloading TLSH
 
@@ -123,16 +127,15 @@ py_ext/tlshmodule.cpp and the py_ext/test.py script to see the full API set.
 - The global similarity score distances objects with significant size 
   difference. Global similarity can be disabled. It also distances objects with 
   different quartile distributions.
-- TLSH can be compiled to generate 70 or 134 characters hash strings. The longer
-  version is more accurate.
+- TLSH can be compiled to generate 70 or 134 characters hash strings.
+  The longer version has been created to use of the 70 char hash strings is not working
+  for your application.
 
 TLSH similarity is expressed as a difference score:
 
 - A score of 0 means the objects are almost identical.
-- For the 70 characters hash, a score of 200 or higher means the objects are 
-  very different.
-  For the 134 characters hash, a score of 400 or higher means the objects are
-  very different.
+- For the 70 characters hash, there is a detailed table of experimental Detection rates and False Positive rates
+  based on the threshhold. see [Table II on page 5](https://github.com/trendmicro/tlsh/blob/master/TLSH_CTC_final.pdf)
 
 # Publications
 
