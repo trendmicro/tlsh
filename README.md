@@ -8,22 +8,22 @@ Given a byte stream with a minimum length of 256 bytes
 	In addition the -force option allows strings down to length 50.
 	See notes for version 3.5.0 of TLSH)
 TLSH generates a hash value which can be used for similarity comparisons.
-Similar objects will have similar hash values which allows for 
-the detection of similar objects by comparing their hash values.  Note that 
-the byte stream should have a sufficient amount of complexity.  For example, 
+Similar objects will have similar hash values which allows for
+the detection of similar objects by comparing their hash values.  Note that
+the byte stream should have a sufficient amount of complexity.  For example,
 a byte stream of identical bytes will not generate a hash value.
 
-The computed hash is 35 bytes long (output as 70 hexidecimal charactes). The 
-first 3 bytes are used to capture the information about the file as a whole 
-(length, ...), while the last 32 bytes are used to capture information about 
-incremental parts of the file.  (Note that the length of the hash can be 
-increased by changing build parameters described below in [CMakeLists.txt](CMakeLists.txt), 
+The computed hash is 35 bytes long (output as 70 hexidecimal charactes). The
+first 3 bytes are used to capture the information about the file as a whole
+(length, ...), while the last 32 bytes are used to capture information about
+incremental parts of the file.  (Note that the length of the hash can be
+increased by changing build parameters described below in [CMakeLists.txt](CMakeLists.txt),
 which will increase the information stored in the hash.
 For some applications this might increase the accuracy in predicting similarities between files.)
 
 Building TLSH (see below) will create a static library in the `lib` directory,
 and the `tlsh_unittest` executable, which links to the static library, in the `bin`
-directory.  The library has functionality to generate the hash value from a given 
+directory.  The library has functionality to generate the hash value from a given
 file, and to compute the similarity between two hash values.
 
 `tlsh` is a utility for generating TLSH hash values and comparing TLSH
@@ -31,8 +31,8 @@ hash values to determine similarity.  Run it with no parameters for detailed usa
 
 ## Ports
 
-- A Java port is available [here](https://github.com/triplecheck/TLSH).
 - A JavaScript port available in the `js_ext` directory.
+- A Java port is available [here](https://github.com/idealista/tlsh).
 - A Golang port is available [here](https://github.com/glaslos/tlsh).
 - A Ruby port is available [here](https://github.com/adamliesko/tlsh)
 
@@ -66,7 +66,7 @@ Edit [CMakeLists.txt](CMakeLists.txt) to build TLSH with different options.
 Execute:
 
 ```
-make.sh 
+make.sh
 ```
 
 **Note:** *Building TLSH on Linux depends upon `cmake` to create the `Makefile` and then
@@ -78,7 +78,7 @@ make.sh
 Use the version-specific tlsh solution files ([tlsh.VC2005.sln](Windows/tlsh.VC2005.sln),
 [tlsh.VC2008.sln](Windows/tlsh.VC2008.sln), ...) under the Windows directory.
 
-See [tlsh.h](include/tlsh.h) for the tlsh library interface and [tlsh_unittest.cpp](test/tlsh_unittest.cpp) and 
+See [tlsh.h](include/tlsh.h) for the tlsh library interface and [tlsh_unittest.cpp](test/tlsh_unittest.cpp) and
 [simple_unittest.cpp](test/simple_unittest.cpp) under the `test` directory for example code.
 
 ## Python Extension
@@ -98,34 +98,34 @@ tlsh.hash(data)
 
 
 Note that the data must contain at least 256 bytes to generate a hash value and that
-it must have a certain amount of randomness. 
+it must have a certain amount of randomness.
 For example, `tlsh.hash(str(os.urandom(256)))`, should always generate a hash.  
 To get the hash value of a file, try `tlsh.hash(open(file, 'rb').read())`.
-    
+
 ```python
 tlsh.diff(h1, h2)
 tlsh.diffxlen(h1, h2)
 ```
 
 The `diffxlen` function removes the file length component of the tlsh header from
-the comparison.  If a file with a repeating pattern is compared to a file 
+the comparison.  If a file with a repeating pattern is compared to a file
 with only a single instance of the pattern, then the difference will be increased
 if the file lenght is included.  But by using the `diffxlen` function, the file
 length will be removed from consideration.
 
-Note that the python API has been extended to miror the C++ API.  See 
+Note that the python API has been extended to miror the C++ API.  See
 py_ext/tlshmodule.cpp and the py_ext/test.py script to see the full API set.
 
 # Design Choices
 
-- To improve comparison accuracy, TLSH tracks counting bucket height 
-  distribution in quartiles. Bigger quartile difference results in higher 
+- To improve comparison accuracy, TLSH tracks counting bucket height
+  distribution in quartiles. Bigger quartile difference results in higher
   difference score.
-- Use specially 6 trigrams to give equal representation of the bytes in the 5 
+- Use specially 6 trigrams to give equal representation of the bytes in the 5
   byte sliding window which produces improved results.
 - Pearson hash is used to distribute the trigram counts to the counting buckets.
-- The global similarity score distances objects with significant size 
-  difference. Global similarity can be disabled. It also distances objects with 
+- The global similarity score distances objects with significant size
+  difference. Global similarity can be disabled. It also distances objects with
   different quartile distributions.
 - TLSH can be compiled to generate 70 or 134 characters hash strings.
   The longer version has been created to use of the 70 char hash strings is not working
@@ -206,7 +206,7 @@ ATIS 2014, November, 2014, pages 199-210
 **3.4.0**
 - Add JavaScript implementation (see directory `js_ext`) - required for [Blackhat presentation](https://www.blackhat.com/us-15/speakers/Sean-Park.html).
 - Modify `tlsh_unittest` so that it can output tlsh values and filenames correctly, when the filenames contain embedded newline, linefeed or tab characters.
- 
+
 **3.4.1**
 - Thanks to Jeremy Bobbios `py_ext` patch. TLSH has these enhancements.
 - Instead of using a big memory blob, it will calculate the hash incrementally.
@@ -223,7 +223,7 @@ ATIS 2014, November, 2014, pages 199-210
 - Specify Tlsh::getHash() is a const method
 
 **3.4.5**
-- Pick up Jeremy Bobbios patches for: 
+- Pick up Jeremy Bobbios patches for:
   - Build shared library (libtlsh.so), in addition to static library, on Linux and have tlsh_unittest link to it.
   - Remove TlshImpl symbols from libtlsh.so
   - Add Tlsh_init to py_ext/tlshmodule.cpp, which ensures Tlsh constructor will be called from Tlsh python module
