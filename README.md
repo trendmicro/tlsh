@@ -32,7 +32,8 @@ hash values to determine similarity.  Run it with no parameters for detailed usa
 ## Ports
 
 - A JavaScript port available in the `js_ext` directory.
-- A Java port is available [here](https://github.com/idealista/tlsh).
+- A Java port is available in the `java` directory.
+- Another Java port is available [here](https://github.com/idealista/tlsh).
 - A Golang port is available [here](https://github.com/glaslos/tlsh).
 - A Ruby port is available [here](https://github.com/adamliesko/tlsh)
 
