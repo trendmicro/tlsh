@@ -198,13 +198,19 @@ public class ExampleDataUtilities {
 	 * Not safe for large files.
 	 */
 	public static byte[] getFileBytes(File exampleFile) {
-		return fileCache.computeIfAbsent(exampleFile, (File f) -> {
+		// Would be nice to use Map.computeIfAbsent but that requires 1.8-level
+		// source compatibility
+		byte[] bytes = fileCache.get(exampleFile);
+		if (bytes == null) {
 			try {
-				return Files.readAllBytes(f.toPath());
+				bytes = Files.readAllBytes(exampleFile.toPath());
 			} catch (IOException e) {
 				throw new RuntimeException("Cannot read file " + exampleFile, e);
 			}
-		});
+			fileCache.put(exampleFile, bytes);
+			
+		}
+		return bytes;
 	}
 
 	public static void clearFileCache() {

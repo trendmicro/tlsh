@@ -2,7 +2,29 @@
 
 This folder contains a Java port of the Trend Micro Locality Sensitive Hash algorithm
 
-Example usage:
+## Use with gradle
+
+Pre-built versions of TLSH are hosted on bintray and can be used in gradle build scripts as follows:
+
+```
+repositories {
+    jcenter()
+
+     maven {
+         url  "https://dl.bintray.com/mrpolyonymous/tlsh"
+     }
+}
+
+dependencies {
+	compile 'com.trendmicro:tlsh:3.7.1'
+	
+    // ... other dependencies
+}
+```
+
+**Note**: The process of getting the TLSH library in the main JCenter repository is under way.
+
+## Example
 ```java
 import com.trendmicro.tlsh.Tlsh;
 import com.trendmicro.tlsh.TlshCreator;
