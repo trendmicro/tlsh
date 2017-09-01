@@ -366,7 +366,7 @@ struct tagdef oneoff_def[] = {
 
 static void rhtml_contents(std::string &htmls, int *ntags, int *ndistinct_tags)
 {
-	if ((*ntags <= 0) && (ndistinct_tags <= 0))
+	if ((*ntags <= 0) && (*ndistinct_tags <= 0))
 		return; 
 	if (random() % 10 == 1) {
 		anchor(htmls);
