@@ -9,7 +9,7 @@ def compute_1(path,force):
         data = f.read()
         if force == 1:
             hs = tlsh.forcehash(data)
-	else:
+        else:
             hs = tlsh.hash(data)
         return hs
     except IOError as e:
@@ -22,12 +22,12 @@ def main(argv):
         print('usage: tlsh_digest.py [-force] file')
         sys.exit()
     else:
-	if argv[1] == '-force':
+        if argv[1] == '-force':
             force=1
             fname=argv[2]
         else:
             force=0
-	    fname=argv[1]
+            fname=argv[1]
         hex1 = compute_1(fname, force)
         print(hex1, '\t', fname, sep='')
 
