@@ -262,3 +262,8 @@ to use these settings then change in CMakeLists.txt
 set(TLSH_DISTANCE_PARAMETERS 0)
 =>
 set(TLSH_DISTANCE_PARAMETERS 1)
+
+**3.7.3**
+- resolving issue #44
+- making static library the default
+

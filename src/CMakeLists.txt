@@ -56,12 +56,26 @@ set(TLSH_SRCS tlsh.cpp tlsh_impl.cpp tlsh_util.cpp)
 add_library(tlsh STATIC ${TLSH_SRCS})
 set_target_properties(tlsh PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/lib)
 set_target_properties(tlsh PROPERTIES OUTPUT_NAME tlsh${BUILD_POSTFIX})
-add_library(tlsh_shared SHARED ${TLSH_SRCS})
-set_target_properties(tlsh_shared PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/lib)
-set_target_properties(tlsh_shared PROPERTIES OUTPUT_NAME tlsh${BUILD_POSTFIX})
-set_target_properties(tlsh_shared PROPERTIES VERSION "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}"
-                                             SOVERSION "0")
+
+##########################
+# the tlsh library is small - there is no reason to have a shared library
+# it was causing problems when compiling / testing tools on Linux
+##########################
+
+set(TLSH_SHARED_LIBRARY 0)
+if(TLSH_SHARED_LIBRARY EQUAL 1)
+    add_library(tlsh_shared SHARED ${TLSH_SRCS})
+    set_target_properties(tlsh_shared PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/lib)
+    set_target_properties(tlsh_shared PROPERTIES OUTPUT_NAME tlsh${BUILD_POSTFIX})
+    set_target_properties(tlsh_shared PROPERTIES VERSION "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}"
+                                                 SOVERSION "0")
+endif()
 
 include(GNUInstallDirs)
-install(TARGETS tlsh tlsh_shared DESTINATION ${CMAKE_INSTALL_LIBDIR})
+if(TLSH_SHARED_LIBRARY EQUAL 1)
+    install(TARGETS tlsh tlsh_shared DESTINATION ${CMAKE_INSTALL_LIBDIR})
+else()
+    install(TARGETS tlsh             DESTINATION ${CMAKE_INSTALL_LIBDIR})
+endif()
+
 install(FILES ../include/tlsh.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
