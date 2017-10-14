@@ -4735,13 +4735,84 @@ int mod_diff(unsigned int x, unsigned int y, unsigned int R)
     return (dl > dr ? dr : dl);
 }
 
+///////////////////////////////////////////////////////////////
+
+#include "version.h"
+
+#ifdef TLSH_DISTANCE_PARAMETERS
+#include <stdlib.h>	// for abs()
+#include <stdio.h>	// for printf()
+extern int hist_diff1_add; // default value 1
+extern int hist_diff2_add; // default value 2
+extern int hist_diff3_add; // default value 6
+
+static int pairbit_diff(int pairb, int opairb)
+{
+	int diff = abs(pairb - opairb);
+	if (diff == 0) {
+		// printf("PBD:	%d\n", diff);
+		return(0);
+	} else if (diff == 1) {
+		// printf("PBD:	diff=%d	%d\n", diff, hist_diff1_add);
+		return(hist_diff1_add);
+	} else if (diff == 2) {
+		// printf("PBD:	diff=%d	%d\n", diff, hist_diff2_add);
+		return(hist_diff2_add);
+	}
+	// printf("PBD:	diff=%d	%d\n", diff, hist_diff3_add);
+	return(hist_diff3_add);
+}
+
+static int byte_diff(unsigned char bv, unsigned char obv)
+{
+	int h1	= (unsigned char) bv  / 16;
+	int oh1	= (unsigned char) obv / 16;
+	int h2	= (unsigned char) bv  % 16;
+	int oh2	= (unsigned char) obv % 16;
+	int p1	= h1 / 4;
+	int op1	= oh1 / 4;
+	int p2	= h1 % 4;
+	int op2	= oh1 % 4;
+	int p3	= h2 / 4;
+	int op3	= oh2 / 4;
+	int p4	= h2 % 4;
+	int op4	= oh2 % 4;
+	int diff = 0;
+	diff = diff + pairbit_diff(p1, op1);
+	diff = diff + pairbit_diff(p2, op2);
+	diff = diff + pairbit_diff(p3, op3);
+	diff = diff + pairbit_diff(p4, op4);
+	return(diff);
+}
+///////////////////////////////////////////////////////////////
+
+static int test_distance = 1;
+#endif
+
 int h_distance( int len, const unsigned char x[], const unsigned char y[])
 {
-    int diff = 0;
-    for( int i=0; i<len; i++ ){
-        diff += bit_pairs_diff_table[ x[i] ][ y[i] ];
-    }
-    return diff;
+	int diff = 0;
+
+#ifdef TLSH_DISTANCE_PARAMETERS
+	if (test_distance) {
+		for (int i=0; i<len; i++) {
+			int dist2 = byte_diff( x[i], y[i] );
+			// printf("warning x[%d]=%d y[%d]=%d dist2=%d\n", i, x[i], i, y[i], dist2);
+			if ( (hist_diff1_add == 1) && (hist_diff2_add == 2) && (hist_diff3_add == 6) ) {
+				int dist1 = bit_pairs_diff_table[ x[i] ][ y[i] ];
+				if (dist1 != dist2) {
+					printf("warning x[%d]=%d y[%d]=%d dist1=%d dist2=%d\n", i, x[i], i, y[i], dist1, dist2);
+				}
+			}
+			diff += dist2;
+		}
+		return diff;
+	}
+#endif
+	for (int i=0; i<len; i++) {
+		diff += bit_pairs_diff_table[ x[i] ][ y[i] ];
+	}
+	return diff;
 }
 
 unsigned char swap_byte( const unsigned char in )

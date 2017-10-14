@@ -292,6 +292,39 @@ int TlshImpl::compare(const TlshImpl& other) const
     return (memcmp( &(this->lsh_bin), &(other.lsh_bin), sizeof(this->lsh_bin)));
 }
 
+////////////////////////////////////////////
+// the default for these parameters is 12
+////////////////////////////////////////////
+
+static int length_mult = 12;
+static int qratio_mult = 12;
+
+#ifdef TLSH_DISTANCE_PARAMETERS
+
+       int hist_diff1_add = 1;
+       int hist_diff2_add = 2;
+       int hist_diff3_add = 6;
+
+void set_tlsh_distance_parameters(int length_mult_value, int qratio_mult_value, int hist_diff1_add_value, int hist_diff2_add_value, int hist_diff3_add_value)
+{
+	if (length_mult_value != -1) {
+		length_mult = length_mult_value;
+	}
+	if (qratio_mult_value != -1) {
+		qratio_mult = qratio_mult_value;
+	}
+	if (hist_diff1_add_value != -1) {
+		hist_diff1_add = hist_diff1_add_value;
+	}
+	if (hist_diff2_add_value != -1) {
+		hist_diff2_add = hist_diff2_add_value;
+	}
+	if (hist_diff3_add_value != -1) {
+		hist_diff3_add = hist_diff3_add_value;
+	}
+}
+#endif
+
 int TlshImpl::totalDiff(const TlshImpl& other, bool len_diff) const
 {
     int diff = 0;
@@ -303,20 +336,20 @@ int TlshImpl::totalDiff(const TlshImpl& other, bool len_diff) const
         else if ( ldiff == 1 )
             diff = 1;
         else
-           diff += ldiff*12;
+           diff += ldiff*length_mult;
     }
     
     int q1diff = mod_diff( this->lsh_bin.Q.QR.Q1ratio, other.lsh_bin.Q.QR.Q1ratio, RANGE_QRATIO);
     if ( q1diff <= 1 )
         diff += q1diff;
     else           
-        diff += (q1diff-1)*12;
+        diff += (q1diff-1)*qratio_mult;
     
     int q2diff = mod_diff( this->lsh_bin.Q.QR.Q2ratio, other.lsh_bin.Q.QR.Q2ratio, RANGE_QRATIO);
     if ( q2diff <= 1)
         diff += q2diff;
     else
-        diff += (q2diff-1)*12;
+        diff += (q2diff-1)*qratio_mult;
     
     for (int k = 0; k < TLSH_CHECKSUM_LEN; k++) {    
       if (this->lsh_bin.checksum[k] != other.lsh_bin.checksum[k] ) {

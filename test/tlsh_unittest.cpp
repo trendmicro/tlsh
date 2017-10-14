@@ -670,6 +670,14 @@ int main(int argc, char *argv[])
 	int threshold			= DEFAULT_THRESHOLD;
 	int force_option		= 0;
 
+#ifdef TLSH_DISTANCE_PARAMETERS
+	int length_mult_value		= -1;
+	int qratio_mult_value		= -1;
+	int hist_diff1_add_value	= -1;
+	int hist_diff2_add_value	= -1;
+	int hist_diff3_add_value	= -1;
+#endif
+
 	int argIdx		= 1;
 	while (argc > argIdx) {
 		if (strcmp(argv[argIdx], "-c") == 0) {
@@ -711,6 +719,53 @@ int main(int argc, char *argv[])
                 } else if (strcmp(argv[argIdx], "-version") == 0) {
 		        printf("%s\n", Tlsh::version());
 			return 0;
+#ifdef TLSH_DISTANCE_PARAMETERS
+		} else if (strcmp(argv[argIdx], "-SPlen") == 0) {
+			char *len_mult_str = argv[argIdx+1];
+			if ((len_mult_str[0] >= '0') && (len_mult_str[0] <= '9')) {
+				length_mult_value	= atoi(argv[argIdx+1]);
+			} else {
+				printf("\nBad SPlen '%s' - must be a numeric value\n", argv[argIdx+1]);
+				usage(argv[0]);
+			}
+			argIdx = argIdx+2;
+		} else if (strcmp(argv[argIdx], "-SPqrat") == 0) {
+			char *qratio_mult_str = argv[argIdx+1];
+			if ((qratio_mult_str[0] >= '0') && (qratio_mult_str[0] <= '9')) {
+				qratio_mult_value	= atoi(argv[argIdx+1]);
+			} else {
+				printf("\nBad SPqrat '%s' - must be a numeric value\n", argv[argIdx+1]);
+				usage(argv[0]);
+			}
+			argIdx = argIdx+2;
+		} else if (strcmp(argv[argIdx], "-SPdiff1") == 0) {
+			char *hist_diff1_add_str = argv[argIdx+1];
+			if ((hist_diff1_add_str[0] >= '0') && (hist_diff1_add_str[0] <= '9')) {
+				hist_diff1_add_value	= atoi(argv[argIdx+1]);
+			} else {
+				printf("\nBad SPdiff1 '%s' - must be a numeric value\n", argv[argIdx+1]);
+				usage(argv[0]);
+			}
+			argIdx = argIdx+2;
+		} else if (strcmp(argv[argIdx], "-SPdiff2") == 0) {
+			char *hist_diff2_add_str = argv[argIdx+1];
+			if ((hist_diff2_add_str[0] >= '0') && (hist_diff2_add_str[0] <= '9')) {
+				hist_diff2_add_value	= atoi(argv[argIdx+1]);
+			} else {
+				printf("\nBad SPdiff2 '%s' - must be a numeric value\n", argv[argIdx+1]);
+				usage(argv[0]);
+			}
+			argIdx = argIdx+2;
+		} else if (strcmp(argv[argIdx], "-SPdiff3") == 0) {
+			char *hist_diff3_add_str = argv[argIdx+1];
+			if ((hist_diff3_add_str[0] >= '0') && (hist_diff3_add_str[0] <= '9')) {
+				hist_diff3_add_value	= atoi(argv[argIdx+1]);
+			} else {
+				printf("\nBad SPdiff3 '%s' - must be a numeric value\n", argv[argIdx+1]);
+				usage(argv[0]);
+			}
+			argIdx = argIdx+2;
+#endif
 		} else {
 			printf("\nunknown option '%s'\n\n", argv[argIdx]);
 			usage(argv[0]);
@@ -746,5 +801,8 @@ int main(int argc, char *argv[])
 		usage(argv[0]);
 	}
 
+#ifdef TLSH_DISTANCE_PARAMETERS
+	set_tlsh_distance_parameters(length_mult_value, qratio_mult_value, hist_diff1_add_value, hist_diff2_add_value, hist_diff3_add_value);
+#endif
 	trendLSH_ut(compare_fname, dirname, listname, fname, digestname, xref, xlen, show_details, threshold, force_option);
 }

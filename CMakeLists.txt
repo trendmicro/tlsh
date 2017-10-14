@@ -57,7 +57,7 @@ project(TLSH)
 
 set(VERSION_MAJOR 3)
 set(VERSION_MINOR 7)
-set(VERSION_PATCH 1)
+set(VERSION_PATCH 2)
 
 # TLSH uses only half the counting buckets.
 # It can use all the buckets now.
@@ -85,6 +85,11 @@ else()
   add_definitions(-DCHECKSUM_3B)
 endif()
 
+# setting TLSH_DISTANCE_PARAMETERS to 1 allows you to set command line arguments
+# to set - and hence experiment with the distance parameters
+#	by default this is zero
+set(TLSH_DISTANCE_PARAMETERS 0)
+
 # write a file with the VERSION information
 file(REMOVE VERSION)
 file(WRITE VERSION 
@@ -103,6 +108,10 @@ file(WRITE include/version.h
   "#define VERSION_PATCH ${VERSION_PATCH}\n"
   "#define TLSH_HASH \"${TLSH_HASH}\"\n"
   "#define TLSH_CHECKSUM \"${TLSH_CHECKSUM}\"\n")
+if(TLSH_DISTANCE_PARAMETERS EQUAL 1)
+file(APPEND include/version.h
+  "#define TLSH_DISTANCE_PARAMETERS ${TLSH_DISTANCE_PARAMETERS}\n")
+endif()
 
 if (CMAKE_BUILD_TYPE STREQUAL Debug)
     set(CMAKE_CXX_FLAGS "-g")

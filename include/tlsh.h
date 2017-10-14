@@ -60,6 +60,8 @@
 #ifndef HEADER_TLSH_H
 #define HEADER_TLSH_H
 
+#include "version.h"
+
 #ifndef NULL
 #define NULL 0
 #endif
@@ -162,6 +164,11 @@ public:
 private:
     TlshImpl* impl;
 };
+
+#ifdef TLSH_DISTANCE_PARAMETERS
+void set_tlsh_distance_parameters(int length_mult_value, int qratio_mult_value, int hist_diff1_add_value, int hist_diff2_add_value, int hist_diff3_add_value);
+#endif
+
 #endif
 
 #endif

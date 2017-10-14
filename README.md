@@ -255,3 +255,10 @@ ATIS 2014, November, 2014, pages 199-210
 - resolved issue #29 - the force option for Python
   Step 1 - adding a regression test for strings approx of length 50
   Step 2 - add python code
+
+**3.7.2**
+- added code to set the distance parameters for ROC analysis
+to use these settings then change in CMakeLists.txt
+set(TLSH_DISTANCE_PARAMETERS 0)
+=>
+set(TLSH_DISTANCE_PARAMETERS 1)
