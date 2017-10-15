@@ -270,6 +270,7 @@ set(TLSH_DISTANCE_PARAMETERS 1)
 **3.7.4**
 - resolving issue #45
 - add a timing test for TLSH
+<PRE>
   $ bin/timing_unittest
   build a buffer with a million bytes...
   eval TLSH 50 times...
@@ -278,3 +279,4 @@ set(TLSH_DISTANCE_PARAMETERS 1)
   AFTER	ms=1502905573523
   TIME	ms=5892
   TIME	ms=117	per iteration
+</PRE>
