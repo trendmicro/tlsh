@@ -385,6 +385,19 @@ void set_tlsh_distance_parameters(int length_mult_value, int qratio_mult_value, 
 }
 #endif
 
+int TlshImpl::Lvalue()
+{
+	return(this->lsh_bin.Lvalue);
+}
+int TlshImpl::Q1ratio()
+{
+	return(this->lsh_bin.Q.QR.Q1ratio);
+}
+int TlshImpl::Q2ratio()
+{
+	return(this->lsh_bin.Q.QR.Q2ratio);
+}
+
 int TlshImpl::totalDiff(const TlshImpl& other, bool len_diff) const
 {
     int diff = 0;

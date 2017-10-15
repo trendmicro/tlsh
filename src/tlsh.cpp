@@ -153,6 +153,19 @@ bool Tlsh::operator!=(const Tlsh& other) const
     return !(*this==other);
 }
 
+int Tlsh::Lvalue()
+{
+	return( impl->Lvalue() );
+}
+int Tlsh::Q1ratio()
+{
+	return( impl->Q1ratio() );
+}
+int Tlsh::Q2ratio()
+{
+	return( impl->Q2ratio() );
+}
+
 int Tlsh::totalDiff(const Tlsh *other, bool len_diff) const
 {
     if( NULL==impl || NULL == other || NULL == other->impl )

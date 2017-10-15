@@ -138,6 +138,11 @@ public:
     /* to bring to object back to the initial state */
     void reset();
     
+    // access functions
+    int Lvalue();
+    int Q1ratio();
+    int Q2ratio();
+
     /* calculate difference */
     /* The len_diff parameter specifies if the file length is to be included in the difference calculation (len_diff=true) or if it */
     /* is to be excluded (len_diff=false).  In general, the length should be considered in the difference calculation, but there */

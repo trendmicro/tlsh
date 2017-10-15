@@ -286,3 +286,10 @@ set(TLSH_DISTANCE_PARAMETERS 1)
 - in include/tlsh_impl.h
 	#define SLIDING_WND_SIZE  5
 this can be varied between 4 to 8
+
+**3.8.0**
+Adding    // access functions - required by tools using TLSH library
++    int Lvalue();
++    int Q1ratio();
++    int Q2ratio();
+

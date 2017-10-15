@@ -57,8 +57,9 @@
 
 #ifndef HEADER_TLSH_IMPL_H
 #define HEADER_TLSH_IMPL_H
-    
+
 #define SLIDING_WND_SIZE  5
+
 #define BUCKETS           256
 #define Q_BITS            2    // 2 bits; quartile value 0, 1, 2, 3
 
@@ -108,6 +109,9 @@ public:
     const char* hash(char *buffer, unsigned int bufSize) const;  // saves allocating hash string in TLSH instance - bufSize should be TLSH_STRING_LEN + 1
     int compare(const TlshImpl& other) const;
     int totalDiff(const TlshImpl& other, bool len_diff=true) const;
+    int Lvalue();
+    int Q1ratio();
+    int Q2ratio();
     int fromTlshStr(const char* str);
     bool isValid() const { return lsh_code_valid; }
 
