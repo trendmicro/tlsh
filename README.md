@@ -267,3 +267,14 @@ set(TLSH_DISTANCE_PARAMETERS 1)
 - resolving issue #44
 - making static library the default
 
+**3.7.4**
+- resolving issue #45
+- add a timing test for TLSH
+  $ bin/timing_unittest
+  build a buffer with a million bytes...
+  eval TLSH 50 times...
+  TLSH(buffer) = A12500088C838B0A0F0EC3C0ACAB82F3B8228B0308CFA302338C0F0AE2C24F28000008
+  BEFORE	ms=1502905567631
+  AFTER	ms=1502905573523
+  TIME	ms=5892
+  TIME	ms=117	per iteration
