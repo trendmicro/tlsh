@@ -293,3 +293,18 @@ Adding    // access functions - required by tools using TLSH library
 +    int Q1ratio();
 +    int Q2ratio();
 
+**3.9.0**
+resolving issue #48 - tlsh_pattern program
+This tlsh_pattern program should read a pattern file
++ col 1: pattern number
++ col 2: nitems in group
++ col 3: TLSH
++ col 4: radius
++ col 5: pattern label
+The input options should match the tlsh program
+<PRE>
+usage: tlsh_pattern [-xlen] [-force] -pat pattern_file -f file
+: tlsh_pattern [-xlen] [-force] -pat pattern_file -d digest
+: tlsh_pattern [-xlen] [-force] -pat pattern_file -r dir
+: tlsh_pattern [-xlen] [-force] -pat pattern_file -l listfile
+</PRE>
