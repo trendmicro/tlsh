@@ -280,3 +280,9 @@ set(TLSH_DISTANCE_PARAMETERS 1)
   TIME	ms=5892
   TIME	ms=117	per iteration
 </PRE>
+
+**3.7.5**
+- resolving issue #46
+- in include/tlsh_impl.h
+	#define SLIDING_WND_SIZE  5
+this can be varied between 4 to 8

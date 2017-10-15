@@ -85,7 +85,8 @@ const char *Tlsh::version()
 {
     static char versionBuf[256];
     if (versionBuf[0] == '\0')
-        snprintf(versionBuf, sizeof(versionBuf), "%d.%d.%d %s %s", VERSION_MAJOR, VERSION_MINOR, VERSION_PATCH, TLSH_HASH, TLSH_CHECKSUM);
+        snprintf(versionBuf, sizeof(versionBuf), "%d.%d.%d %s %s sliding_window=%d",
+		VERSION_MAJOR, VERSION_MINOR, VERSION_PATCH, TLSH_HASH, TLSH_CHECKSUM, SLIDING_WND_SIZE);
     return versionBuf;
 }
 

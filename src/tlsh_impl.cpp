@@ -99,6 +99,18 @@ void TlshImpl::reset()
     this->lsh_code_valid = false;   
 }
 
+#if SLIDING_WND_SIZE==5
+	#define SLIDING_WND_SIZE_M1	4
+#elif SLIDING_WND_SIZE==4
+	#define SLIDING_WND_SIZE_M1	3
+#elif SLIDING_WND_SIZE==6
+	#define SLIDING_WND_SIZE_M1	5
+#elif SLIDING_WND_SIZE==7
+	#define SLIDING_WND_SIZE_M1	6
+#elif SLIDING_WND_SIZE==8
+	#define SLIDING_WND_SIZE_M1	7
+#endif
+
 void TlshImpl::update(const unsigned char* data, unsigned int len) 
 {
     #define RNG_SIZE    	SLIDING_WND_SIZE
@@ -115,12 +127,23 @@ void TlshImpl::update(const unsigned char* data, unsigned int len)
     for( unsigned int i=0; i<len; i++, fed_len++, j=RNG_IDX(j+1) ) {
         this->slide_window[j] = data[i];
         
-        if ( fed_len >= 4 ) {
+        if ( fed_len >= SLIDING_WND_SIZE_M1 ) {
             //only calculate when input >= 5 bytes
             int j_1 = RNG_IDX(j-1);
             int j_2 = RNG_IDX(j-2);
             int j_3 = RNG_IDX(j-3);
+#if SLIDING_WND_SIZE>=5
             int j_4 = RNG_IDX(j-4);
+#endif
+#if SLIDING_WND_SIZE>=6
+            int j_5 = RNG_IDX(j-5);
+#endif
+#if SLIDING_WND_SIZE>=7
+            int j_6 = RNG_IDX(j-6);
+#endif
+#if SLIDING_WND_SIZE>=8
+            int j_7 = RNG_IDX(j-7);
+#endif
            
             for (int k = 0; k < TLSH_CHECKSUM_LEN; k++) {
                  if (k == 0) {
@@ -139,13 +162,50 @@ void TlshImpl::update(const unsigned char* data, unsigned int len)
             this->a_bucket[r]++;
             r = b_mapping(5, this->slide_window[j], this->slide_window[j_2], this->slide_window[j_3]);
             this->a_bucket[r]++;
+#if SLIDING_WND_SIZE>=5
             r = b_mapping(7, this->slide_window[j], this->slide_window[j_2], this->slide_window[j_4]);
             this->a_bucket[r]++;
             r = b_mapping(11, this->slide_window[j], this->slide_window[j_1], this->slide_window[j_4]);
             this->a_bucket[r]++;
             r = b_mapping(13, this->slide_window[j], this->slide_window[j_3], this->slide_window[j_4]);
             this->a_bucket[r]++;
-
+#endif
+#if SLIDING_WND_SIZE>=6
+            r = b_mapping(17, this->slide_window[j], this->slide_window[j_1], this->slide_window[j_5]);
+            this->a_bucket[r]++;
+            r = b_mapping(19, this->slide_window[j], this->slide_window[j_2], this->slide_window[j_5]);
+            this->a_bucket[r]++;
+            r = b_mapping(23, this->slide_window[j], this->slide_window[j_3], this->slide_window[j_5]);
+            this->a_bucket[r]++;
+            r = b_mapping(29, this->slide_window[j], this->slide_window[j_4], this->slide_window[j_5]);
+            this->a_bucket[r]++;
+#endif
+#if SLIDING_WND_SIZE>=7
+            r = b_mapping(31, this->slide_window[j], this->slide_window[j_1], this->slide_window[j_6]);
+            this->a_bucket[r]++;
+            r = b_mapping(37, this->slide_window[j], this->slide_window[j_2], this->slide_window[j_6]);
+            this->a_bucket[r]++;
+            r = b_mapping(41, this->slide_window[j], this->slide_window[j_3], this->slide_window[j_6]);
+            this->a_bucket[r]++;
+            r = b_mapping(43, this->slide_window[j], this->slide_window[j_4], this->slide_window[j_6]);
+            this->a_bucket[r]++;
+            r = b_mapping(47, this->slide_window[j], this->slide_window[j_5], this->slide_window[j_6]);
+            this->a_bucket[r]++;
+#endif
+#if SLIDING_WND_SIZE>=8
+            r = b_mapping(53, this->slide_window[j], this->slide_window[j_1], this->slide_window[j_7]);
+            this->a_bucket[r]++;
+            r = b_mapping(59, this->slide_window[j], this->slide_window[j_2], this->slide_window[j_7]);
+            this->a_bucket[r]++;
+            r = b_mapping(61, this->slide_window[j], this->slide_window[j_3], this->slide_window[j_7]);
+            this->a_bucket[r]++;
+            r = b_mapping(67, this->slide_window[j], this->slide_window[j_4], this->slide_window[j_7]);
+            this->a_bucket[r]++;
+            r = b_mapping(71, this->slide_window[j], this->slide_window[j_5], this->slide_window[j_7]);
+            this->a_bucket[r]++;
+            r = b_mapping(73, this->slide_window[j], this->slide_window[j_6], this->slide_window[j_7]);
+            this->a_bucket[r]++;
+#endif
         }
     }
     this->data_len += len;
