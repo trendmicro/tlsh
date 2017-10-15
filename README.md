@@ -308,3 +308,9 @@ usage: tlsh_pattern [-xlen] [-force] -pat pattern_file -f file
 : tlsh_pattern [-xlen] [-force] -pat pattern_file -r dir
 : tlsh_pattern [-xlen] [-force] -pat pattern_file -l listfile
 </PRE>
+
+**3.9.1**
+resolving issue #38
+putting in fix in rand_tags.cpp so that it generates identical output to previous version
+while safely working with pointers
+

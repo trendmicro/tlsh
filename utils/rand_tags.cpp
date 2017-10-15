@@ -366,7 +366,14 @@ struct tagdef oneoff_def[] = {
 
 static void rhtml_contents(std::string &htmls, int *ntags, int *ndistinct_tags)
 {
-	if ((*ntags <= 0) && (*ndistinct_tags <= 0))
+	// original code
+	// ((*ntags <= 0) && ( ndistinct_tags <= 0))
+	// bad - should not do comparison on pointer value
+	//
+	// intention
+	// ((*ntags <= 0) && (*ndistinct_tags <= 0))
+	//	have the == NULL test to be consistent - pass regression tests
+	if ((*ntags <= 0) && (ndistinct_tags == NULL))
 		return; 
 	if (random() % 10 == 1) {
 		anchor(htmls);
