@@ -306,7 +306,7 @@ Tlsh_hexdigest(tlsh_TlshObject *self)
     }
     self->tlsh.getHash(hash, TLSH_STRING_LEN + 1);
     if (hash[0] == '\0') {
-        PyErr_SetString(PyExc_ValueError, "error while getting hash (not enough entropy?)");
+        PyErr_SetString(PyExc_ValueError, "error while getting hash (not enough variation in input?)");
         return NULL;
     }
     return Py_BuildValue("s", hash);
