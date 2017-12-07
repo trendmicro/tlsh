@@ -3,15 +3,22 @@
 # TLSH - Trend Micro Locality Sensitive Hash
 
 TLSH is a fuzzy matching library.
-Given a byte stream with a minimum length of 256 bytes
-	(and a minimum amount of randomness - see note in Python extension below.
-	In addition the -force option allows strings down to length 50.
-	See notes for version 3.5.0 of TLSH)
+Given a byte stream with a minimum length of 50 bytes
 TLSH generates a hash value which can be used for similarity comparisons.
 Similar objects will have similar hash values which allows for
 the detection of similar objects by comparing their hash values.  Note that
 the byte stream should have a sufficient amount of complexity.  For example,
 a byte stream of identical bytes will not generate a hash value.
+
+## Minimum byte stream length
+
+The program in default mode requires an input byte stream with a minimum length of 256 bytes
+(and a minimum amount of randomness - see note in Python extension below).
+
+In addition the -force option allows strings down to length 50.
+See notes for version 3.5.0 of TLSH
+
+## Computed hash
 
 The computed hash is 35 bytes long (output as 70 hexidecimal charactes). The
 first 3 bytes are used to capture the information about the file as a whole
@@ -21,9 +28,12 @@ increased by changing build parameters described below in [CMakeLists.txt](CMake
 which will increase the information stored in the hash.
 For some applications this might increase the accuracy in predicting similarities between files.)
 
+## Executables and library
+
 Building TLSH (see below) will create a static library in the `lib` directory,
-and the `tlsh_unittest` executable, which links to the static library, in the `bin`
-directory.  The library has functionality to generate the hash value from a given
+and the `tlsh` executable (a symbolic link to `tlsh_unittest`).
+'tlsh' links to the static library, in the `bin` directory.
+The library has functionality to generate the hash value from a given
 file, and to compute the similarity between two hash values.
 
 `tlsh` is a utility for generating TLSH hash values and comparing TLSH
@@ -98,8 +108,9 @@ tlsh.hash(data)
 ```
 
 
-Note that the data must contain at least 256 bytes to generate a hash value and that
+Note that in default mode the data must contain at least 256 bytes to generate a hash value and that
 it must have a certain amount of randomness.
+If you use the "force" option, then the data must contain at least 50 characters.
 For example, `tlsh.hash(str(os.urandom(256)))`, should always generate a hash.  
 To get the hash value of a file, try `tlsh.hash(open(file, 'rb').read())`.
 
@@ -200,6 +211,7 @@ ATIS 2014, November, 2014, pages 199-210
 
 **3.3.0**
 - Made the minimum data length = 256 for the C version.
+	This was reduced in version 3.5.0 to 50 bytes (the force option)
 
 **3.3.1**
 - Fixed bug introduced by commit 1a8f1c581c8b988ced683ff8e0a0f9c574058df4 which caused a different hash value to be generated if there were multiple calls to `Tlsh::update` as opposed to a single call.
