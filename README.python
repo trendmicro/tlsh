@@ -1,15 +1,26 @@
+24/Mar/2018
+
+To make the python version
+
+(1) compile the C++ code
+	$./make.sh
+(2) build the python version
+	$ cd py_ext/
+	$ python ./setup.py build
+(3) install - possibly - sudo, run as root or administrator
+	$ python ./setup.py install
+(4) test it
+	$ cd ../Testing
+	$ ./python_test.sh
+
+==============================================================
 17/Oct/2016
 
 Sorry everyone for me breaking the Python implementation of TLSH
 The --force option meant that I changed the CMakeLists.txt
 And I did not test the Python (I am an algorithm / C++ guy - not really a Python guy).
 
-Anyway - I dug through it and did the following
-	$ cd py_ext/
-	$ python ./setup.py build
-	$ python ./setup.py install
-	$ cd ../Testing
-	$ ./python_test.sh
+Anyway - I dug through it and did the steps (1)-(3) above
 I fixed setup.py to process the new CMakeLists.txt properly
 And now it passes
 

@@ -69,8 +69,10 @@ git checkout master
 
 Edit [CMakeLists.txt](CMakeLists.txt) to build TLSH with different options.
 
-- TLSH_BUCKETS: determines using 128 or 256 buckets, more is better
+- TLSH_BUCKETS: determines using 128 or 256 buckets
+	use the default 128 buckets unless you are an expert and know you need 256 buckets
 - TLSH_CHECKSUM_1B: determines checksum length, longer means less collision
+	use the default 1 byte unless you are an expert and know you need a larger checksum
 
 ## Linux
 
@@ -94,10 +96,19 @@ See [tlsh.h](include/tlsh.h) for the tlsh library interface and [tlsh_unittest.c
 
 ## Python Extension
 
+There is a README.python with notes about the python version
+
 ```
-cd py_ext
-python setup.py build
-python setup.py install (sudo, run as root or administrator)
+(1) compile the C++ code
+	$./make.sh
+(2) build the python version
+	$ cd py_ext/
+	$ python ./setup.py build
+(3) install - possibly - sudo, run as root or administrator
+	$ python ./setup.py install
+(4) test it
+	$ cd ../Testing
+	$ ./python_test.sh
 ```
 
 ### Python API
