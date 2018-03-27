@@ -51,6 +51,9 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
 # OF THE POSSIBILITY OF SUCH DAMAGE.
 
+if(MSVC)
+    add_definitions(-DTLSH_EXPORTS -DTLSH_LIB)
+endif()
 
 set(TLSH_SRCS tlsh.cpp tlsh_impl.cpp tlsh_util.cpp)
 add_library(tlsh STATIC ${TLSH_SRCS})

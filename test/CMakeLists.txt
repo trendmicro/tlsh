@@ -51,11 +51,11 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
 # OF THE POSSIBILITY OF SUCH DAMAGE.
 
-if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
+if (MSVC)
 	include_directories(../Windows/WinFunctions.cpp)
 endif()
 add_executable(tlsh_version tlsh_version.cpp)
-if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
+if (MSVC)
 	target_link_libraries(tlsh_version tlsh winfunc)
 else()
 	target_link_libraries(tlsh_version tlsh)
@@ -64,7 +64,7 @@ set_target_properties(tlsh_version PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_S
 set_target_properties(tlsh_version PROPERTIES OUTPUT_NAME tlsh_version${BUILD_POSTFIX})
 
 add_executable(simple_unittest simple_unittest.cpp)
-if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
+if (MSVC)
 	target_link_libraries(simple_unittest tlsh winfunc)
 else()
 	target_link_libraries(simple_unittest tlsh)
@@ -73,7 +73,7 @@ set_target_properties(simple_unittest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAK
 set_target_properties(simple_unittest PROPERTIES OUTPUT_NAME simple_unittest${BUILD_POSTFIX})
 
 add_executable(tlsh_unittest tlsh_unittest.cpp)
-if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
+if (MSVC)
 	target_link_libraries(tlsh_unittest tlsh winfunc)
 else()
 	target_link_libraries(tlsh_unittest tlsh)
@@ -82,14 +82,20 @@ set_target_properties(tlsh_unittest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_
 set_target_properties(tlsh_unittest PROPERTIES OUTPUT_NAME tlsh_unittest${BUILD_POSTFIX})
 set_target_properties(tlsh_unittest PROPERTIES SKIP_BUILD_RPATH TRUE)
 
-add_executable(timing_unittest timing_unittest.cpp)
-target_link_libraries(timing_unittest tlsh)
-set_target_properties(timing_unittest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
-set_target_properties(timing_unittest PROPERTIES OUTPUT_NAME timing_unittest${BUILD_POSTFIX})
-set_target_properties(timing_unittest PROPERTIES SKIP_BUILD_RPATH TRUE)
+if (!MSVC)
+	add_executable(timing_unittest timing_unittest.cpp)
+	target_link_libraries(timing_unittest tlsh)
+	set_target_properties(timing_unittest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
+	set_target_properties(timing_unittest PROPERTIES OUTPUT_NAME timing_unittest${BUILD_POSTFIX})
+	set_target_properties(timing_unittest PROPERTIES SKIP_BUILD_RPATH TRUE)
+endif()
 
 add_executable(tlsh_pattern tlsh_pattern.cpp)
-target_link_libraries(tlsh_pattern tlsh)
+if (MSVC)
+	target_link_libraries(tlsh_pattern tlsh winfunc)
+else()
+	target_link_libraries(tlsh_pattern tlsh)
+endif()
 set_target_properties(tlsh_pattern PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
 set_target_properties(tlsh_pattern PROPERTIES OUTPUT_NAME tlsh_pattern${BUILD_POSTFIX})
 set_target_properties(tlsh_pattern PROPERTIES SKIP_BUILD_RPATH TRUE)

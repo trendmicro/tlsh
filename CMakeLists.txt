@@ -114,7 +114,9 @@ file(APPEND include/version.h
 endif()
 
 if (CMAKE_BUILD_TYPE STREQUAL Debug)
-    set(CMAKE_CXX_FLAGS "-g")
+    if(CMAKE_COMPILER_IS_GNUCXX)
+        set(CMAKE_CXX_FLAGS "-g")
+    endif()
 else(CMAKE_BUILD_TYPE STREQUAL Debug)
     if(CMAKE_COMPILER_IS_GNUCXX)
         set(CMAKE_CXX_FLAGS "-O2")        ## Optimize
@@ -122,10 +124,13 @@ else(CMAKE_BUILD_TYPE STREQUAL Debug)
     endif()
     if(MSVC)
         set(CMAKE_CXX_FLAGS "/O2")        ## Optimize
-	add_definitions(-DWINDOWS)
-	include_directories(Windows)
     endif()
 endif(CMAKE_BUILD_TYPE STREQUAL Debug)
+
+if(MSVC)
+    add_definitions(-DWINDOWS -DTLSH_LIB)
+    include_directories(Windows)
+endif()
 
 enable_testing()
 
@@ -136,7 +141,7 @@ add_subdirectory(utils)
 add_subdirectory(Testing)
 
 if(MSVC)
-	add_subdirectory(Windows)
+    add_subdirectory(Windows)
 endif()
 
 set(CPACK_GENERATOR "TGZ")
