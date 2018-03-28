@@ -51,15 +51,13 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
 # OF THE POSSIBILITY OF SUCH DAMAGE.
 
-cmake_minimum_required(VERSION 3.6)
+cmake_minimum_required(VERSION 2.6)
 
 project(TLSH)
 
 set(VERSION_MAJOR 3)
 set(VERSION_MINOR 9)
 set(VERSION_PATCH 1)
-
-#
 
 # TLSH uses only half the counting buckets.
 # It can use all the buckets now.
