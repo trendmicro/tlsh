@@ -132,6 +132,12 @@ if(MSVC)
     include_directories(Windows)
 endif()
 
+# user can override CXX; make sure tests link and load properly regardless of LD_LIBRARY_PATH
+if(CMAKE_COMPILER_IS_GNUCXX)
+    set(CMAKE_EXE_LINKER_FLAGS "-static-libgcc")
+    set(CMAKE_EXE_LINKER_FLAGS "-static-libstdc++")
+endif()
+
 enable_testing()
 
 include_directories(include)
