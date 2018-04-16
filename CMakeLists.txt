@@ -114,7 +114,9 @@ file(APPEND include/version.h
 endif()
 
 if (CMAKE_BUILD_TYPE STREQUAL Debug)
-    set(CMAKE_CXX_FLAGS "-g")
+    if(CMAKE_COMPILER_IS_GNUCXX)
+        set(CMAKE_CXX_FLAGS "-g")
+    endif()
 else(CMAKE_BUILD_TYPE STREQUAL Debug)
     if(CMAKE_COMPILER_IS_GNUCXX)
         set(CMAKE_CXX_FLAGS "-O2")        ## Optimize
@@ -125,6 +127,17 @@ else(CMAKE_BUILD_TYPE STREQUAL Debug)
     endif()
 endif(CMAKE_BUILD_TYPE STREQUAL Debug)
 
+if(MSVC)
+    add_definitions(-DWINDOWS -DTLSH_LIB)
+    include_directories(Windows)
+endif()
+
+# user can override CXX; make sure tests link and load properly regardless of LD_LIBRARY_PATH
+if(CMAKE_COMPILER_IS_GNUCXX)
+    set(CMAKE_EXE_LINKER_FLAGS "-static-libgcc")
+    set(CMAKE_EXE_LINKER_FLAGS "-static-libstdc++")
+endif()
+
 enable_testing()
 
 include_directories(include)
@@ -132,6 +145,10 @@ add_subdirectory(src)
 add_subdirectory(test)
 add_subdirectory(utils)
 add_subdirectory(Testing)
+
+if(MSVC)
+    add_subdirectory(Windows)
+endif()
 
 set(CPACK_GENERATOR "TGZ")
 set(CPACK_SOURCE_GENERATOR "TGZ")
