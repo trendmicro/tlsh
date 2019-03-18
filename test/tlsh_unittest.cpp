@@ -636,6 +636,7 @@ static void usage(const char *fullPathName)
 	printf("     : %s [-c <file|digest> | -xref] -r <dir>      [-T <threshold_value>] [-xlen] [-force] [-details]\n", pgmName);
 	printf("     : %s [-c <file|digest> | -xref] -l <listfile> [-T <threshold_value>] [-xlen] [-force] [-details]\n", pgmName);
 	printf("     : %s -version: prints version of tlsh library\n", pgmName);
+	printf("     : tlsh -notice:  prints NOTICE.txt of tlsh library\n");
 	printf("\n");
 	printf("%s can be used to compute TLSH digest values or the distance between digest values in the following ways:\n", pgmName);
 	printf("  1) To compute the TLSH digest value of a single file (-f file), or a directory of files (-r dir).\n");
@@ -746,6 +747,9 @@ int main(int argc, char *argv[])
                 } else if (strcmp(argv[argIdx], "-xlen") == 0) {
                         xlen = false;
                         argIdx = argIdx+1;
+                } else if (strcmp(argv[argIdx], "-notice") == 0) {
+		        Tlsh::display_notice();
+			return 0;
                 } else if (strcmp(argv[argIdx], "-version") == 0) {
 		        printf("%s\n", Tlsh::version());
 			return 0;

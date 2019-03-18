@@ -156,6 +156,9 @@ public:
     /* check if Tlsh object is valid to operate */
     bool isValid() const;
 
+    /* display the contents of NOTICE.txt */
+    static void display_notice();
+
     /* Return the version information used to build this library */
     static const char *version();
 

@@ -337,3 +337,12 @@ resolving issue #38
 putting in fix in rand_tags.cpp so that it generates identical output to previous version
 while safely working with pointers
 
+**3.9.2**
+<PRE>
+18/Mar/2019
+Also merged the contents of NOTICE.txt into LICENSE.
+This was done because NOTICE.txt is sometimes accidently removed when people clone this repository.
+And the LICENSE specifically states that NOTICE.txt should NOT be removed.
+
+Also added command line option -notice which displays the NOTICE.txt file
+</PRE>

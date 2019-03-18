@@ -1,4 +1,4 @@
-﻿   =========================================================================
+   =========================================================================
    ==  NOTICE file for use with the Apache License, Version 2.0,          ==
    ==  in this case for the Trend Locality Sensitive Hash distribution.   ==
    =========================================================================
@@ -32,5 +32,7 @@
 
 
     
-   SHA1(LICENSE)= 11e8757af16132dd60979eacd73a525a40ff31f0
+   SHA1 of first 242 lines of LICENSE - so that we can append NOTICE.txt to LICENSE
+   $ head -n 242 LICENSE | openssl dgst -sha1
+   (stdin)= 11e8757af16132dd60979eacd73a525a40ff31f0
 
