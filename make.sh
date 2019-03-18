@@ -1,5 +1,18 @@
 #!/bin/sh
 
+####################################################
+# process command line options
+####################################################
+
+OPTION=$1
+
+notest=0
+if [ "$OPTION" = "-notest" ]; then
+	notest=1
+fi
+
+####################################################
+
 if [ $# -eq 1 -a "$1" = "debug" ]; then
   mkdir -p build/debug
   cd build/debug
@@ -19,11 +32,14 @@ cd ../../bin
 cmake -E create_symlink tlsh_unittest tlsh
 cd -
 
-echo
-echo "==========="
-echo "Cmake Tests"
-echo "==========="
-make test
+if test $notest = 0
+then
+	echo
+	echo "==========="
+	echo "Cmake Tests"
+	echo "==========="
+	make test
+fi
 
 cd ../..
 
@@ -38,10 +54,13 @@ then
   cd ..
 fi
 
-echo
-echo "====================="
-echo "tests on example data"
-echo "====================="
-cd Testing
-./test.sh | grep -E "(^test|^passed|error|^Running|Scenario)"
-cd ..
+if test $notest = 0
+then
+	echo
+	echo "====================="
+	echo "tests on example data"
+	echo "====================="
+	cd Testing
+	./test.sh | grep -E "(^test|^passed|error|^Running|Scenario)"
+	cd ..
+fi
