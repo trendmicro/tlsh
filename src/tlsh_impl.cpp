@@ -113,6 +113,11 @@ void TlshImpl::reset()
 
 void TlshImpl::update(const unsigned char* data, unsigned int len) 
 {
+    if (this->lsh_code_valid) {
+      fprintf(stderr, "call to update() on a tlsh that is already valid\n");
+      return;
+    }   
+
     #define RNG_SIZE    	SLIDING_WND_SIZE
     #define RNG_IDX(i)	((i+RNG_SIZE)%RNG_SIZE)
 	
@@ -214,6 +219,10 @@ void TlshImpl::update(const unsigned char* data, unsigned int len)
 /* to signal the class there is no more data to be added */
 void TlshImpl::final(int force_option) 
 {
+    if (this->lsh_code_valid) {
+      fprintf(stderr, "call to final() on a tlsh that is already valid\n");
+      return;
+    }   
     // incoming data must more than or equal to MIN_DATA_LENGTH bytes
     if ((force_option == 0) && (this->data_len < MIN_DATA_LENGTH)) {
       // this->lsh_code be empty

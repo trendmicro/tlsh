@@ -360,4 +360,5 @@ remove the newline from the input fields when reading in the tlsh_pattern file
 <PRE>
 19/Mar/2019
 check in order_bug program which demonstrates issue #50
+resolved issue #50 - added code to tlsh_impl.cpp to check for invalid call sequences to update() and final()
 </PRE>
