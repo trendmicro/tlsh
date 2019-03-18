@@ -101,11 +101,10 @@ int main(int argc, char *argv[])
 
 	printf("eval TLSH %d times...\n", MAX_TRY );
 	for (int tries=0; tries<MAX_TRY; tries++) {
+		t1.reset();
 		t1.final( (const unsigned char*) buffer, MILLION);
-		if (tries==0) {
-			printf("TLSH(buffer) = %s\n", t1.getHash() );
-		}
 	}
+	printf("TLSH(buffer) = %s\n", t1.getHash() );
 
 	gettimeofday(&tp, NULL);
 	after_ms = tp.tv_sec * 1000 + tp.tv_usec / 1000; //get current timestamp in milliseconds

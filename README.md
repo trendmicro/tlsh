@@ -376,3 +376,9 @@ issue #61: added a command line option -notest - do not do any testing
 Have a cmake option to build tlsh with a zero byte checksum (development / research option)
 Default build has 1 byte checksum - which is strongly recommended
 </PRE>
+
+**3.9.7**
+<PRE>
+19/Mar/2019
+resolving issue #50 for bin/timing_unittest
+</PRE>
