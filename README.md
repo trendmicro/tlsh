@@ -382,3 +382,10 @@ Default build has 1 byte checksum - which is strongly recommended
 19/Mar/2019
 resolving issue #50 for bin/timing_unittest
 </PRE>
+
+**3.9.8**
+<PRE>
+19/Mar/2019
+timing_unittest measures the time taken to do distance calculations
+add a command line option -size - so that you can measure the time taken to evaluate different sizes of string
+</PRE>
