@@ -355,3 +355,9 @@ modify tlsh_pattern to return the best match
 
 remove the newline from the input fields when reading in the tlsh_pattern file
 </PRE>
+
+**3.9.4**
+<PRE>
+19/Mar/2019
+check in order_bug program which demonstrates issue #50
+</PRE>
