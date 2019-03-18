@@ -369,3 +369,10 @@ resolved issue #50 - added code to tlsh_impl.cpp to check for invalid call seque
 issue #61: added a command line option -notest - do not do any testing
 	./make.sh -notest
 </PRE>
+
+**3.9.6**
+<PRE>
+19/Mar/2019
+Have a cmake option to build tlsh with a zero byte checksum (development / research option)
+Default build has 1 byte checksum - which is strongly recommended
+</PRE>

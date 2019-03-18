@@ -150,6 +150,7 @@ void TlshImpl::update(const unsigned char* data, unsigned int len)
             int j_7 = RNG_IDX(j-7);
 #endif
            
+#ifndef CHECKSUM_0B
             for (int k = 0; k < TLSH_CHECKSUM_LEN; k++) {
                  if (k == 0) {
                      this->lsh_bin.checksum[k] = b_mapping(0, this->slide_window[j], this->slide_window[j_1], this->lsh_bin.checksum[k]);
@@ -159,6 +160,7 @@ void TlshImpl::update(const unsigned char* data, unsigned int len)
                      this->lsh_bin.checksum[k] = b_mapping(this->lsh_bin.checksum[k-1], this->slide_window[j], this->slide_window[j_1], this->lsh_bin.checksum[k]);
                  }
             }
+#endif
 
             unsigned char r;
             r = b_mapping(2, this->slide_window[j], this->slide_window[j_1], this->slide_window[j_2]);

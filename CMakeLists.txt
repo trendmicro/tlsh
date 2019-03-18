@@ -57,7 +57,7 @@ project(TLSH)
 
 set(VERSION_MAJOR 3)
 set(VERSION_MINOR 9)
-set(VERSION_PATCH 5)
+set(VERSION_PATCH 6)
 
 # TLSH uses only half the counting buckets.
 # It can use all the buckets now.
@@ -78,9 +78,15 @@ endif()
 # TLSH uses 1 byte checksum. The collision rate is 1 in 24.
 # It can use 3 bytes checksum now. That collision rate in 1 in 5800.
 set(TLSH_CHECKSUM_1B 1)
+
+if(TLSH_CHECKSUM_0B EQUAL 1)
+  set(TLSH_CHECKSUM "no checksum")
+  add_definitions(-DCHECKSUM_0B)
+endif()
 if(TLSH_CHECKSUM_1B EQUAL 1)
   set(TLSH_CHECKSUM "1 byte checksum")
-else()
+endif()
+if(TLSH_CHECKSUM_3B EQUAL 1)
   set(TLSH_CHECKSUM "3 bytes checksum")
   add_definitions(-DCHECKSUM_3B)
 endif()
