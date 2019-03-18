@@ -438,19 +438,44 @@ pattern_tlsh::~pattern_tlsh()
 int pattern_tlsh::match_pattern(Tlsh *tlsh, bool xlen)
 {
 	int nmatch = 0;
+	int best_ti = -1;
+	int best_dist = -1;
 	for (int ti=0; ti<npattern; ti++) {
 		Tlsh *tp = tlsh_array[ti];
 		if (tp != NULL) {
 			int dist = tp->totalDiff(tlsh, xlen);
 			if (dist <= tlsh_radius[ti]) {
-				printf("match	%s	%s	%d	%s\n", tlsh->getHash(), tp->getHash(), dist, pattern_name[ti]);
+				if ((best_dist == -1) || (dist < best_dist)) {
+					best_dist = dist;
+					best_ti	  = ti;
+				}
 				nmatch ++;
 			}
 		}
 	}
+	if (best_ti != -1) {
+		Tlsh *tp = tlsh_array[best_ti];
+		printf("match	pat_%d	%s	%s	%d	%s\n", best_ti, tlsh->getHash(), tp->getHash(), best_dist, pattern_name[best_ti]);
+	}
 	return(nmatch);
 }
 
+void chomp(char *s)
+{
+int len;
+unsigned char x;
+	if (s == NULL)
+		return;
+	len = strlen(s);
+	if ((len >= 2) && (s[len-2] == '\r') && (s[len-1] == '\n')) {
+		s[len-2] = '\0';
+		return;
+	} else {
+		x = s[len-1];
+		if ((x == '\n') || (x == '\r'))
+			s[len-1] = '\0';
+	}
+}
 
 int read_line(char *buf, char **col1, char **col2, char **col3, char **col4, char **col5)
 {
@@ -524,6 +549,7 @@ char buf[1000];
 	x = fgets(buf, sizeof(buf), f);
 	while (x != NULL) {
 		char *col1, *col2, *col3, *col4, *col5;
+		chomp(buf);
 		int err = read_line(buf, &col1, &col2, &col3, &col4, &col5);
 		if (err) {
 			printf("error reading line %d of %s\n", count+2, pattern_fname);

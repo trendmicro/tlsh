@@ -346,3 +346,12 @@ And the LICENSE specifically states that NOTICE.txt should NOT be removed.
 
 Also added command line option -notice which displays the NOTICE.txt file
 </PRE>
+
+**3.9.3**
+<PRE>
+19/Mar/2019
+currently tlsh_pattern returns all the matches
+modify tlsh_pattern to return the best match
+
+remove the newline from the input fields when reading in the tlsh_pattern file
+</PRE>
