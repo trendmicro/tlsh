@@ -389,3 +389,10 @@ resolving issue #50 for bin/timing_unittest
 timing_unittest measures the time taken to do distance calculations
 add a command line option -size - so that you can measure the time taken to evaluate different sizes of string
 </PRE>
+
+**3.9.9**
+<PRE>
+19/Mar/2019
+resolve issue #62
+remove dependancy on GNUInstallDirs
+</PRE>
