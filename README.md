@@ -413,4 +413,88 @@ done by
 	- inline functions
 	- unrolling loops
 	- fixing the -O2 optimization option
+
+<H3>Timing on Amazon linux</H3>
+#       "Amazon Linux 2 AMI (HVM), SSD Volume Type"
+#       Description: Amazon Linux 2 comes with five years support. It provides Linux kernel 4.14 tuned for optimal performance
+#               on Amazon EC2, systemd 219, GCC 7.3, Glibc 2.26, Binutils 2.29.1, and the latest software packages through extras.
+
+BEFORE
+$ ./tlsh_3_10_0/bin/timing_unittest 
+build a buffer with a million bytes...
+eval TLSH (3.9.9 compact hash 1 byte checksum sliding_window=5) 50 times...
+TLSH(buffer) = A12500088C838B0A0F0EC3C0ACAB82F3B8228B0308CFA302338C0F0AE2C24F28000008
+Test 1: Evaluate TLSH digest
+BEFORE	ms=1552963428277
+AFTER	ms=1552963433258
+TIME	ms=4981
+TIME	ms=99	per iteration
+
+eval TLSH distance 50 million times...
+Test 2: Calc distance TLSH digest
+dist=138
+BEFORE	ms=1552963433362
+AFTER	ms=1552963440723
+TIME	ms=7361
+TIME	ms=147	per million iterations
+ 
+AFTER
+$ ./tlsh_3_11_0/bin/timing_unittest 
+build a buffer with a million bytes...
+eval TLSH (3.11.0 compact hash 1 byte checksum sliding_window=5) 50 times...
+TLSH(buffer) = A12500088C838B0A0F0EC3C0ACAB82F3B8228B0308CFA302338C0F0AE2C24F28000008
+Test 1: Evaluate TLSH digest
+BEFORE	ms=1552963419037
+AFTER	ms=1552963419628
+TIME	ms=591
+TIME	ms=11	per iteration
+
+eval TLSH distance 50 million times...
+Test 2: Calc distance TLSH digest
+dist=138
+BEFORE	ms=1552963419642
+AFTER	ms=1552963421519
+TIME	ms=1877
+TIME	ms=37	per million iterations
+
+
+<H3>Timing on a Mac (Processor 3.1 GHz - running Sierra)</H3>
+
+BEFORE using tlsh_3_10_0
+$ bin/timing_unittest 
+build a buffer with a million bytes...
+eval TLSH (3.10.0 compact hash 1 byte checksum sliding_window=5) 50 times...
+TLSH(buffer) = A12500088C838B0A0F0EC3C0ACAB82F3B8228B0308CFA302338C0F0AE2C24F28000008
+Test 1: Evaluate TLSH digest
+BEFORE	ms=1552963383885
+AFTER	ms=1552963387866
+TIME	ms=3981
+TIME	ms=79	per iteration
+
+eval TLSH distance 50 million times...
+Test 2: Calc distance TLSH digest
+dist=138
+BEFORE	ms=1552963387951
+AFTER	ms=1552963392498
+TIME	ms=4547
+TIME	ms=90	per million iterations
+
+AFTER using tlsh_3_11_0
+$ bin/timing_unittest 
+build a buffer with a million bytes...
+eval TLSH (3.11.0 compact hash 1 byte checksum sliding_window=5) 50 times...
+TLSH(buffer) = A12500088C838B0A0F0EC3C0ACAB82F3B8228B0308CFA302338C0F0AE2C24F28000008
+Test 1: Evaluate TLSH digest
+BEFORE	ms=1552963360177
+AFTER	ms=1552963360791
+TIME	ms=614
+TIME	ms=12	per iteration
+
+eval TLSH distance 50 million times...
+Test 2: Calc distance TLSH digest
+dist=138
+BEFORE	ms=1552963360808
+AFTER	ms=1552963365502
+TIME	ms=4694
+TIME	ms=93	per million iterations
 </PRE>
