@@ -396,3 +396,11 @@ add a command line option -size - so that you can measure the time taken to eval
 resolve issue #62
 remove dependancy on GNUInstallDirs
 </PRE>
+
+**3.10.0**
+<PRE>
+19/Mar/2019
+Adding // access function - required by tools using TLSH library
+	int BucketValue(int bucket);
+	int Checksum(int k);
+</PRE>

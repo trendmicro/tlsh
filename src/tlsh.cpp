@@ -207,6 +207,14 @@ int Tlsh::Q2ratio()
 {
 	return( impl->Q2ratio() );
 }
+int Tlsh::Checksum(int k)
+{
+	return( impl->Checksum(k) );
+}
+int Tlsh::BucketValue(int bucket)
+{
+	return( impl->BucketValue(bucket) );
+}
 
 int Tlsh::totalDiff(const Tlsh *other, bool len_diff) const
 {

@@ -112,6 +112,8 @@ public:
     int Lvalue();
     int Q1ratio();
     int Q2ratio();
+    int Checksum(int k);
+    int BucketValue(int bucket);
     int fromTlshStr(const char* str);
     bool isValid() const { return lsh_code_valid; }
 

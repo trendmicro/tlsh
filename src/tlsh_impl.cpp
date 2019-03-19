@@ -408,6 +408,46 @@ int TlshImpl::Q2ratio()
 {
 	return(this->lsh_bin.Q.QR.Q2ratio);
 }
+int TlshImpl::Checksum(int k)
+{
+	if ((k >= TLSH_CHECKSUM_LEN) || (k < 0)) {
+		return(0);
+	}
+	return(this->lsh_bin.checksum[k]);
+}
+int TlshImpl::BucketValue(int bucket)
+{
+int idx;
+int elem;
+unsigned char bv;
+//  default TLSH
+//  #define EFF_BUCKETS         128
+//  #define CODE_SIZE           32   // 128 * 2 bits = 32 bytes
+
+	idx	= (CODE_SIZE - (bucket / 4)) - 1;
+//	if ((idx < 0) || (idx >= CODE_SIZE)) {
+//		printf("error in BucketValue: idx=%d\n", idx);
+//		exit(1);
+//	}
+	elem	= bucket % 4;
+	bv = this->lsh_bin.tmp_code[idx];
+	int h1	= bv  / 16;
+	int h2	= bv  % 16;
+	int p1	= h1 / 4;
+	int p2	= h1 % 4;
+	int p3	= h2 / 4;
+	int p4	= h2 % 4;
+	if (elem == 0) {
+		return(p1);
+	}
+	if (elem == 1) {
+		return(p2);
+	}
+	if (elem == 2) {
+		return(p3);
+	}
+	return(p4);
+}
 
 int TlshImpl::totalDiff(const TlshImpl& other, bool len_diff) const
 {
