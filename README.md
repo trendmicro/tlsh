@@ -404,3 +404,12 @@ Adding // access function - required by tools using TLSH library
 	int BucketValue(int bucket);
 	int Checksum(int k);
 </PRE>
+
+**3.11.0**
+<PRE>
+19/Mar/2019
+Make calculation of TLSH digests approx 7 times faster (for large files)
+done by
+	- inline functions
+	- unrolling loops
+</PRE>
