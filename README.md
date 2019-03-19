@@ -412,4 +412,5 @@ Make calculation of TLSH digests approx 7 times faster (for large files)
 done by
 	- inline functions
 	- unrolling loops
+	- fixing the -O2 optimization option
 </PRE>

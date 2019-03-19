@@ -125,8 +125,7 @@ if (CMAKE_BUILD_TYPE STREQUAL Debug)
     endif()
 else(CMAKE_BUILD_TYPE STREQUAL Debug)
     if(CMAKE_COMPILER_IS_GNUCXX)
-        set(CMAKE_CXX_FLAGS "-O2")        ## Optimize
-        set(CMAKE_CXX_FLAGS "-fvisibility=internal")  ## Remove TlshImpl symbols
+        set(CMAKE_CXX_FLAGS "-O2 -fvisibility=internal")  ## Remove TlshImpl symbols
     endif()
     if(MSVC)
         set(CMAKE_CXX_FLAGS "/O2")        ## Optimize
