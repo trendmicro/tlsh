@@ -1,6 +1,7 @@
 from distutils.core import setup, Extension
 from os.path import join, realpath
 import re
+import os
 
 tlsh_256 = '-DBUCKETS_256'
 tlsh_128 = '-DBUCKETS_128'
@@ -17,14 +18,26 @@ with open(join(realpath('..'), 'CMakeLists.txt'), 'r') as f:
     if m:
       tlsh_3b = ''
 
-tlsh_module = Extension('tlsh', \
-  sources = ['tlshmodule.cpp', \
-    join(realpath('..'), 'src', 'tlsh.cpp'), \
-    join(realpath('..'), 'src', 'tlsh_impl.cpp'), \
-    join(realpath('..'), 'src', 'tlsh_util.cpp') \
-  ], \
-  include_dirs = [join(realpath('..'), 'include')], \
-)
+if os.name == 'nt':
+  tlsh_module = Extension('tlsh', \
+    sources = ['tlshmodule.cpp', \
+      join(realpath('..'), 'src', 'tlsh.cpp'), \
+      join(realpath('..'), 'src', 'tlsh_impl.cpp'), \
+      join(realpath('..'), 'src', 'tlsh_util.cpp') \
+    ], \
+    include_dirs = [join(realpath('..'), 'include'),
+                    join(realpath('..'), 'Windows')],\
+    define_macros = [('WINDOWS', None),], \
+  )
+else:
+  tlsh_module = Extension('tlsh', \
+    sources = ['tlshmodule.cpp', \
+      join(realpath('..'), 'src', 'tlsh.cpp'), \
+      join(realpath('..'), 'src', 'tlsh_impl.cpp'), \
+      join(realpath('..'), 'src', 'tlsh_util.cpp') \
+    ], \
+    include_dirs = [join(realpath('..'), 'include')],
+  )
 
 if tlsh_256 != '':
   tlsh_module.extra_compile_args.append(tlsh_256)

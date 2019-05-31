@@ -521,3 +521,9 @@ use alookup table instead
 .vcproj files and instructions for builing TLSH on Windows using Visual Studio
 Thanks Jayson Pryde! :-)
 </PRE>
+
+**3.13.1**
+<PRE>
+31/May/2019
+fixing setup.py so that you can install Python Extension on Windows
+</PRE>
