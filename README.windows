@@ -1,0 +1,50 @@
+31/May/2019
+
+Thanks to Jayson Pryde for compilation on Windows
+
+*** Compiling and building in Windows 10 using Visual Studio 2017 ***
+
+1. Open the tlsh.VS2008.sln file under Windows directory.
+2. Accept the migration/update of the solution from 2008 to 2017
+3. Once the solution is opened, on the Solution Explorer (right pane) of the Visual Studio 2017 IDE, right click the solution, and choose “Retarget solution”
+4. In the dialog box, choose the appropriate Windows SDK Version (e.g. 10.0.16299.0), and press OK
+5. Once retargeting is done, right click the solution again in the Solution Explorer, and choose “Rebuild Solution”
+
+Possible Problem:
+Undefined header files (i.e. No such file or directory)
+
+Solution:
+Make sure that “MFC and ATL support (x86 and x64)” and “C++/CLI Support” were installed. If not, do the following:
+1. Launch the Visual Studio 2017 installer
+2. Choose modify
+3. Under individual components, look for the “MFC and ATL support (x86 and x64)” and “C++/CLI Support” tick boxes, and click them, and click modify
+
+*** Compiling and building python extension ***
+
+Kindly pick whether to use the pre-installed python 3.6.3 that comes with Visual Studio 2017, or an Anaconda environment.
+
+Using pre-installed python 3.6.3:
+1. Open a command prompt.
+2. Change directory to Library-tlsh-master/py_ext
+3. Run the following:
+     - python setup.py clean —all
+     - python setup.py build
+     - python setup.py install
+
+Possible Problem:
+Permission denied in writing the built .pyd file in the site-packages dir (e.g. C:\Program Files (x86)\Microsoft Visual Studio\Shared\Python36_64\Lib\site-packages)
+
+Solution:
+Give write permission on the said folder
+
+Using an anaconda environment:
+1. Launch the anaconda command prompt.
+2. Create a new environment
+	- conda create -n <name> python==3.6.3
+3. Activate the new environment:
+	- activate <name>
+4. Once environment is activated, change directory to Library-tlsh-master/py-ext
+5. Run the following:
+     - python setup.py clean —all
+     - python setup.py build
+     - python setup.py install

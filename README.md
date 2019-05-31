@@ -514,3 +514,10 @@ tidy up:
 remove floating point calculations such as log() function
 use alookup table instead
 </PRE>
+
+**3.13.0**
+<PRE>
+31/May/2019
+.vcproj files and instructions for builing TLSH on Windows using Visual Studio
+Thanks Jayson Pryde! :-)
+</PRE>
