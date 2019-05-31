@@ -208,66 +208,87 @@ void TlshImpl::update(const unsigned char* data, unsigned int len)
            
 #ifndef CHECKSUM_0B
             for (int k = 0; k < TLSH_CHECKSUM_LEN; k++) {
-                 if (k == 0) {
-                     this->lsh_bin.checksum[k] = b_mapping(0, this->slide_window[j], this->slide_window[j_1], this->lsh_bin.checksum[k]);
-                 }
-                 else {
-                     // use calculated 1 byte checksums to expand the total checksum to 3 bytes
-                     this->lsh_bin.checksum[k] = b_mapping(this->lsh_bin.checksum[k-1], this->slide_window[j], this->slide_window[j_1], this->lsh_bin.checksum[k]);
-                 }
+		if (k == 0) {
+			//				 b_mapping(0, ... )
+		 	this->lsh_bin.checksum[k] = fast_b_mapping(1, this->slide_window[j], this->slide_window[j_1], this->lsh_bin.checksum[k]);
+		} else {
+			// use calculated 1 byte checksums to expand the total checksum to 3 bytes
+			this->lsh_bin.checksum[k] = b_mapping(this->lsh_bin.checksum[k-1], this->slide_window[j], this->slide_window[j_1], this->lsh_bin.checksum[k]);
+		}
             }
 #endif
 
             unsigned char r;
-            r = b_mapping(2, this->slide_window[j], this->slide_window[j_1], this->slide_window[j_2]);
+	    //	     b_mapping(2, ... )
+	    r = fast_b_mapping(49, this->slide_window[j], this->slide_window[j_1], this->slide_window[j_2]);
             this->a_bucket[r]++;
-            r = b_mapping(3, this->slide_window[j], this->slide_window[j_1], this->slide_window[j_3]);
+	    //	     b_mapping(3, ... )
+	    r = fast_b_mapping(12, this->slide_window[j], this->slide_window[j_1], this->slide_window[j_3]);
             this->a_bucket[r]++;
-            r = b_mapping(5, this->slide_window[j], this->slide_window[j_2], this->slide_window[j_3]);
+	    //	     b_mapping(5, ... )
+	    r = fast_b_mapping(178, this->slide_window[j], this->slide_window[j_2], this->slide_window[j_3]);
             this->a_bucket[r]++;
 #if SLIDING_WND_SIZE>=5
-            r = b_mapping(7, this->slide_window[j], this->slide_window[j_2], this->slide_window[j_4]);
+	    //	     b_mapping(7, ... )
+	    r = fast_b_mapping(166, this->slide_window[j], this->slide_window[j_2], this->slide_window[j_4]);
             this->a_bucket[r]++;
-            r = b_mapping(11, this->slide_window[j], this->slide_window[j_1], this->slide_window[j_4]);
+	    //	     b_mapping(11, ... )
+	    r = fast_b_mapping(84, this->slide_window[j], this->slide_window[j_1], this->slide_window[j_4]);
             this->a_bucket[r]++;
-            r = b_mapping(13, this->slide_window[j], this->slide_window[j_3], this->slide_window[j_4]);
+	    //	     b_mapping(13, ... )
+	    r = fast_b_mapping(230, this->slide_window[j], this->slide_window[j_3], this->slide_window[j_4]);
             this->a_bucket[r]++;
 #endif
 #if SLIDING_WND_SIZE>=6
-            r = b_mapping(17, this->slide_window[j], this->slide_window[j_1], this->slide_window[j_5]);
-            this->a_bucket[r]++;
-            r = b_mapping(19, this->slide_window[j], this->slide_window[j_2], this->slide_window[j_5]);
-            this->a_bucket[r]++;
-            r = b_mapping(23, this->slide_window[j], this->slide_window[j_3], this->slide_window[j_5]);
-            this->a_bucket[r]++;
-            r = b_mapping(29, this->slide_window[j], this->slide_window[j_4], this->slide_window[j_5]);
-            this->a_bucket[r]++;
+	    //	     b_mapping(17, ... )
+	    r = fast_b_mapping(197, this->slide_window[j], this->slide_window[j_1], this->slide_window[j_5]);
+	    this->a_bucket[r]++;
+	    //	     b_mapping(19, ... )
+	    r = fast_b_mapping(181, this->slide_window[j], this->slide_window[j_2], this->slide_window[j_5]);
+	    this->a_bucket[r]++;
+	    //	     b_mapping(23, ... )
+	    r = fast_b_mapping(80, this->slide_window[j], this->slide_window[j_3], this->slide_window[j_5]);
+	    this->a_bucket[r]++;
+	    //	     b_mapping(29, ... )
+	    r = fast_b_mapping(142, this->slide_window[j], this->slide_window[j_4], this->slide_window[j_5]);
+	    this->a_bucket[r]++;
 #endif
 #if SLIDING_WND_SIZE>=7
-            r = b_mapping(31, this->slide_window[j], this->slide_window[j_1], this->slide_window[j_6]);
-            this->a_bucket[r]++;
-            r = b_mapping(37, this->slide_window[j], this->slide_window[j_2], this->slide_window[j_6]);
-            this->a_bucket[r]++;
-            r = b_mapping(41, this->slide_window[j], this->slide_window[j_3], this->slide_window[j_6]);
-            this->a_bucket[r]++;
-            r = b_mapping(43, this->slide_window[j], this->slide_window[j_4], this->slide_window[j_6]);
-            this->a_bucket[r]++;
-            r = b_mapping(47, this->slide_window[j], this->slide_window[j_5], this->slide_window[j_6]);
-            this->a_bucket[r]++;
+	    //	     b_mapping(31, ... )
+	    r = fast_b_mapping(200, this->slide_window[j], this->slide_window[j_1], this->slide_window[j_6]);
+	    this->a_bucket[r]++;
+	    //	     b_mapping(37, ... )
+	    r = fast_b_mapping(253, this->slide_window[j], this->slide_window[j_2], this->slide_window[j_6]);
+	    this->a_bucket[r]++;
+	    //	     b_mapping(41, ... )
+	    r = fast_b_mapping(101, this->slide_window[j], this->slide_window[j_3], this->slide_window[j_6]);
+	    this->a_bucket[r]++;
+	    //	     b_mapping(43, ... )
+	    r = fast_b_mapping(18, this->slide_window[j], this->slide_window[j_4], this->slide_window[j_6]);
+	    this->a_bucket[r]++;
+	    //	     b_mapping(47, ... )
+	    r = fast_b_mapping(222, this->slide_window[j], this->slide_window[j_5], this->slide_window[j_6]);
+	    this->a_bucket[r]++;
 #endif
 #if SLIDING_WND_SIZE>=8
-            r = b_mapping(53, this->slide_window[j], this->slide_window[j_1], this->slide_window[j_7]);
-            this->a_bucket[r]++;
-            r = b_mapping(59, this->slide_window[j], this->slide_window[j_2], this->slide_window[j_7]);
-            this->a_bucket[r]++;
-            r = b_mapping(61, this->slide_window[j], this->slide_window[j_3], this->slide_window[j_7]);
-            this->a_bucket[r]++;
-            r = b_mapping(67, this->slide_window[j], this->slide_window[j_4], this->slide_window[j_7]);
-            this->a_bucket[r]++;
-            r = b_mapping(71, this->slide_window[j], this->slide_window[j_5], this->slide_window[j_7]);
-            this->a_bucket[r]++;
-            r = b_mapping(73, this->slide_window[j], this->slide_window[j_6], this->slide_window[j_7]);
-            this->a_bucket[r]++;
+	    //	     b_mapping(53, ... )
+	    r = fast_b_mapping(237, this->slide_window[j], this->slide_window[j_1], this->slide_window[j_7]);
+	    this->a_bucket[r]++;
+	    //	     b_mapping(59, ... )
+	    r = fast_b_mapping(214, this->slide_window[j], this->slide_window[j_2], this->slide_window[j_7]);
+	    this->a_bucket[r]++;
+	    //	     b_mapping(61, ... )
+	    r = fast_b_mapping(227, this->slide_window[j], this->slide_window[j_3], this->slide_window[j_7]);
+	    this->a_bucket[r]++;
+	    //	     b_mapping(67, ... )
+	    r = fast_b_mapping(22, this->slide_window[j], this->slide_window[j_4], this->slide_window[j_7]);
+	    this->a_bucket[r]++;
+	    //	     b_mapping(71, ... )
+	    r = fast_b_mapping(175, this->slide_window[j], this->slide_window[j_5], this->slide_window[j_7]);
+	    this->a_bucket[r]++;
+	    //	     b_mapping(73, ... )
+	    r = fast_b_mapping(5, this->slide_window[j], this->slide_window[j_6], this->slide_window[j_7]);
+	    this->a_bucket[r]++;
 #endif
         }
     }
@@ -348,7 +369,6 @@ void TlshImpl::fast_update(const unsigned char* data, unsigned int len)
 				int j_3 = RNG_IDX(j-3); if (i >= 3) { this->slide_window[j_3] = data[i-3]; }
 				int j_4 = RNG_IDX(j-4); if (i >= 4) { this->slide_window[j_4] = data[i-4]; }
 
-				unsigned char r;
 				checksum = fast_b_mapping(1, this->slide_window[j], this->slide_window[j_1], checksum );
 				this->a_bucket[ fast_b_mapping(49,  this->slide_window[j], this->slide_window[j_1], this->slide_window[j_2] ) ]++;
 				this->a_bucket[ fast_b_mapping(12,  this->slide_window[j], this->slide_window[j_1], this->slide_window[j_3] ) ]++;

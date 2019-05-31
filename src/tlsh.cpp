@@ -58,7 +58,6 @@
 #include "tlsh.h"
 #include "tlsh_impl.h"
 #include "stdio.h"
-#include "version.h"
 #include <errno.h>
 #include <string.h>
 

@@ -498,3 +498,13 @@ AFTER	ms=1552963365502
 TIME	ms=4694
 TIME	ms=93	per million iterations
 </PRE>
+
+**3.11.1**
+<PRE>
+31/May/2019
+tidy up:
+1. use fast_b_mapping() instead of b_mapping()
+2. remove declaration of unsigned r which is never used
+3. remove #include which is not required
+
+</PRE>
