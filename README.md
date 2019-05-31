@@ -506,5 +506,11 @@ tidy up:
 1. use fast_b_mapping() instead of b_mapping()
 2. remove declaration of unsigned r which is never used
 3. remove #include which is not required
+</PRE>
 
+**3.12.0**
+<PRE>
+31/May/2019
+remove floating point calculations such as log() function
+use alookup table instead
 </PRE>
