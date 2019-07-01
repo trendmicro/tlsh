@@ -68,6 +68,7 @@
 #include <assert.h>
 
 #ifdef WINDOWS
+#include <strsafe.h>
 #include <WinFunctions.h>
 #else
 // for directory processing on Unix / Linux
@@ -229,56 +230,40 @@ static int read_file_eval_tlsh(char *fname, Tlsh *th, int show_details, int forc
 	return(0);
 }
 
+#ifndef WINDOWS
 bool is_dir(char *dirname)
 {
 DIR	  *dip;
 	if (dirname == NULL) {
 		return(false);
 	}
-#ifndef WINDOWS
 	dip = opendir(dirname);
-#else
-	WIN32_FIND_DATA data;
-	HANDLE h = FindFirstFile(dirname, &data);
-	if (h != nullptr)
-	{
-		dip = new DIR();
-		dip->hFind = h;
-	}
-#endif
 	if (dip == NULL) {
 		return(false);
 	}
-#ifndef WINDOWS
 	closedir(dip);
-#else
-	FindClose(dip->hFind);
-	delete dip;
-#endif
 	return(true);
 }
+#else
+bool is_dir(char *dirname)
+{
+	DWORD dw = GetFileAttributes(dirname);
+	return dw & FILE_ATTRIBUTE_DIRECTORY ? true : false;
+}
+#endif
 
 struct FileName {
         char *tlsh;  // Only used with -l parameter
         char *name;
 };
 
+#ifndef WINDOWS
 static int count_files_in_dir(char *dirname)
 {
 DIR     *dip;
 struct dirent   *dit;
 
-#ifndef WINDOWS
 	dip = opendir(dirname);
-#else
-	WIN32_FIND_DATA data;
-	HANDLE h = FindFirstFile(dirname, &data);
-	if (h != nullptr)
-	{
-		dip = new DIR();
-		dip->hFind = h;
-	}
-#endif
 	if (dip == NULL) {
 		return(0);
 	}
@@ -301,14 +286,29 @@ struct dirent   *dit;
 		}
 		dit = readdir(dip);
 	}
-#ifndef WINDOWS
 	closedir(dip);
-#else
-	FindClose(dip->hFind);
-	delete dip;
-#endif
 	return(n_file);
 }
+#else
+static int count_files_in_dir(char *dirname)
+{
+	TCHAR szDirWildcard[MAX_PATH];
+	StringCbCopy(szDirWildcard, sizeof(szDirWildcard), dirname);
+	StringCbCat(szDirWildcard, sizeof(szDirWildcard) / sizeof(TCHAR), "\\*");
+
+	WIN32_FIND_DATA data;
+	HANDLE hDir = FindFirstFile(szDirWildcard, &data);
+	if (hDir == INVALID_HANDLE_VALUE)
+		return 0;
+
+	int file_count = 0;
+	while (FindNextFile(hDir, &data))
+		++file_count;
+
+	FindClose(hDir);
+	return file_count;
+}
+#endif
 
 static int recursive_read_files_from_dir(char *dirname, struct FileName *fnames, int max_fnames, int *n_file)
 {

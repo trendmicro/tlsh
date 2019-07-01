@@ -51,36 +51,35 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
 # OF THE POSSIBILITY OF SUCH DAMAGE.
 
+if(MSVC)
+    set(EXTRALIBS winfunc)
+    add_compile_options(/EHsc)
+endif()
+
 add_executable(tlsh_version tlsh_version.cpp)
-target_link_libraries(tlsh_version tlsh)
-set_target_properties(tlsh_version PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
 set_target_properties(tlsh_version PROPERTIES OUTPUT_NAME tlsh_version${BUILD_POSTFIX})
+target_link_libraries(tlsh_version PRIVATE tlsh ${EXTRALIBS})
 
 add_executable(simple_unittest simple_unittest.cpp)
-target_link_libraries(simple_unittest tlsh)
-set_target_properties(simple_unittest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
 set_target_properties(simple_unittest PROPERTIES OUTPUT_NAME simple_unittest${BUILD_POSTFIX})
+target_link_libraries(simple_unittest PRIVATE tlsh ${EXTRALIBS})
 
 add_executable(tlsh_unittest tlsh_unittest.cpp)
-target_link_libraries(tlsh_unittest tlsh)
-set_target_properties(tlsh_unittest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
 set_target_properties(tlsh_unittest PROPERTIES OUTPUT_NAME tlsh_unittest${BUILD_POSTFIX})
+target_link_libraries(tlsh_unittest PRIVATE tlsh ${EXTRALIBS})
 set_target_properties(tlsh_unittest PROPERTIES SKIP_BUILD_RPATH TRUE)
 
 add_executable(timing_unittest timing_unittest.cpp)
-target_link_libraries(timing_unittest tlsh)
-set_target_properties(timing_unittest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
 set_target_properties(timing_unittest PROPERTIES OUTPUT_NAME timing_unittest${BUILD_POSTFIX})
+target_link_libraries(timing_unittest PRIVATE tlsh ${EXTRALIBS})
 set_target_properties(timing_unittest PROPERTIES SKIP_BUILD_RPATH TRUE)
 
 add_executable(order_bug order_bug.cpp)
-target_link_libraries(order_bug tlsh)
-set_target_properties(order_bug PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
 set_target_properties(order_bug PROPERTIES OUTPUT_NAME order_bug${BUILD_POSTFIX})
+target_link_libraries(order_bug PRIVATE tlsh ${EXTRALIBS})
 set_target_properties(order_bug PROPERTIES SKIP_BUILD_RPATH TRUE)
 
 add_executable(tlsh_pattern tlsh_pattern.cpp)
-target_link_libraries(tlsh_pattern tlsh)
-set_target_properties(tlsh_pattern PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
 set_target_properties(tlsh_pattern PROPERTIES OUTPUT_NAME tlsh_pattern${BUILD_POSTFIX})
+target_link_libraries(tlsh_pattern PRIVATE tlsh ${EXTRALIBS})
 set_target_properties(tlsh_pattern PROPERTIES SKIP_BUILD_RPATH TRUE)

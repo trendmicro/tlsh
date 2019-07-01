@@ -67,7 +67,10 @@
 #include <stdlib.h>
 #include <string.h>
 #include <assert.h>
+
+#ifndef WINDOWS
 #include <sys/time.h>
+#endif
 
 #include "tlsh.h"
 

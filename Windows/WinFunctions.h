@@ -40,6 +40,7 @@ extern struct dirent *readdir(DIR *dir);
 extern int closedir(DIR *dir);
 extern struct tm *localtime_r(const time_t *timep, struct tm *results);
 extern bool read_file_win(const char *fname, int sizefile, unsigned char* data);
+extern int gettimeofday(struct timeval *tv, struct timezone *tz);
 
 #endif  // #ifndef WINFUNCTIONS_H
 

@@ -51,63 +51,44 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
 # OF THE POSSIBILITY OF SUCH DAMAGE.
 
-set(TLSH_SRCS
-    tlsh.cpp
-    tlsh_impl.cpp
-    tlsh_util.cpp
+add_library(winfunc STATIC
+    WinFunctions.h
+    WinFunctions.cpp
 )
 
-add_library(tlsh ${TLSH_SRCS})
-
-target_include_directories(tlsh
+target_compile_definitions(winfunc
     PUBLIC
-        $<BUILD_INTERFACE:${TLSH_SOURCE_DIR}/include>
-    INTERFACE
-        $<INSTALL_INTERFACE:include>
-)
-
-target_compile_definitions(tlsh
-    PUBLIC
+        -DWINDOWS
         -D${TLSH_BUCKETS_SIZE}
         -D${TLSH_CHECKSUM_TYPE}
-        -D$<$<CXX_COMPILER_ID:MSVC>:WINDOWS>
 )
 
 if(BUILD_SHARED_LIBS)
-    target_compile_definitions(tlsh PRIVATE -DTLSH_EXPORTS)
-
-    set_target_properties(tlsh
-        PROPERTIES
-            VERSION "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}"
-            SOVERSION "0"
-    )
+    target_compile_definitions(winfunc PRIVATE -DTLSH_EXPORTS)
 else()
-    target_compile_definitions(tlsh PUBLIC -DTLSH_LIB)
+    target_compile_definitions(winfunc PUBLIC -DTLSH_LIB)
 endif()
 
-target_link_libraries(tlsh PRIVATE $<$<CXX_COMPILER_ID:MSVC>:winfunc>)
+# Disable unwanted microsoft warnings
+target_compile_options(winfunc
+    PUBLIC
+        /wd4477
+        /wd4267
+        /wd4996
+        /EHsc
+)
 
-if(NOT TLSH_NO_INSTALL_HEADERS)
-    set(PUBLIC_HEADERS
-        "${TLSH_SOURCE_DIR}/include/tlsh.h"
-        "${TLSH_SOURCE_DIR}/include/version.h"
+target_include_directories(winfunc
+    PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+)
+
+if(NOT BUILD_SHARED_LIBS)
+    install(
+        TARGETS winfunc
+        EXPORT tlsh-export
+        ARCHIVE DESTINATION lib
+        LIBRARY DESTINATION lib
+        RUNTIME DESTINATION bin
         )
-    set_target_properties(tlsh PROPERTIES PUBLIC_HEADER "${PUBLIC_HEADERS}")
 endif()
-
-install(
-    TARGETS tlsh
-    EXPORT tlsh-export
-    ARCHIVE DESTINATION lib
-    LIBRARY DESTINATION lib
-    RUNTIME DESTINATION bin
-    PUBLIC_HEADER DESTINATION include/tlsh
-)
-
-install(
-    EXPORT tlsh-export
-    DESTINATION share/tlsh
-    FILE tlshConfig.cmake
-    NAMESPACE tlsh::
-    CONFIGURATIONS Release
-)

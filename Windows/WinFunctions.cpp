@@ -4,6 +4,29 @@
 
 #include <WinFunctions.h>
 
+#include <WinSock.h> // struct timeval
+#include <stdint.h>
+
+#if defined(_MSC_VER) || defined(_MSC_EXTENSIONS)
+#define DELTA_EPOCH_IN_MICROSECS 11644473600000000Ui64
+#else
+#define DELTA_EPOCH_IN_MICROSECS 11644473600000000ULL
+#endif
+
+int gettimeofday(struct timeval *tv, struct timezone *tzp) {
+	FILETIME file_time;
+	GetSystemTimeAsFileTime(&file_time);
+
+	uint64_t time = ((uint64_t)file_time.dwLowDateTime);
+	time += ((uint64_t)file_time.dwHighDateTime) << 32;
+
+	time /= 10; // convert into microseconds
+	time -= DELTA_EPOCH_IN_MICROSECS;
+	tv->tv_sec = (long)(time / 1000000UL);
+	tv->tv_usec = (long)(time % 1000000UL);
+	return 0;
+}
+
 DIR *opendir(const char *dirname)
 {
 	if (strlen(dirname) >= NAME_LENGTH) {

@@ -53,7 +53,12 @@
 
 
 add_executable(rand_tags rand_tags.cpp)
-target_link_libraries(rand_tags tlsh)
-set_target_properties(rand_tags PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
+
 set_target_properties(rand_tags PROPERTIES OUTPUT_NAME rand_tags${BUILD_POSTFIX})
 
+if(MSVC)
+    set(EXTRALIBS winfunc)
+    add_compile_options(/EHsc)
+endif()
+
+target_link_libraries(rand_tags PRIVATE tlsh ${EXTRALIBS})
