@@ -55,11 +55,7 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifdef WINDOWS
-#include "win_version.h"
-#else
 #include "version.h"
-#endif
 
 #ifndef HEADER_TLSH_IMPL_H
 #define HEADER_TLSH_IMPL_H

@@ -60,11 +60,7 @@
 #ifndef HEADER_TLSH_H
 #define HEADER_TLSH_H
 
-#ifdef WINDOWS
-#include "win_version.h"
-#else
 #include "version.h"
-#endif
 
 #ifndef NULL
 #define NULL 0
