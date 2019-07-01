@@ -51,7 +51,7 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
 # OF THE POSSIBILITY OF SUCH DAMAGE.
 
-cmake_minimum_required(VERSION 2.6)
+cmake_minimum_required(VERSION 2.8)
 
 project(TLSH)
 
@@ -59,42 +59,57 @@ set(VERSION_MAJOR 3)
 set(VERSION_MINOR 13)
 set(VERSION_PATCH 1)
 
+# Edit those values or call cmake with options defined below
+set(TLSH_BUCKETS_DEFAULT "TLSH_BUCKETS_128")
+set(TLSH_CHECKSUM_DEFAULT "TLSH_CHECKSUM_1B")
+
 # TLSH uses only half the counting buckets.
 # It can use all the buckets now.
-set(TLSH_BUCKETS_128 1)
-if(TLSH_BUCKETS_48 EQUAL 1)
+option(TLSH_BUCKETS_48 "Use 48 bits buckets" OFF)
+option(TLSH_BUCKETS_128 "Use 128 bits buckets" OFF)
+option(TLSH_BUCKETS_256 "Use 256 bits buckets" OFF)
+
+if(NOT TLSH_BUCKETS_48 AND NOT TLSH_BUCKETS_128 AND NOT TLSH_BUCKETS_256)
+  set(${TLSH_BUCKETS_DEFAULT} ON)
+endif()
+
+if(TLSH_BUCKETS_48)
   set(TLSH_HASH "min hash")
-  add_definitions(-DBUCKETS_48)
-endif()
-if(TLSH_BUCKETS_128 EQUAL 1)
+  set(TLSH_BUCKETS_SIZE "BUCKETS_48")
+elseif(TLSH_BUCKETS_128)
   set(TLSH_HASH "compact hash")
-  add_definitions(-DBUCKETS_128)
-endif()
-if(TLSH_BUCKETS_256 EQUAL 1)
+  set(TLSH_BUCKETS_SIZE "BUCKETS_128")
+elseif(TLSH_BUCKETS_256)
   set(TLSH_HASH "full hash")
-  add_definitions(-DBUCKETS_256)
+  set(TLSH_BUCKETS_SIZE "BUCKETS_256")
 endif()
 
-# TLSH uses 1 byte checksum. The collision rate is 1 in 24.
-# It can use 3 bytes checksum now. That collision rate in 1 in 5800.
-set(TLSH_CHECKSUM_1B 1)
+message(STATUS "Hash type: ${TLSH_HASH}")
 
-if(TLSH_CHECKSUM_0B EQUAL 1)
+option(TLSH_CHECKSUM_0B "Do not use checksum" OFF)
+option(TLSH_CHECKSUM_1B "Use 1 byte checksum (collision rate: 1/24)" OFF)
+option(TLSH_CHECKSUM_3B "Use 3 bytes checksum (collision rate: 1/5000)" OFF)
+
+if(NOT TLSH_CHECKSUM_0B AND NOT TLSH_CHECKSUM_1B AND NOT TLSH_CHECKSUM_3B)
+  set(${TLSH_CHECKSUM_DEFAULT} ON)
+endif()
+
+if(TLSH_CHECKSUM_0B)
   set(TLSH_CHECKSUM "no checksum")
-  add_definitions(-DCHECKSUM_0B)
-endif()
-if(TLSH_CHECKSUM_1B EQUAL 1)
+  set(TLSH_CHECKSUM_TYPE "CHECKSUM_0B")
+elseif(TLSH_CHECKSUM_1B)
   set(TLSH_CHECKSUM "1 byte checksum")
-endif()
-if(TLSH_CHECKSUM_3B EQUAL 1)
+  set(TLSH_CHECKSUM_TYPE "CHECKSUM_1B")
+elseif(TLSH_CHECKSUM_3B)
   set(TLSH_CHECKSUM "3 bytes checksum")
-  add_definitions(-DCHECKSUM_3B)
+  set(TLSH_CHECKSUM_TYPE "CHECKSUM_3B")
 endif()
 
-# setting TLSH_DISTANCE_PARAMETERS to 1 allows you to set command line arguments
-# to set - and hence experiment with the distance parameters
-#	by default this is zero
-set(TLSH_DISTANCE_PARAMETERS 0)
+message(STATUS "Checksum: ${TLSH_CHECKSUM}")
+
+# setting TLSH_DISTANCE_PARAMETERS to 'ON' allows you to set command line
+# arguments to set - and hence experiment with the distance parameters
+option(TLSH_DISTANCE_PARAMETERS "Enable cli control of the distance parameters" OFF)
 
 # write a file with the VERSION information
 file(REMOVE VERSION)

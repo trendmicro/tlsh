@@ -69,10 +69,12 @@ git checkout master
 
 Edit [CMakeLists.txt](CMakeLists.txt) to build TLSH with different options.
 
-- TLSH_BUCKETS: determines using 128 or 256 buckets
+- TLSH_BUCKETS_DEFAULT: determines using 128 or 256 buckets
 	use the default 128 buckets unless you are an expert and know you need 256 buckets
-- TLSH_CHECKSUM_1B: determines checksum length, longer means less collision
+- TLSH_CHECKSUM_DEFAULT: determines checksum length, longer means less collision
 	use the default 1 byte unless you are an expert and know you need a larger checksum
+
+Alternatively, those values can be set from usual cmake options if you are not using the provided build script.
 
 ## Linux
 
