@@ -27,9 +27,14 @@ if [ $# -eq 1 -a "$1" = "-c" ]; then
   makecversion=1
 fi
 
-make
+cmake --build .
+
 cd ../../bin
-cmake -E create_symlink tlsh_unittest tlsh
+if [ -z "${WINDIR}" ]; then
+  cmake -E create_symlink tlsh_unittest tlsh
+else
+  cmake -E copy tlsh_unittest.exe tlsh.exe
+fi
 cd -
 
 if test $notest = 0
@@ -38,7 +43,7 @@ then
 	echo "==========="
 	echo "Cmake Tests"
 	echo "==========="
-	make test
+	ctest
 fi
 
 cd ../..

@@ -7,20 +7,25 @@ export LD_LIBRARY_PATH=../lib:$LD_LIBRARY_PATH
 BASEDIR=$(dirname $0)
 pushd $BASEDIR > /dev/null
 
+# Check Windows typical env variable to add extension for git bash
+if [ ! -z "${WINDIR}" ]; then
+	EXT=".exe"
+fi
+
 TMP="tmp"
-HASH=`../bin/tlsh_version | head -1 | cut -f1`
-CHKSUM=`../bin/tlsh_version | tail -1 | cut -f1`
+HASH=`../bin/tlsh_version${EXT} | head -1 | cut -f1`
+CHKSUM=`../bin/tlsh_version${EXT} | tail -1 | cut -f1`
 echo "HASH is $HASH"
 echo "CHKSUM is $CHKSUM"
 
-if test ! -f ../bin/tlsh
+if test ! -f ../bin/tlsh${EXT}
 then
 	echoerr "error: (127), you must compile tlsh"
         popd > /dev/null
 	exit 127
 fi
 
-if test ! -f ../bin/simple_unittest
+if test ! -f ../bin/simple_unittest${EXT}
 then
 	echoerr "error: (127), you must compile ../bin/simple_unittest"
         popd > /dev/null
@@ -51,10 +56,10 @@ runit() {
 	fi
 	if test "$1" = "-tlsh_c"
 	then
-	    TLSH_PROG="tlsh_c"
+	    TLSH_PROG="tlsh_c${EXT}"
 	    echo "Scenario: tlsh_c (c standalone version)..."
 	else
-	    TLSH_PROG="tlsh"
+	    TLSH_PROG="tlsh${EXT}"
 	    echo "Scenario: tlsh   (c++ standard version)..."
 	fi
 
@@ -274,7 +279,7 @@ echo "passed"
 
 echo
 echo "Running simple_unittest"
-../bin/simple_unittest > $TMP/simple_unittest.out
+../bin/simple_unittest${EXT} > $TMP/simple_unittest.out
 diff --ignore-all-space $TMP/simple_unittest.out exp/simple_unittest_EXP > /dev/null 2>/dev/null
 if [ $? -ne 0 ]; then
 	echoerr "error: diff $TMP/simple_unittest.out exp/simple_unittest_EXP"
