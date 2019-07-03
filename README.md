@@ -74,7 +74,7 @@ Edit [CMakeLists.txt](CMakeLists.txt) to build TLSH with different options.
 - TLSH_CHECKSUM_DEFAULT: determines checksum length, longer means less collision
 	use the default 1 byte unless you are an expert and know you need a larger checksum
 
-Alternatively, those values can be set from usual cmake options if you are not using the provided build script.
+Alternatively, those values can be set from usual cmake options if you are not using the provided build script (see TLSH_BUCKETS_128 )
 
 ## Linux
 
@@ -88,13 +88,28 @@ make.sh
 `make` the project, so the build will fail if `cmake` is not installed.*
 
 
-## Windows (Visual Studio)
+## Windows
 
+### Visual Studio versioned .sln
 Use the version-specific tlsh solution files ([tlsh.VC2005.sln](Windows/tlsh.VC2005.sln),
 [tlsh.VC2008.sln](Windows/tlsh.VC2008.sln), ...) under the Windows directory.
 
 See [tlsh.h](include/tlsh.h) for the tlsh library interface and [tlsh_unittest.cpp](test/tlsh_unittest.cpp) and
 [simple_unittest.cpp](test/simple_unittest.cpp) under the `test` directory for example code.
+
+**Note:** *It is also possible to generate .sln files using cmake*
+```
+mkdir build
+cd build
+cmake ..
+```
+
+### Visual Studio and WSL or Git Bash
+Within WSL's bash shell or Git Bash's execute:
+
+```bash
+./make.sh
+```
 
 ## Python Extension
 
