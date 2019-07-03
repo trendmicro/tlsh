@@ -59,6 +59,9 @@ set(VERSION_MAJOR 3)
 set(VERSION_MINOR 13)
 set(VERSION_PATCH 1)
 
+# Standard shared library flag is supported, enable to build a shared library
+#set(BUILD_SHARED_LIBS OFF)
+
 # Edit those values or call cmake with options defined below
 set(TLSH_BUCKETS_DEFAULT "TLSH_BUCKETS_128")
 set(TLSH_CHECKSUM_DEFAULT "TLSH_CHECKSUM_1B")

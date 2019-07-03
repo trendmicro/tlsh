@@ -4,7 +4,7 @@
 add_test(tlsh_unittest_len "${CMAKE_SOURCE_DIR}/Testing/test.sh")
 add_test(tlsh_unittest_xlen "${CMAKE_SOURCE_DIR}/Testing/test.sh" "-xlen")
 if(CMAKE_HOST_UNIX)
-    if(CMAKE_SHARED_LIBRARY EQUAL 1)
+    if(BUILD_SHARED_LIBS)
         set_tests_properties(tlsh_unittest_len tlsh_unittest_xlen PROPERTIES ENVIRONMENT "LD_PRELOAD=${CMAKE_SOURCE_DIR}/lib/libtlsh.so.0")
     endif()
 endif()
