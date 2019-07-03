@@ -1,0 +1,2 @@
+*.sh eol=lf
+Testing/example_data/*.txt  binary
