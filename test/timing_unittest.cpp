@@ -69,7 +69,9 @@
 #include <assert.h>
 
 #ifndef WINDOWS
-#include <sys/time.h>
+	#include <sys/time.h>
+#else
+	#include "WinFunctions.h"
 #endif
 
 #include "tlsh.h"

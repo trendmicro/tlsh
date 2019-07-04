@@ -7,6 +7,10 @@
 #include <string.h>
 #include "tlsh.h"
 
+#ifdef WINDOWS
+	#include "WinFunctions.h"
+#endif
+
 static void html_contents(std::string &htmls);
 static void html_table(std::string &htmls, int *ntags);
 

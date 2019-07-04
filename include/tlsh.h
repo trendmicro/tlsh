@@ -108,7 +108,15 @@ class TlshImpl;
 #define TLSH_STRING_BUFFER_LEN (TLSH_STRING_LEN+1)
 
 #ifdef WINDOWS
-#include <WinFunctions.h>
+  #ifndef TLSH_LIB
+    #ifdef TLSH_EXPORTS
+      #define TLSH_API __declspec(dllexport)
+    #else
+      #define TLSH_API __declspec(dllimport)
+    #endif
+  #else
+    #define TLSH_API
+  #endif
 #else 
 	#if defined(__SPARC) || defined(_AS_MK_OS_RH73)
 	   #define TLSH_API
