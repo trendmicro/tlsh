@@ -1,7 +1,11 @@
 language: cpp
 
-compiler:
-  - gcc
+matrix:
+  include:
+  - os: linux
+    compiler: gcc
+  - os: osx
+    compiler: clang
+  - os: windows
 
-script:
-  - ./make.sh
+script: ./make.sh || cat CMakeOutput.log
