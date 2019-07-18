@@ -80,10 +80,6 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 
-#define	PATH_OPTION_FULL	1
-#define	PATH_OPTION_FNAME	2
-#define	PATH_OPTION_DIRNAME	3
-
 #define	ERROR_READING_FILE	1
 #define	WARNING_FILE_TOO_SMALL	2
 #define	WARNING_CANNOT_HASH	3
