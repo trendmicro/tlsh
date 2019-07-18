@@ -64,5 +64,10 @@
 int main(int argc, char *argv[])
 {
     printf("%d\tbuckets hash (128 compact, 256 full)\n", EFF_BUCKETS);
+#ifdef CHECKSUM_0B
+    printf("0\tbyte checksum\n");
+#else
     printf("%d\tbyte checksum\n", TLSH_CHECKSUM_LEN);
+#endif
+    printf("%d\tsliding window\n", SLIDING_WND_SIZE);
 }

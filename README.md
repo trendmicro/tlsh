@@ -527,3 +527,10 @@ Thanks Jayson Pryde! :-)
 31/May/2019
 fixing setup.py so that you can install Python Extension on Windows
 </PRE>
+
+**3.14.0**
+<PRE>
+18/July/2019
+adding sliding window size to tlsh_version
+changing test.sh to read the sliding window size
+</PRE>

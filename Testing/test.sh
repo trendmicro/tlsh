@@ -1,17 +1,16 @@
 #!/bin/bash
 
+##################################
+# set CREATE_EXP_FILE=1 if you want this script to create the Expected Results for the regression tests
+##################################
+CREATE_EXP_FILE=0
+
 echoerr() { echo "$@" 1>&2; }
 
 ## Set LD_LIBRARY_PATH so that tlsh can pick up the tlsh shared library
 export LD_LIBRARY_PATH=../lib:$LD_LIBRARY_PATH
 BASEDIR=$(dirname $0)
 pushd $BASEDIR > /dev/null
-
-TMP="tmp"
-HASH=`../bin/tlsh_version | head -1 | cut -f1`
-CHKSUM=`../bin/tlsh_version | tail -1 | cut -f1`
-echo "HASH is $HASH"
-echo "CHKSUM is $CHKSUM"
 
 if test ! -f ../bin/tlsh
 then
@@ -26,6 +25,21 @@ then
         popd > /dev/null
 	exit 127
 fi
+
+if test ! -f ../bin/tlsh_version
+then
+	echoerr "error: (127), you must compile ../bin/tlsh_version"
+        popd > /dev/null
+	exit 127
+fi
+
+TMP="tmp"
+HASH=`  ../bin/tlsh_version | head -1           | cut -f1`
+CHKSUM=`../bin/tlsh_version | head -2 | tail -1 | cut -f1`
+SLDWIN=`../bin/tlsh_version |           tail -1 | cut -f1`
+echo "HASH is $HASH"
+echo "CHKSUM is $CHKSUM"
+echo "SLDWIN is $SLDWIN"
 
 if test ! -d tmp
 then
