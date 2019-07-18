@@ -58,10 +58,10 @@ runit() {
 	then
 	    XLEN="xlen"
 	    echo
-	    echo "Scenario: considering len, ..."
+	    echo "Scenario: not considering len, ..."
 	else
 	    XLEN="len"
-	    echo "Scenario: not considering len, ..."
+	    echo "Scenario:     considering len, ..."
 	fi
 	if test "$1" = "-tlsh_c"
 	then
@@ -84,17 +84,45 @@ runit() {
 	echo "../bin/${TLSH_PROG} -r ../Testing/example_data > $TMP/example_data.out 2> $TMP/example_data.err"
 	      ../bin/${TLSH_PROG} -r ../Testing/example_data > $TMP/example_data.out 2> $TMP/example_data.err
 
-	diffc=`diff --ignore-all-space $TMP/example_data.out exp/example_data.$HASH.$CHKSUM.$XLEN.out_EXP | wc -l`
+	EXPECTED_OUT=exp/example_data.$HASH.$CHKSUM.$XLEN.out_EXP
+	EXPECTED_ERR=exp/example_data.$HASH.$CHKSUM.$XLEN.err_EXP
+	if test ! -f $EXPECTED_OUT
+	then
+		if test $CREATE_EXP_FILE = 0
+		then
+			echoerr "error: (1), Expected Result file $EXPECTED_OUT does not exist"
+			popd > /dev/null
+			exit 1
+		else
+			echo "cp $TMP/example_data.out $EXPECTED_OUT"
+			      cp $TMP/example_data.out $EXPECTED_OUT
+		fi
+	fi
+	if test ! -f $EXPECTED_ERR
+	then
+		if test $CREATE_EXP_FILE = 0
+		then
+			echoerr "error: (1), Expected Result file $EXPECTED_ERR does not exist"
+			popd > /dev/null
+			exit 1
+		else
+			echo "cp $TMP/example_data.err $EXPECTED_ERR"
+			      cp $TMP/example_data.err $EXPECTED_ERR
+		fi
+	fi
+
+	diffc=`diff --ignore-all-space $TMP/example_data.out $EXPECTED_OUT | wc -l`
 	if test ! $diffc = 0
 	then
-		echoerr "error: (1), diff $TMP/example_data.out exp/example_data.$HASH.$CHKSUM.$XLEN.out_EXP"
+		echoerr "error: (1), diff $TMP/example_data.out $EXPECTED_OUT"
 		popd > /dev/null
 		exit 1
 	fi
-	diffc=`diff --ignore-all-space $TMP/example_data.err exp/example_data.$HASH.$CHKSUM.$XLEN.err_EXP | wc -l`
+
+	diffc=`diff --ignore-all-space $TMP/example_data.err $EXPECTED_ERR | wc -l`
 	if test ! $diffc = 0
 	then
-		echoerr "error: (1), diff $TMP/example_data.err exp/example_data.$HASH.$CHKSUM.$XLEN.err_EXP"
+		echoerr "error: (1), diff $TMP/example_data.err $EXPECTED_ERR"
 		popd > /dev/null
 		exit 1
 	fi
@@ -119,17 +147,44 @@ runit() {
 	      ../bin/${TLSH_PROG} -r ../Testing/example_data -c ../Testing/example_data/website_course_descriptors06-07.txt > $TMP/example_data.scores 2> $TMP/example_data.err2
 	fi
 
-	diffc=`diff --ignore-all-space $TMP/example_data.scores exp/example_data.$HASH.$CHKSUM.$XLEN.scores_EXP | wc -l`
+	EXPECTED_SCO=exp/example_data.$HASH.$CHKSUM.$XLEN.scores_EXP
+	EXPECTED_ERR=exp/example_data.$HASH.$CHKSUM.$XLEN.err2_EXP
+	if test ! -f $EXPECTED_SCO
+	then
+		if test $CREATE_EXP_FILE = 0
+		then
+			echoerr "error: (1), Expected Result file $EXPECTED_SCO does not exist"
+			popd > /dev/null
+			exit 1
+		else
+			echo "cp $TMP/example_data.scores $EXPECTED_SCO"
+			      cp $TMP/example_data.scores $EXPECTED_SCO
+		fi
+	fi
+	if test ! -f $EXPECTED_ERR
+	then
+		if test $CREATE_EXP_FILE = 0
+		then
+			echoerr "error: (1), Expected Result file $EXPECTED_ERR does not exist"
+			popd > /dev/null
+			exit 1
+		else
+			echo "cp $TMP/example_data.err2 $EXPECTED_ERR"
+			      cp $TMP/example_data.err2 $EXPECTED_ERR
+		fi
+	fi
+
+	diffc=`diff --ignore-all-space $TMP/example_data.scores $EXPECTED_SCO | wc -l`
 	if test ! $diffc = 0
 	then
-		echoerr "error: (2), diff $TMP/example_data.scores exp/example_data.$HASH.$CHKSUM.$XLEN.scores_EXP"
+		echoerr "error: (2), diff $TMP/example_data.scores $EXPECTED_SCO"
 		popd > /dev/null
 		exit 2
 	fi
-	diffc=`diff --ignore-all-space $TMP/example_data.err2 exp/example_data.$HASH.$CHKSUM.$XLEN.err2_EXP | wc -l`
+	diffc=`diff --ignore-all-space $TMP/example_data.err2 $EXPECTED_ERR | wc -l`
 	if test ! $diffc = 0
 	then
-		echoerr "error: (2), diff $TMP/example_data.err2 exp/example_data.$HASH.$CHKSUM.$XLEN.err2_EXP"
+		echoerr "error: (2), diff $TMP/example_data.err2 $EXPECTED_ERR"
 		popd > /dev/null
 		exit 2
 	fi
@@ -157,10 +212,24 @@ runit() {
 	      ../bin/${TLSH_PROG} -l $TMP/example_data.out -c ../Testing/example_data/website_course_descriptors06-07.txt > $TMP/example_data.scores.2 2>/dev/null
 	fi
 
-	diffc=`diff --ignore-all-space $TMP/example_data.scores.2 exp/example_data.$HASH.$CHKSUM.$XLEN.scores.2_EXP | wc -l`
+	EXPECTED_SCO=exp/example_data.$HASH.$CHKSUM.$XLEN.scores.2_EXP
+	if test ! -f $EXPECTED_SCO
+	then
+		if test $CREATE_EXP_FILE = 0
+		then
+			echoerr "error: (3), Expected Result file $EXPECTED_SCO does not exist"
+			popd > /dev/null
+			exit 1
+		else
+			echo "cp $TMP/example_data.scores.2 $EXPECTED_SCO"
+			      cp $TMP/example_data.scores.2 $EXPECTED_SCO
+		fi
+	fi
+
+	diffc=`diff --ignore-all-space $TMP/example_data.scores.2 $EXPECTED_SCO | wc -l`
 	if test ! $diffc = 0
 	then
-		echoerr "error: (3) diff $TMP/example_data.scores.2 exp/example_data.$HASH.$CHKSUM.$XLEN.scores.2_EXP"
+		echoerr "error: (3) diff $TMP/example_data.scores.2 $EXPECTED_SCO"
 		popd > /dev/null
 		exit 3
 	fi
@@ -184,9 +253,23 @@ runit() {
 	      ../bin/${TLSH_PROG} -xref -r ../Testing/example_data > $TMP/example_data.xref.scores 2>/dev/null
 	fi
 
-	diff --ignore-all-space $TMP/example_data.xref.scores exp/example_data.$HASH.$CHKSUM.$XLEN.xref.scores_EXP > /dev/null 2>/dev/null
+	EXPECTED_SCO=exp/example_data.$HASH.$CHKSUM.$XLEN.xref.scores_EXP
+	if test ! -f $EXPECTED_SCO
+	then
+		if test $CREATE_EXP_FILE = 0
+		then
+			echoerr "error: ($testnum), Expected Result file $EXPECTED_SCO does not exist"
+			popd > /dev/null
+			exit 1
+		else
+			echo "cp $TMP/example_data.xref.scores $EXPECTED_SCO"
+			      cp $TMP/example_data.xref.scores $EXPECTED_SCO
+		fi
+	fi
+
+	diff --ignore-all-space $TMP/example_data.xref.scores $EXPECTED_SCO > /dev/null 2>/dev/null
 	if [ $? -ne 0 ]; then
-		echoerr "error: ($testnum), diff $TMP/example_data.xref.scores exp/example_data.$HASH.$CHKSUM.$XLEN.xref.scores_EXP"
+		echoerr "error: ($testnum), diff $TMP/example_data.xref.scores $EXPECTED_SCO"
 		popd > /dev/null
 		exit $testnum
 	fi
@@ -212,9 +295,23 @@ runit() {
 	      ../bin/${TLSH_PROG} -T 201 -l $TMP/example_data.out -c ../Testing/example_data/website_course_descriptors06-07.txt > $TMP/example_data.scores.2.T-201 2>/dev/null
 	fi
 
-	diff --ignore-all-space $TMP/example_data.scores.2.T-201 exp/example_data.$HASH.$CHKSUM.$XLEN.scores.2.T-201_EXP > /dev/null 2>/dev/null
+	EXPECTED_SCO=exp/example_data.$HASH.$CHKSUM.$XLEN.scores.2.T-201_EXP
+	if test ! -f $EXPECTED_SCO
+	then
+		if test $CREATE_EXP_FILE = 0
+		then
+			echoerr "error: ($testnum), Expected Result file $EXPECTED_SCO does not exist"
+			popd > /dev/null
+			exit 1
+		else
+			echo "cp $TMP/example_data.scores.2.T-201 $EXPECTED_SCO"
+			      cp $TMP/example_data.scores.2.T-201 $EXPECTED_SCO
+		fi
+	fi
+
+	diff --ignore-all-space $TMP/example_data.scores.2.T-201 $EXPECTED_SCO > /dev/null 2>/dev/null
 	if [ $? -ne 0 ]; then
-		echoerr "error: ($testnum) diff $TMP/example_data.scores.2.T-201 exp/example_data.$HASH.$CHKSUM.$XLEN.scores.2.T-201_EXP"
+		echoerr "error: ($testnum) diff $TMP/example_data.scores.2.T-201 $EXPECTED_SCO"
 		popd > /dev/null
 		exit $testnum
 	fi
@@ -248,9 +345,23 @@ echo
 echo "./testlen.sh 22 > $TMP/testlen.out"
       ./testlen.sh 22 > $TMP/testlen.out
 
-diff --ignore-all-space $TMP/testlen.out exp/testlen.out_EXP > /dev/null 2>/dev/null
+EXPECTED_TESTLEN=exp/testlen.$HASH.$CHKSUM.out_EXP
+if test ! -f $EXPECTED_TESTLEN
+then
+	if test $CREATE_EXP_FILE = 0
+	then
+		echoerr "error: ($testnum), Expected Result file $EXPECTED_TESTLEN does not exist"
+		popd > /dev/null
+		exit 1
+	else
+		echo "cp $TMP/testlen.out $EXPECTED_TESTLEN"
+		      cp $TMP/testlen.out $EXPECTED_TESTLEN
+	fi
+fi
+
+diff --ignore-all-space $TMP/testlen.out $EXPECTED_TESTLEN > /dev/null 2>/dev/null
 if [ $? -ne 0 ]; then
-	echoerr "error: ($testnum) diff $TMP/testlen.out exp/testlen.out_EXP"
+	echoerr "error: ($testnum) diff $TMP/testlen.out $EXPECTED_TESTLEN"
 	popd > /dev/null
 	exit $testnum
 fi
@@ -273,9 +384,23 @@ for file in small small2 ; do
 	echo "../bin/${TLSH_PROG} -force -f example_data/$file.txt > $TMP/$file.tlsh"
 	      ../bin/${TLSH_PROG} -force -f example_data/$file.txt > $TMP/$file.tlsh
 
-	diff --ignore-all-space $TMP/$file.tlsh exp/$file.tlsh_EXP
+	EXPECTED_TLSH=exp/$file.$HASH.$CHKSUM.tlsh_EXP
+	if test ! -f $EXPECTED_TLSH
+	then
+		if test $CREATE_EXP_FILE = 0
+		then
+			echoerr "error: ($testnum), Expected Result file $EXPECTED_TLSH does not exist"
+			popd > /dev/null
+			exit 1
+		else
+			echo "cp $TMP/$file.tlsh $EXPECTED_TLSH"
+			      cp $TMP/$file.tlsh $EXPECTED_TLSH
+		fi
+	fi
+
+	diff --ignore-all-space $TMP/$file.tlsh $EXPECTED_TLSH
 	if [ $? -ne 0 ]; then
-		echoerr "error: ($testnum) $TMP/$file.tlsh exp/$file.tlsh_EXP"
+		echoerr "error: ($testnum) $TMP/$file.tlsh $EXPECTED_TLSH"
 		popd > /dev/null
 		exit $testnum
 	fi

@@ -534,3 +534,10 @@ fixing setup.py so that you can install Python Extension on Windows
 adding sliding window size to tlsh_version
 changing test.sh to read the sliding window size
 </PRE>
+
+**3.14.1**
+<PRE>
+18/July/2019
+fixing error in test script for -xlen option (print statements about considering length were incorrect)
+improved test.sh - tests for existance of expected output files
+</PRE>
