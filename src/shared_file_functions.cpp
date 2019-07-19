@@ -140,7 +140,7 @@ size_t buf_offset = 0;
 
 ////////////////////////////////////////////////////////////////////////////////
 
-int read_file_eval_tlsh(char *fname, Tlsh *th, int show_details, int force_option)
+int read_file_eval_tlsh(char *fname, Tlsh *th, int show_details, int fc_cons_option)
 {
 	///////////////////////////////////////
 	// 1. How big is the file?
@@ -156,11 +156,11 @@ int read_file_eval_tlsh(char *fname, Tlsh *th, int show_details, int force_optio
 
 	fclose(fd);
 
-	if (force_option == 0) {
+	if (fc_cons_option <= 1) {
 		if (sizefile < MIN_DATA_LENGTH)
 			return(WARNING_FILE_TOO_SMALL);
 	} else {
-		if (sizefile < MIN_FORCE_DATA_LENGTH)
+		if (sizefile < MIN_CONSERVATIVE_DATA_LENGTH)
 			return(WARNING_FILE_TOO_SMALL);
 	}
 
@@ -202,7 +202,7 @@ int read_file_eval_tlsh(char *fname, Tlsh *th, int show_details, int force_optio
 	///////////////////////////////////////
 	// 4. calculate the digest
 	///////////////////////////////////////
-	th->final(data, sizefile, force_option);
+	th->final(data, sizefile, fc_cons_option);
 
 	///////////////////////////////////////
 	// 5. clean up and return

@@ -137,12 +137,12 @@ void Tlsh::update(const unsigned char* data, unsigned int len)
         impl->update(data, len);
 }
 
-void Tlsh::final(const unsigned char* data, unsigned int len, int force_option)
+void Tlsh::final(const unsigned char* data, unsigned int len, int fc_cons_option)
 {
     if ( NULL != impl ){
         if ( NULL != data && len > 0 )
             impl->update(data, len);
-        impl->final(force_option);
+        impl->final(fc_cons_option);
     }
 }
 

@@ -8,4 +8,4 @@ struct InputDescr {
 };
 
 int set_input_desc(char *dirname, char *listname, int listname_col, int listname_csv,
-	char *fname, char *digestname, int show_details, int force_option, char *splitlines, struct InputDescr *inputd);
+	char *fname, char *digestname, int show_details, int fc_cons_option, char *splitlines, struct InputDescr *inputd);

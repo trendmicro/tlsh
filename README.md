@@ -603,3 +603,14 @@ add options
 added regression tests for 3.16.1
 by adding tests for -split, swapping columns in input files, and for CVS input file
 </PRE>
+
+**3.17.0**
+<PRE>
+19/July/2019
+Make command line option	-force		(50 character limit) the default behaviour
+Add a command line option	-conservative	(256 character limit)
+change the force_option parameter to be a bit field
+	force_option	==	0	Default (50 char limit)
+	force_option	==	1	Force behaviour (50 char limit)
+	force_option	==	2	conservative behaviour (256 char limit)
+</PRE>

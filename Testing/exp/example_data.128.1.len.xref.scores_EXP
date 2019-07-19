@@ -66,6 +66,8 @@
 ../Testing/example_data/021106_yossivassa.txt	../Testing/example_data/record_voting.txt	224
 ../Testing/example_data/021106_yossivassa.txt	../Testing/example_data/rkc_flyer.txt	232
 ../Testing/example_data/021106_yossivassa.txt	../Testing/example_data/sisters_pressrelease.txt	261
+../Testing/example_data/021106_yossivassa.txt	../Testing/example_data/small.txt	473
+../Testing/example_data/021106_yossivassa.txt	../Testing/example_data/small2.txt	455
 ../Testing/example_data/021106_yossivassa.txt	../Testing/example_data/socy642_f02_milkie.txt	346
 ../Testing/example_data/021106_yossivassa.txt	../Testing/example_data/spanish_place_namesA.txt	194
 ../Testing/example_data/021106_yossivassa.txt	../Testing/example_data/spanish_place_namesB.txt	284
@@ -142,6 +144,8 @@
 ../Testing/example_data/0Alice.txt	../Testing/example_data/record_voting.txt	207
 ../Testing/example_data/0Alice.txt	../Testing/example_data/rkc_flyer.txt	204
 ../Testing/example_data/0Alice.txt	../Testing/example_data/sisters_pressrelease.txt	287
+../Testing/example_data/0Alice.txt	../Testing/example_data/small.txt	496
+../Testing/example_data/0Alice.txt	../Testing/example_data/small2.txt	500
 ../Testing/example_data/0Alice.txt	../Testing/example_data/socy642_f02_milkie.txt	270
 ../Testing/example_data/0Alice.txt	../Testing/example_data/spanish_place_namesA.txt	180
 ../Testing/example_data/0Alice.txt	../Testing/example_data/spanish_place_namesB.txt	271
@@ -217,6 +221,8 @@
 ../Testing/example_data/11-17-06_Academy.txt	../Testing/example_data/record_voting.txt	298
 ../Testing/example_data/11-17-06_Academy.txt	../Testing/example_data/rkc_flyer.txt	131
 ../Testing/example_data/11-17-06_Academy.txt	../Testing/example_data/sisters_pressrelease.txt	419
+../Testing/example_data/11-17-06_Academy.txt	../Testing/example_data/small.txt	555
+../Testing/example_data/11-17-06_Academy.txt	../Testing/example_data/small2.txt	550
 ../Testing/example_data/11-17-06_Academy.txt	../Testing/example_data/socy642_f02_milkie.txt	388
 ../Testing/example_data/11-17-06_Academy.txt	../Testing/example_data/spanish_place_namesA.txt	307
 ../Testing/example_data/11-17-06_Academy.txt	../Testing/example_data/spanish_place_namesB.txt	213
@@ -291,6 +297,8 @@
 ../Testing/example_data/1english-only.txt	../Testing/example_data/record_voting.txt	176
 ../Testing/example_data/1english-only.txt	../Testing/example_data/rkc_flyer.txt	317
 ../Testing/example_data/1english-only.txt	../Testing/example_data/sisters_pressrelease.txt	244
+../Testing/example_data/1english-only.txt	../Testing/example_data/small.txt	452
+../Testing/example_data/1english-only.txt	../Testing/example_data/small2.txt	449
 ../Testing/example_data/1english-only.txt	../Testing/example_data/socy642_f02_milkie.txt	438
 ../Testing/example_data/1english-only.txt	../Testing/example_data/spanish_place_namesA.txt	199
 ../Testing/example_data/1english-only.txt	../Testing/example_data/spanish_place_namesB.txt	363
@@ -364,6 +372,8 @@
 ../Testing/example_data/2005NISSE.txt	../Testing/example_data/record_voting.txt	396
 ../Testing/example_data/2005NISSE.txt	../Testing/example_data/rkc_flyer.txt	321
 ../Testing/example_data/2005NISSE.txt	../Testing/example_data/sisters_pressrelease.txt	518
+../Testing/example_data/2005NISSE.txt	../Testing/example_data/small.txt	751
+../Testing/example_data/2005NISSE.txt	../Testing/example_data/small2.txt	714
 ../Testing/example_data/2005NISSE.txt	../Testing/example_data/socy642_f02_milkie.txt	210
 ../Testing/example_data/2005NISSE.txt	../Testing/example_data/spanish_place_namesA.txt	379
 ../Testing/example_data/2005NISSE.txt	../Testing/example_data/spanish_place_namesB.txt	325
@@ -436,6 +446,8 @@
 ../Testing/example_data/2006-07_Resource_Brochure.txt	../Testing/example_data/record_voting.txt	340
 ../Testing/example_data/2006-07_Resource_Brochure.txt	../Testing/example_data/rkc_flyer.txt	475
 ../Testing/example_data/2006-07_Resource_Brochure.txt	../Testing/example_data/sisters_pressrelease.txt	219
+../Testing/example_data/2006-07_Resource_Brochure.txt	../Testing/example_data/small.txt	375
+../Testing/example_data/2006-07_Resource_Brochure.txt	../Testing/example_data/small2.txt	305
 ../Testing/example_data/2006-07_Resource_Brochure.txt	../Testing/example_data/socy642_f02_milkie.txt	507
 ../Testing/example_data/2006-07_Resource_Brochure.txt	../Testing/example_data/spanish_place_namesA.txt	324
 ../Testing/example_data/2006-07_Resource_Brochure.txt	../Testing/example_data/spanish_place_namesB.txt	496
@@ -507,6 +519,8 @@
 ../Testing/example_data/2006_2007PhysicalEducationConceptMap.txt	../Testing/example_data/record_voting.txt	251
 ../Testing/example_data/2006_2007PhysicalEducationConceptMap.txt	../Testing/example_data/rkc_flyer.txt	328
 ../Testing/example_data/2006_2007PhysicalEducationConceptMap.txt	../Testing/example_data/sisters_pressrelease.txt	272
+../Testing/example_data/2006_2007PhysicalEducationConceptMap.txt	../Testing/example_data/small.txt	511
+../Testing/example_data/2006_2007PhysicalEducationConceptMap.txt	../Testing/example_data/small2.txt	449
 ../Testing/example_data/2006_2007PhysicalEducationConceptMap.txt	../Testing/example_data/socy642_f02_milkie.txt	423
 ../Testing/example_data/2006_2007PhysicalEducationConceptMap.txt	../Testing/example_data/spanish_place_namesA.txt	225
 ../Testing/example_data/2006_2007PhysicalEducationConceptMap.txt	../Testing/example_data/spanish_place_namesB.txt	369
@@ -577,6 +591,8 @@
 ../Testing/example_data/2007ShowcaseFilm_Package.txt	../Testing/example_data/record_voting.txt	301
 ../Testing/example_data/2007ShowcaseFilm_Package.txt	../Testing/example_data/rkc_flyer.txt	186
 ../Testing/example_data/2007ShowcaseFilm_Package.txt	../Testing/example_data/sisters_pressrelease.txt	432
+../Testing/example_data/2007ShowcaseFilm_Package.txt	../Testing/example_data/small.txt	630
+../Testing/example_data/2007ShowcaseFilm_Package.txt	../Testing/example_data/small2.txt	604
 ../Testing/example_data/2007ShowcaseFilm_Package.txt	../Testing/example_data/socy642_f02_milkie.txt	282
 ../Testing/example_data/2007ShowcaseFilm_Package.txt	../Testing/example_data/spanish_place_namesA.txt	288
 ../Testing/example_data/2007ShowcaseFilm_Package.txt	../Testing/example_data/spanish_place_namesB.txt	164
@@ -646,6 +662,8 @@
 ../Testing/example_data/22-ppa-3rd_e2snewsletter_jun06.txt	../Testing/example_data/record_voting.txt	286
 ../Testing/example_data/22-ppa-3rd_e2snewsletter_jun06.txt	../Testing/example_data/rkc_flyer.txt	236
 ../Testing/example_data/22-ppa-3rd_e2snewsletter_jun06.txt	../Testing/example_data/sisters_pressrelease.txt	412
+../Testing/example_data/22-ppa-3rd_e2snewsletter_jun06.txt	../Testing/example_data/small.txt	648
+../Testing/example_data/22-ppa-3rd_e2snewsletter_jun06.txt	../Testing/example_data/small2.txt	643
 ../Testing/example_data/22-ppa-3rd_e2snewsletter_jun06.txt	../Testing/example_data/socy642_f02_milkie.txt	193
 ../Testing/example_data/22-ppa-3rd_e2snewsletter_jun06.txt	../Testing/example_data/spanish_place_namesA.txt	282
 ../Testing/example_data/22-ppa-3rd_e2snewsletter_jun06.txt	../Testing/example_data/spanish_place_namesB.txt	246
@@ -714,6 +732,8 @@
 ../Testing/example_data/42nd_street.txt	../Testing/example_data/record_voting.txt	247
 ../Testing/example_data/42nd_street.txt	../Testing/example_data/rkc_flyer.txt	434
 ../Testing/example_data/42nd_street.txt	../Testing/example_data/sisters_pressrelease.txt	158
+../Testing/example_data/42nd_street.txt	../Testing/example_data/small.txt	324
+../Testing/example_data/42nd_street.txt	../Testing/example_data/small2.txt	336
 ../Testing/example_data/42nd_street.txt	../Testing/example_data/socy642_f02_milkie.txt	441
 ../Testing/example_data/42nd_street.txt	../Testing/example_data/spanish_place_namesA.txt	272
 ../Testing/example_data/42nd_street.txt	../Testing/example_data/spanish_place_namesB.txt	466
@@ -781,6 +801,8 @@
 ../Testing/example_data/5._.txt	../Testing/example_data/record_voting.txt	303
 ../Testing/example_data/5._.txt	../Testing/example_data/rkc_flyer.txt	128
 ../Testing/example_data/5._.txt	../Testing/example_data/sisters_pressrelease.txt	387
+../Testing/example_data/5._.txt	../Testing/example_data/small.txt	562
+../Testing/example_data/5._.txt	../Testing/example_data/small2.txt	557
 ../Testing/example_data/5._.txt	../Testing/example_data/socy642_f02_milkie.txt	351
 ../Testing/example_data/5._.txt	../Testing/example_data/spanish_place_namesA.txt	284
 ../Testing/example_data/5._.txt	../Testing/example_data/spanish_place_namesB.txt	130
@@ -847,6 +869,8 @@
 ../Testing/example_data/7-prikaz-slozeno.txt	../Testing/example_data/record_voting.txt	221
 ../Testing/example_data/7-prikaz-slozeno.txt	../Testing/example_data/rkc_flyer.txt	371
 ../Testing/example_data/7-prikaz-slozeno.txt	../Testing/example_data/sisters_pressrelease.txt	148
+../Testing/example_data/7-prikaz-slozeno.txt	../Testing/example_data/small.txt	330
+../Testing/example_data/7-prikaz-slozeno.txt	../Testing/example_data/small2.txt	366
 ../Testing/example_data/7-prikaz-slozeno.txt	../Testing/example_data/socy642_f02_milkie.txt	414
 ../Testing/example_data/7-prikaz-slozeno.txt	../Testing/example_data/spanish_place_namesA.txt	244
 ../Testing/example_data/7-prikaz-slozeno.txt	../Testing/example_data/spanish_place_namesB.txt	425
@@ -912,6 +936,8 @@
 ../Testing/example_data/AccessToNationalSportsCentresPassportScheme.txt	../Testing/example_data/record_voting.txt	276
 ../Testing/example_data/AccessToNationalSportsCentresPassportScheme.txt	../Testing/example_data/rkc_flyer.txt	172
 ../Testing/example_data/AccessToNationalSportsCentresPassportScheme.txt	../Testing/example_data/sisters_pressrelease.txt	418
+../Testing/example_data/AccessToNationalSportsCentresPassportScheme.txt	../Testing/example_data/small.txt	592
+../Testing/example_data/AccessToNationalSportsCentresPassportScheme.txt	../Testing/example_data/small2.txt	556
 ../Testing/example_data/AccessToNationalSportsCentresPassportScheme.txt	../Testing/example_data/socy642_f02_milkie.txt	368
 ../Testing/example_data/AccessToNationalSportsCentresPassportScheme.txt	../Testing/example_data/spanish_place_namesA.txt	282
 ../Testing/example_data/AccessToNationalSportsCentresPassportScheme.txt	../Testing/example_data/spanish_place_namesB.txt	217
@@ -976,6 +1002,8 @@
 ../Testing/example_data/Adult-Sports.txt	../Testing/example_data/record_voting.txt	161
 ../Testing/example_data/Adult-Sports.txt	../Testing/example_data/rkc_flyer.txt	335
 ../Testing/example_data/Adult-Sports.txt	../Testing/example_data/sisters_pressrelease.txt	237
+../Testing/example_data/Adult-Sports.txt	../Testing/example_data/small.txt	442
+../Testing/example_data/Adult-Sports.txt	../Testing/example_data/small2.txt	461
 ../Testing/example_data/Adult-Sports.txt	../Testing/example_data/socy642_f02_milkie.txt	374
 ../Testing/example_data/Adult-Sports.txt	../Testing/example_data/spanish_place_namesA.txt	150
 ../Testing/example_data/Adult-Sports.txt	../Testing/example_data/spanish_place_namesB.txt	385
@@ -1039,6 +1067,8 @@
 ../Testing/example_data/AfghanistanLiteracyDiscussionPaper.txt	../Testing/example_data/record_voting.txt	416
 ../Testing/example_data/AfghanistanLiteracyDiscussionPaper.txt	../Testing/example_data/rkc_flyer.txt	321
 ../Testing/example_data/AfghanistanLiteracyDiscussionPaper.txt	../Testing/example_data/sisters_pressrelease.txt	466
+../Testing/example_data/AfghanistanLiteracyDiscussionPaper.txt	../Testing/example_data/small.txt	680
+../Testing/example_data/AfghanistanLiteracyDiscussionPaper.txt	../Testing/example_data/small2.txt	647
 ../Testing/example_data/AfghanistanLiteracyDiscussionPaper.txt	../Testing/example_data/socy642_f02_milkie.txt	171
 ../Testing/example_data/AfghanistanLiteracyDiscussionPaper.txt	../Testing/example_data/spanish_place_namesA.txt	355
 ../Testing/example_data/AfghanistanLiteracyDiscussionPaper.txt	../Testing/example_data/spanish_place_namesB.txt	305
@@ -1101,6 +1131,8 @@
 ../Testing/example_data/BBVDlivepr.txt	../Testing/example_data/record_voting.txt	202
 ../Testing/example_data/BBVDlivepr.txt	../Testing/example_data/rkc_flyer.txt	247
 ../Testing/example_data/BBVDlivepr.txt	../Testing/example_data/sisters_pressrelease.txt	284
+../Testing/example_data/BBVDlivepr.txt	../Testing/example_data/small.txt	494
+../Testing/example_data/BBVDlivepr.txt	../Testing/example_data/small2.txt	497
 ../Testing/example_data/BBVDlivepr.txt	../Testing/example_data/socy642_f02_milkie.txt	461
 ../Testing/example_data/BBVDlivepr.txt	../Testing/example_data/spanish_place_namesA.txt	196
 ../Testing/example_data/BBVDlivepr.txt	../Testing/example_data/spanish_place_namesB.txt	269
@@ -1162,6 +1194,8 @@
 ../Testing/example_data/BBVDpr.txt	../Testing/example_data/record_voting.txt	210
 ../Testing/example_data/BBVDpr.txt	../Testing/example_data/rkc_flyer.txt	299
 ../Testing/example_data/BBVDpr.txt	../Testing/example_data/sisters_pressrelease.txt	297
+../Testing/example_data/BBVDpr.txt	../Testing/example_data/small.txt	473
+../Testing/example_data/BBVDpr.txt	../Testing/example_data/small2.txt	491
 ../Testing/example_data/BBVDpr.txt	../Testing/example_data/socy642_f02_milkie.txt	481
 ../Testing/example_data/BBVDpr.txt	../Testing/example_data/spanish_place_namesA.txt	238
 ../Testing/example_data/BBVDpr.txt	../Testing/example_data/spanish_place_namesB.txt	321
@@ -1222,6 +1256,8 @@
 ../Testing/example_data/BENEFITS_OF_EXERCISE_for_the_manual.txt	../Testing/example_data/record_voting.txt	237
 ../Testing/example_data/BENEFITS_OF_EXERCISE_for_the_manual.txt	../Testing/example_data/rkc_flyer.txt	320
 ../Testing/example_data/BENEFITS_OF_EXERCISE_for_the_manual.txt	../Testing/example_data/sisters_pressrelease.txt	164
+../Testing/example_data/BENEFITS_OF_EXERCISE_for_the_manual.txt	../Testing/example_data/small.txt	408
+../Testing/example_data/BENEFITS_OF_EXERCISE_for_the_manual.txt	../Testing/example_data/small2.txt	347
 ../Testing/example_data/BENEFITS_OF_EXERCISE_for_the_manual.txt	../Testing/example_data/socy642_f02_milkie.txt	445
 ../Testing/example_data/BENEFITS_OF_EXERCISE_for_the_manual.txt	../Testing/example_data/spanish_place_namesA.txt	199
 ../Testing/example_data/BENEFITS_OF_EXERCISE_for_the_manual.txt	../Testing/example_data/spanish_place_namesB.txt	351
@@ -1281,6 +1317,8 @@
 ../Testing/example_data/Call-for-abstracts.txt	../Testing/example_data/record_voting.txt	305
 ../Testing/example_data/Call-for-abstracts.txt	../Testing/example_data/rkc_flyer.txt	187
 ../Testing/example_data/Call-for-abstracts.txt	../Testing/example_data/sisters_pressrelease.txt	376
+../Testing/example_data/Call-for-abstracts.txt	../Testing/example_data/small.txt	583
+../Testing/example_data/Call-for-abstracts.txt	../Testing/example_data/small2.txt	559
 ../Testing/example_data/Call-for-abstracts.txt	../Testing/example_data/socy642_f02_milkie.txt	266
 ../Testing/example_data/Call-for-abstracts.txt	../Testing/example_data/spanish_place_namesA.txt	252
 ../Testing/example_data/Call-for-abstracts.txt	../Testing/example_data/spanish_place_namesB.txt	164
@@ -1339,6 +1377,8 @@
 ../Testing/example_data/ClaremontTrioBio0607.txt	../Testing/example_data/record_voting.txt	212
 ../Testing/example_data/ClaremontTrioBio0607.txt	../Testing/example_data/rkc_flyer.txt	223
 ../Testing/example_data/ClaremontTrioBio0607.txt	../Testing/example_data/sisters_pressrelease.txt	364
+../Testing/example_data/ClaremontTrioBio0607.txt	../Testing/example_data/small.txt	568
+../Testing/example_data/ClaremontTrioBio0607.txt	../Testing/example_data/small2.txt	569
 ../Testing/example_data/ClaremontTrioBio0607.txt	../Testing/example_data/socy642_f02_milkie.txt	354
 ../Testing/example_data/ClaremontTrioBio0607.txt	../Testing/example_data/spanish_place_namesA.txt	194
 ../Testing/example_data/ClaremontTrioBio0607.txt	../Testing/example_data/spanish_place_namesB.txt	251
@@ -1396,6 +1436,8 @@
 ../Testing/example_data/CommandGde.txt	../Testing/example_data/record_voting.txt	349
 ../Testing/example_data/CommandGde.txt	../Testing/example_data/rkc_flyer.txt	204
 ../Testing/example_data/CommandGde.txt	../Testing/example_data/sisters_pressrelease.txt	467
+../Testing/example_data/CommandGde.txt	../Testing/example_data/small.txt	668
+../Testing/example_data/CommandGde.txt	../Testing/example_data/small2.txt	647
 ../Testing/example_data/CommandGde.txt	../Testing/example_data/socy642_f02_milkie.txt	252
 ../Testing/example_data/CommandGde.txt	../Testing/example_data/spanish_place_namesA.txt	328
 ../Testing/example_data/CommandGde.txt	../Testing/example_data/spanish_place_namesB.txt	184
@@ -1452,6 +1494,8 @@
 ../Testing/example_data/DOC-DHHS_Joint_Action_Plan_summary.txt	../Testing/example_data/record_voting.txt	272
 ../Testing/example_data/DOC-DHHS_Joint_Action_Plan_summary.txt	../Testing/example_data/rkc_flyer.txt	236
 ../Testing/example_data/DOC-DHHS_Joint_Action_Plan_summary.txt	../Testing/example_data/sisters_pressrelease.txt	282
+../Testing/example_data/DOC-DHHS_Joint_Action_Plan_summary.txt	../Testing/example_data/small.txt	528
+../Testing/example_data/DOC-DHHS_Joint_Action_Plan_summary.txt	../Testing/example_data/small2.txt	538
 ../Testing/example_data/DOC-DHHS_Joint_Action_Plan_summary.txt	../Testing/example_data/socy642_f02_milkie.txt	277
 ../Testing/example_data/DOC-DHHS_Joint_Action_Plan_summary.txt	../Testing/example_data/spanish_place_namesA.txt	259
 ../Testing/example_data/DOC-DHHS_Joint_Action_Plan_summary.txt	../Testing/example_data/spanish_place_namesB.txt	296
@@ -1507,6 +1551,8 @@
 ../Testing/example_data/DanceFestOMAIPressReleaseFeb15_07.txt	../Testing/example_data/record_voting.txt	222
 ../Testing/example_data/DanceFestOMAIPressReleaseFeb15_07.txt	../Testing/example_data/rkc_flyer.txt	244
 ../Testing/example_data/DanceFestOMAIPressReleaseFeb15_07.txt	../Testing/example_data/sisters_pressrelease.txt	334
+../Testing/example_data/DanceFestOMAIPressReleaseFeb15_07.txt	../Testing/example_data/small.txt	541
+../Testing/example_data/DanceFestOMAIPressReleaseFeb15_07.txt	../Testing/example_data/small2.txt	533
 ../Testing/example_data/DanceFestOMAIPressReleaseFeb15_07.txt	../Testing/example_data/socy642_f02_milkie.txt	395
 ../Testing/example_data/DanceFestOMAIPressReleaseFeb15_07.txt	../Testing/example_data/spanish_place_namesA.txt	213
 ../Testing/example_data/DanceFestOMAIPressReleaseFeb15_07.txt	../Testing/example_data/spanish_place_namesB.txt	250
@@ -1561,6 +1607,8 @@
 ../Testing/example_data/ExercisePocketSliderText.txt	../Testing/example_data/record_voting.txt	241
 ../Testing/example_data/ExercisePocketSliderText.txt	../Testing/example_data/rkc_flyer.txt	196
 ../Testing/example_data/ExercisePocketSliderText.txt	../Testing/example_data/sisters_pressrelease.txt	382
+../Testing/example_data/ExercisePocketSliderText.txt	../Testing/example_data/small.txt	579
+../Testing/example_data/ExercisePocketSliderText.txt	../Testing/example_data/small2.txt	530
 ../Testing/example_data/ExercisePocketSliderText.txt	../Testing/example_data/socy642_f02_milkie.txt	373
 ../Testing/example_data/ExercisePocketSliderText.txt	../Testing/example_data/spanish_place_namesA.txt	214
 ../Testing/example_data/ExercisePocketSliderText.txt	../Testing/example_data/spanish_place_namesB.txt	249
@@ -1614,6 +1662,8 @@
 ../Testing/example_data/FF06_press_9-7.txt	../Testing/example_data/record_voting.txt	323
 ../Testing/example_data/FF06_press_9-7.txt	../Testing/example_data/rkc_flyer.txt	151
 ../Testing/example_data/FF06_press_9-7.txt	../Testing/example_data/sisters_pressrelease.txt	393
+../Testing/example_data/FF06_press_9-7.txt	../Testing/example_data/small.txt	584
+../Testing/example_data/FF06_press_9-7.txt	../Testing/example_data/small2.txt	595
 ../Testing/example_data/FF06_press_9-7.txt	../Testing/example_data/socy642_f02_milkie.txt	402
 ../Testing/example_data/FF06_press_9-7.txt	../Testing/example_data/spanish_place_namesA.txt	329
 ../Testing/example_data/FF06_press_9-7.txt	../Testing/example_data/spanish_place_namesB.txt	179
@@ -1666,6 +1716,8 @@
 ../Testing/example_data/Fitness_Myths.txt	../Testing/example_data/record_voting.txt	260
 ../Testing/example_data/Fitness_Myths.txt	../Testing/example_data/rkc_flyer.txt	131
 ../Testing/example_data/Fitness_Myths.txt	../Testing/example_data/sisters_pressrelease.txt	343
+../Testing/example_data/Fitness_Myths.txt	../Testing/example_data/small.txt	539
+../Testing/example_data/Fitness_Myths.txt	../Testing/example_data/small2.txt	531
 ../Testing/example_data/Fitness_Myths.txt	../Testing/example_data/socy642_f02_milkie.txt	399
 ../Testing/example_data/Fitness_Myths.txt	../Testing/example_data/spanish_place_namesA.txt	251
 ../Testing/example_data/Fitness_Myths.txt	../Testing/example_data/spanish_place_namesB.txt	185
@@ -1717,6 +1769,8 @@
 ../Testing/example_data/Global_Warming_Resolution_April_2001.txt	../Testing/example_data/record_voting.txt	149
 ../Testing/example_data/Global_Warming_Resolution_April_2001.txt	../Testing/example_data/rkc_flyer.txt	291
 ../Testing/example_data/Global_Warming_Resolution_April_2001.txt	../Testing/example_data/sisters_pressrelease.txt	245
+../Testing/example_data/Global_Warming_Resolution_April_2001.txt	../Testing/example_data/small.txt	476
+../Testing/example_data/Global_Warming_Resolution_April_2001.txt	../Testing/example_data/small2.txt	449
 ../Testing/example_data/Global_Warming_Resolution_April_2001.txt	../Testing/example_data/socy642_f02_milkie.txt	374
 ../Testing/example_data/Global_Warming_Resolution_April_2001.txt	../Testing/example_data/spanish_place_namesA.txt	159
 ../Testing/example_data/Global_Warming_Resolution_April_2001.txt	../Testing/example_data/spanish_place_namesB.txt	327
@@ -1767,6 +1821,8 @@
 ../Testing/example_data/GovernorsTaskForceReport.txt	../Testing/example_data/record_voting.txt	360
 ../Testing/example_data/GovernorsTaskForceReport.txt	../Testing/example_data/rkc_flyer.txt	276
 ../Testing/example_data/GovernorsTaskForceReport.txt	../Testing/example_data/sisters_pressrelease.txt	515
+../Testing/example_data/GovernorsTaskForceReport.txt	../Testing/example_data/small.txt	771
+../Testing/example_data/GovernorsTaskForceReport.txt	../Testing/example_data/small2.txt	689
 ../Testing/example_data/GovernorsTaskForceReport.txt	../Testing/example_data/socy642_f02_milkie.txt	230
 ../Testing/example_data/GovernorsTaskForceReport.txt	../Testing/example_data/spanish_place_namesA.txt	368
 ../Testing/example_data/GovernorsTaskForceReport.txt	../Testing/example_data/spanish_place_namesB.txt	240
@@ -1816,6 +1872,8 @@
 ../Testing/example_data/Groove_Yard.txt	../Testing/example_data/record_voting.txt	205
 ../Testing/example_data/Groove_Yard.txt	../Testing/example_data/rkc_flyer.txt	251
 ../Testing/example_data/Groove_Yard.txt	../Testing/example_data/sisters_pressrelease.txt	329
+../Testing/example_data/Groove_Yard.txt	../Testing/example_data/small.txt	482
+../Testing/example_data/Groove_Yard.txt	../Testing/example_data/small2.txt	493
 ../Testing/example_data/Groove_Yard.txt	../Testing/example_data/socy642_f02_milkie.txt	483
 ../Testing/example_data/Groove_Yard.txt	../Testing/example_data/spanish_place_namesA.txt	226
 ../Testing/example_data/Groove_Yard.txt	../Testing/example_data/spanish_place_namesB.txt	290
@@ -1864,6 +1922,8 @@
 ../Testing/example_data/HSCPR10306.txt	../Testing/example_data/record_voting.txt	293
 ../Testing/example_data/HSCPR10306.txt	../Testing/example_data/rkc_flyer.txt	206
 ../Testing/example_data/HSCPR10306.txt	../Testing/example_data/sisters_pressrelease.txt	328
+../Testing/example_data/HSCPR10306.txt	../Testing/example_data/small.txt	490
+../Testing/example_data/HSCPR10306.txt	../Testing/example_data/small2.txt	507
 ../Testing/example_data/HSCPR10306.txt	../Testing/example_data/socy642_f02_milkie.txt	438
 ../Testing/example_data/HSCPR10306.txt	../Testing/example_data/spanish_place_namesA.txt	278
 ../Testing/example_data/HSCPR10306.txt	../Testing/example_data/spanish_place_namesB.txt	229
@@ -1911,6 +1971,8 @@
 ../Testing/example_data/HandoutSportsInjuryPrevention.txt	../Testing/example_data/record_voting.txt	229
 ../Testing/example_data/HandoutSportsInjuryPrevention.txt	../Testing/example_data/rkc_flyer.txt	194
 ../Testing/example_data/HandoutSportsInjuryPrevention.txt	../Testing/example_data/sisters_pressrelease.txt	392
+../Testing/example_data/HandoutSportsInjuryPrevention.txt	../Testing/example_data/small.txt	561
+../Testing/example_data/HandoutSportsInjuryPrevention.txt	../Testing/example_data/small2.txt	564
 ../Testing/example_data/HandoutSportsInjuryPrevention.txt	../Testing/example_data/socy642_f02_milkie.txt	362
 ../Testing/example_data/HandoutSportsInjuryPrevention.txt	../Testing/example_data/spanish_place_namesA.txt	230
 ../Testing/example_data/HandoutSportsInjuryPrevention.txt	../Testing/example_data/spanish_place_namesB.txt	211
@@ -1957,6 +2019,8 @@
 ../Testing/example_data/IntlChildrensFestRevisedRelease.txt	../Testing/example_data/record_voting.txt	393
 ../Testing/example_data/IntlChildrensFestRevisedRelease.txt	../Testing/example_data/rkc_flyer.txt	262
 ../Testing/example_data/IntlChildrensFestRevisedRelease.txt	../Testing/example_data/sisters_pressrelease.txt	481
+../Testing/example_data/IntlChildrensFestRevisedRelease.txt	../Testing/example_data/small.txt	685
+../Testing/example_data/IntlChildrensFestRevisedRelease.txt	../Testing/example_data/small2.txt	696
 ../Testing/example_data/IntlChildrensFestRevisedRelease.txt	../Testing/example_data/socy642_f02_milkie.txt	222
 ../Testing/example_data/IntlChildrensFestRevisedRelease.txt	../Testing/example_data/spanish_place_namesA.txt	406
 ../Testing/example_data/IntlChildrensFestRevisedRelease.txt	../Testing/example_data/spanish_place_namesB.txt	222
@@ -2002,6 +2066,8 @@
 ../Testing/example_data/LOTRLeadRelease.txt	../Testing/example_data/record_voting.txt	229
 ../Testing/example_data/LOTRLeadRelease.txt	../Testing/example_data/rkc_flyer.txt	191
 ../Testing/example_data/LOTRLeadRelease.txt	../Testing/example_data/sisters_pressrelease.txt	332
+../Testing/example_data/LOTRLeadRelease.txt	../Testing/example_data/small.txt	569
+../Testing/example_data/LOTRLeadRelease.txt	../Testing/example_data/small2.txt	575
 ../Testing/example_data/LOTRLeadRelease.txt	../Testing/example_data/socy642_f02_milkie.txt	261
 ../Testing/example_data/LOTRLeadRelease.txt	../Testing/example_data/spanish_place_namesA.txt	226
 ../Testing/example_data/LOTRLeadRelease.txt	../Testing/example_data/spanish_place_namesB.txt	198
@@ -2046,6 +2112,8 @@
 ../Testing/example_data/Landau-Pickford-Press-Rel.txt	../Testing/example_data/record_voting.txt	170
 ../Testing/example_data/Landau-Pickford-Press-Rel.txt	../Testing/example_data/rkc_flyer.txt	213
 ../Testing/example_data/Landau-Pickford-Press-Rel.txt	../Testing/example_data/sisters_pressrelease.txt	283
+../Testing/example_data/Landau-Pickford-Press-Rel.txt	../Testing/example_data/small.txt	520
+../Testing/example_data/Landau-Pickford-Press-Rel.txt	../Testing/example_data/small2.txt	514
 ../Testing/example_data/Landau-Pickford-Press-Rel.txt	../Testing/example_data/socy642_f02_milkie.txt	343
 ../Testing/example_data/Landau-Pickford-Press-Rel.txt	../Testing/example_data/spanish_place_namesA.txt	155
 ../Testing/example_data/Landau-Pickford-Press-Rel.txt	../Testing/example_data/spanish_place_namesB.txt	255
@@ -2089,6 +2157,8 @@
 ../Testing/example_data/Lotuspike-VBTD-Jenkins.txt	../Testing/example_data/record_voting.txt	171
 ../Testing/example_data/Lotuspike-VBTD-Jenkins.txt	../Testing/example_data/rkc_flyer.txt	241
 ../Testing/example_data/Lotuspike-VBTD-Jenkins.txt	../Testing/example_data/sisters_pressrelease.txt	289
+../Testing/example_data/Lotuspike-VBTD-Jenkins.txt	../Testing/example_data/small.txt	477
+../Testing/example_data/Lotuspike-VBTD-Jenkins.txt	../Testing/example_data/small2.txt	469
 ../Testing/example_data/Lotuspike-VBTD-Jenkins.txt	../Testing/example_data/socy642_f02_milkie.txt	454
 ../Testing/example_data/Lotuspike-VBTD-Jenkins.txt	../Testing/example_data/spanish_place_namesA.txt	199
 ../Testing/example_data/Lotuspike-VBTD-Jenkins.txt	../Testing/example_data/spanish_place_namesB.txt	296
@@ -2131,6 +2201,8 @@
 ../Testing/example_data/MEDT6491.txt	../Testing/example_data/record_voting.txt	375
 ../Testing/example_data/MEDT6491.txt	../Testing/example_data/rkc_flyer.txt	256
 ../Testing/example_data/MEDT6491.txt	../Testing/example_data/sisters_pressrelease.txt	485
+../Testing/example_data/MEDT6491.txt	../Testing/example_data/small.txt	660
+../Testing/example_data/MEDT6491.txt	../Testing/example_data/small2.txt	660
 ../Testing/example_data/MEDT6491.txt	../Testing/example_data/socy642_f02_milkie.txt	177
 ../Testing/example_data/MEDT6491.txt	../Testing/example_data/spanish_place_namesA.txt	355
 ../Testing/example_data/MEDT6491.txt	../Testing/example_data/spanish_place_namesB.txt	250
@@ -2172,6 +2244,8 @@
 ../Testing/example_data/MRbio.txt	../Testing/example_data/record_voting.txt	147
 ../Testing/example_data/MRbio.txt	../Testing/example_data/rkc_flyer.txt	229
 ../Testing/example_data/MRbio.txt	../Testing/example_data/sisters_pressrelease.txt	320
+../Testing/example_data/MRbio.txt	../Testing/example_data/small.txt	489
+../Testing/example_data/MRbio.txt	../Testing/example_data/small2.txt	497
 ../Testing/example_data/MRbio.txt	../Testing/example_data/socy642_f02_milkie.txt	426
 ../Testing/example_data/MRbio.txt	../Testing/example_data/spanish_place_namesA.txt	187
 ../Testing/example_data/MRbio.txt	../Testing/example_data/spanish_place_namesB.txt	271
@@ -2212,6 +2286,8 @@
 ../Testing/example_data/Meeting_the_Challenges.txt	../Testing/example_data/record_voting.txt	328
 ../Testing/example_data/Meeting_the_Challenges.txt	../Testing/example_data/rkc_flyer.txt	298
 ../Testing/example_data/Meeting_the_Challenges.txt	../Testing/example_data/sisters_pressrelease.txt	409
+../Testing/example_data/Meeting_the_Challenges.txt	../Testing/example_data/small.txt	613
+../Testing/example_data/Meeting_the_Challenges.txt	../Testing/example_data/small2.txt	608
 ../Testing/example_data/Meeting_the_Challenges.txt	../Testing/example_data/socy642_f02_milkie.txt	222
 ../Testing/example_data/Meeting_the_Challenges.txt	../Testing/example_data/spanish_place_namesA.txt	291
 ../Testing/example_data/Meeting_the_Challenges.txt	../Testing/example_data/spanish_place_namesB.txt	275
@@ -2251,6 +2327,8 @@
 ../Testing/example_data/Memo_Ehrlich_1103.txt	../Testing/example_data/record_voting.txt	290
 ../Testing/example_data/Memo_Ehrlich_1103.txt	../Testing/example_data/rkc_flyer.txt	211
 ../Testing/example_data/Memo_Ehrlich_1103.txt	../Testing/example_data/sisters_pressrelease.txt	403
+../Testing/example_data/Memo_Ehrlich_1103.txt	../Testing/example_data/small.txt	601
+../Testing/example_data/Memo_Ehrlich_1103.txt	../Testing/example_data/small2.txt	571
 ../Testing/example_data/Memo_Ehrlich_1103.txt	../Testing/example_data/socy642_f02_milkie.txt	234
 ../Testing/example_data/Memo_Ehrlich_1103.txt	../Testing/example_data/spanish_place_namesA.txt	272
 ../Testing/example_data/Memo_Ehrlich_1103.txt	../Testing/example_data/spanish_place_namesB.txt	223
@@ -2289,6 +2367,8 @@
 ../Testing/example_data/Midwestern_Rock_Garden.txt	../Testing/example_data/record_voting.txt	267
 ../Testing/example_data/Midwestern_Rock_Garden.txt	../Testing/example_data/rkc_flyer.txt	190
 ../Testing/example_data/Midwestern_Rock_Garden.txt	../Testing/example_data/sisters_pressrelease.txt	379
+../Testing/example_data/Midwestern_Rock_Garden.txt	../Testing/example_data/small.txt	553
+../Testing/example_data/Midwestern_Rock_Garden.txt	../Testing/example_data/small2.txt	555
 ../Testing/example_data/Midwestern_Rock_Garden.txt	../Testing/example_data/socy642_f02_milkie.txt	393
 ../Testing/example_data/Midwestern_Rock_Garden.txt	../Testing/example_data/spanish_place_namesA.txt	254
 ../Testing/example_data/Midwestern_Rock_Garden.txt	../Testing/example_data/spanish_place_namesB.txt	168
@@ -2326,6 +2406,8 @@
 ../Testing/example_data/Newsletter_20-1-3.txt	../Testing/example_data/record_voting.txt	141
 ../Testing/example_data/Newsletter_20-1-3.txt	../Testing/example_data/rkc_flyer.txt	263
 ../Testing/example_data/Newsletter_20-1-3.txt	../Testing/example_data/sisters_pressrelease.txt	257
+../Testing/example_data/Newsletter_20-1-3.txt	../Testing/example_data/small.txt	461
+../Testing/example_data/Newsletter_20-1-3.txt	../Testing/example_data/small2.txt	471
 ../Testing/example_data/Newsletter_20-1-3.txt	../Testing/example_data/socy642_f02_milkie.txt	398
 ../Testing/example_data/Newsletter_20-1-3.txt	../Testing/example_data/spanish_place_namesA.txt	117
 ../Testing/example_data/Newsletter_20-1-3.txt	../Testing/example_data/spanish_place_namesB.txt	315
@@ -2362,6 +2444,8 @@
 ../Testing/example_data/Reviews-GrooveYard.txt	../Testing/example_data/record_voting.txt	305
 ../Testing/example_data/Reviews-GrooveYard.txt	../Testing/example_data/rkc_flyer.txt	134
 ../Testing/example_data/Reviews-GrooveYard.txt	../Testing/example_data/sisters_pressrelease.txt	383
+../Testing/example_data/Reviews-GrooveYard.txt	../Testing/example_data/small.txt	590
+../Testing/example_data/Reviews-GrooveYard.txt	../Testing/example_data/small2.txt	572
 ../Testing/example_data/Reviews-GrooveYard.txt	../Testing/example_data/socy642_f02_milkie.txt	351
 ../Testing/example_data/Reviews-GrooveYard.txt	../Testing/example_data/spanish_place_namesA.txt	290
 ../Testing/example_data/Reviews-GrooveYard.txt	../Testing/example_data/spanish_place_namesB.txt	137
@@ -2397,6 +2481,8 @@
 ../Testing/example_data/SAR_Dog_Avalanche_promo.txt	../Testing/example_data/record_voting.txt	173
 ../Testing/example_data/SAR_Dog_Avalanche_promo.txt	../Testing/example_data/rkc_flyer.txt	246
 ../Testing/example_data/SAR_Dog_Avalanche_promo.txt	../Testing/example_data/sisters_pressrelease.txt	269
+../Testing/example_data/SAR_Dog_Avalanche_promo.txt	../Testing/example_data/small.txt	514
+../Testing/example_data/SAR_Dog_Avalanche_promo.txt	../Testing/example_data/small2.txt	518
 ../Testing/example_data/SAR_Dog_Avalanche_promo.txt	../Testing/example_data/socy642_f02_milkie.txt	343
 ../Testing/example_data/SAR_Dog_Avalanche_promo.txt	../Testing/example_data/spanish_place_namesA.txt	162
 ../Testing/example_data/SAR_Dog_Avalanche_promo.txt	../Testing/example_data/spanish_place_namesB.txt	280
@@ -2431,6 +2517,8 @@
 ../Testing/example_data/SCE_3320.txt	../Testing/example_data/record_voting.txt	448
 ../Testing/example_data/SCE_3320.txt	../Testing/example_data/rkc_flyer.txt	292
 ../Testing/example_data/SCE_3320.txt	../Testing/example_data/sisters_pressrelease.txt	517
+../Testing/example_data/SCE_3320.txt	../Testing/example_data/small.txt	703
+../Testing/example_data/SCE_3320.txt	../Testing/example_data/small2.txt	673
 ../Testing/example_data/SCE_3320.txt	../Testing/example_data/socy642_f02_milkie.txt	278
 ../Testing/example_data/SCE_3320.txt	../Testing/example_data/spanish_place_namesA.txt	451
 ../Testing/example_data/SCE_3320.txt	../Testing/example_data/spanish_place_namesB.txt	273
@@ -2464,6 +2552,8 @@
 ../Testing/example_data/Shopping.txt	../Testing/example_data/record_voting.txt	142
 ../Testing/example_data/Shopping.txt	../Testing/example_data/rkc_flyer.txt	303
 ../Testing/example_data/Shopping.txt	../Testing/example_data/sisters_pressrelease.txt	239
+../Testing/example_data/Shopping.txt	../Testing/example_data/small.txt	472
+../Testing/example_data/Shopping.txt	../Testing/example_data/small2.txt	443
 ../Testing/example_data/Shopping.txt	../Testing/example_data/socy642_f02_milkie.txt	417
 ../Testing/example_data/Shopping.txt	../Testing/example_data/spanish_place_namesA.txt	168
 ../Testing/example_data/Shopping.txt	../Testing/example_data/spanish_place_namesB.txt	349
@@ -2496,6 +2586,8 @@
 ../Testing/example_data/SoundResources.txt	../Testing/example_data/record_voting.txt	249
 ../Testing/example_data/SoundResources.txt	../Testing/example_data/rkc_flyer.txt	391
 ../Testing/example_data/SoundResources.txt	../Testing/example_data/sisters_pressrelease.txt	210
+../Testing/example_data/SoundResources.txt	../Testing/example_data/small.txt	416
+../Testing/example_data/SoundResources.txt	../Testing/example_data/small2.txt	377
 ../Testing/example_data/SoundResources.txt	../Testing/example_data/socy642_f02_milkie.txt	473
 ../Testing/example_data/SoundResources.txt	../Testing/example_data/spanish_place_namesA.txt	247
 ../Testing/example_data/SoundResources.txt	../Testing/example_data/spanish_place_namesB.txt	401
@@ -2527,6 +2619,8 @@
 ../Testing/example_data/Summer_Math_Syllabus.txt	../Testing/example_data/record_voting.txt	225
 ../Testing/example_data/Summer_Math_Syllabus.txt	../Testing/example_data/rkc_flyer.txt	282
 ../Testing/example_data/Summer_Math_Syllabus.txt	../Testing/example_data/sisters_pressrelease.txt	257
+../Testing/example_data/Summer_Math_Syllabus.txt	../Testing/example_data/small.txt	457
+../Testing/example_data/Summer_Math_Syllabus.txt	../Testing/example_data/small2.txt	469
 ../Testing/example_data/Summer_Math_Syllabus.txt	../Testing/example_data/socy642_f02_milkie.txt	295
 ../Testing/example_data/Summer_Math_Syllabus.txt	../Testing/example_data/spanish_place_namesA.txt	190
 ../Testing/example_data/Summer_Math_Syllabus.txt	../Testing/example_data/spanish_place_namesB.txt	338
@@ -2557,6 +2651,8 @@
 ../Testing/example_data/TeachingMathCameroon.txt	../Testing/example_data/record_voting.txt	247
 ../Testing/example_data/TeachingMathCameroon.txt	../Testing/example_data/rkc_flyer.txt	208
 ../Testing/example_data/TeachingMathCameroon.txt	../Testing/example_data/sisters_pressrelease.txt	364
+../Testing/example_data/TeachingMathCameroon.txt	../Testing/example_data/small.txt	589
+../Testing/example_data/TeachingMathCameroon.txt	../Testing/example_data/small2.txt	602
 ../Testing/example_data/TeachingMathCameroon.txt	../Testing/example_data/socy642_f02_milkie.txt	278
 ../Testing/example_data/TeachingMathCameroon.txt	../Testing/example_data/spanish_place_namesA.txt	244
 ../Testing/example_data/TeachingMathCameroon.txt	../Testing/example_data/spanish_place_namesB.txt	185
@@ -2586,6 +2682,8 @@
 ../Testing/example_data/The-Global-Warming-Response-Act.txt	../Testing/example_data/record_voting.txt	315
 ../Testing/example_data/The-Global-Warming-Response-Act.txt	../Testing/example_data/rkc_flyer.txt	303
 ../Testing/example_data/The-Global-Warming-Response-Act.txt	../Testing/example_data/sisters_pressrelease.txt	262
+../Testing/example_data/The-Global-Warming-Response-Act.txt	../Testing/example_data/small.txt	464
+../Testing/example_data/The-Global-Warming-Response-Act.txt	../Testing/example_data/small2.txt	457
 ../Testing/example_data/The-Global-Warming-Response-Act.txt	../Testing/example_data/socy642_f02_milkie.txt	365
 ../Testing/example_data/The-Global-Warming-Response-Act.txt	../Testing/example_data/spanish_place_namesA.txt	266
 ../Testing/example_data/The-Global-Warming-Response-Act.txt	../Testing/example_data/spanish_place_namesB.txt	388
@@ -2614,6 +2712,8 @@
 ../Testing/example_data/WPTC2006Season.txt	../Testing/example_data/record_voting.txt	249
 ../Testing/example_data/WPTC2006Season.txt	../Testing/example_data/rkc_flyer.txt	196
 ../Testing/example_data/WPTC2006Season.txt	../Testing/example_data/sisters_pressrelease.txt	350
+../Testing/example_data/WPTC2006Season.txt	../Testing/example_data/small.txt	522
+../Testing/example_data/WPTC2006Season.txt	../Testing/example_data/small2.txt	553
 ../Testing/example_data/WPTC2006Season.txt	../Testing/example_data/socy642_f02_milkie.txt	369
 ../Testing/example_data/WPTC2006Season.txt	../Testing/example_data/spanish_place_namesA.txt	241
 ../Testing/example_data/WPTC2006Season.txt	../Testing/example_data/spanish_place_namesB.txt	200
@@ -2641,6 +2741,8 @@
 ../Testing/example_data/Week3.txt	../Testing/example_data/record_voting.txt	339
 ../Testing/example_data/Week3.txt	../Testing/example_data/rkc_flyer.txt	201
 ../Testing/example_data/Week3.txt	../Testing/example_data/sisters_pressrelease.txt	489
+../Testing/example_data/Week3.txt	../Testing/example_data/small.txt	650
+../Testing/example_data/Week3.txt	../Testing/example_data/small2.txt	631
 ../Testing/example_data/Week3.txt	../Testing/example_data/socy642_f02_milkie.txt	275
 ../Testing/example_data/Week3.txt	../Testing/example_data/spanish_place_namesA.txt	308
 ../Testing/example_data/Week3.txt	../Testing/example_data/spanish_place_namesB.txt	167
@@ -2667,6 +2769,8 @@
 ../Testing/example_data/aReportOfTheSurgeonGeneral.txt	../Testing/example_data/record_voting.txt	306
 ../Testing/example_data/aReportOfTheSurgeonGeneral.txt	../Testing/example_data/rkc_flyer.txt	226
 ../Testing/example_data/aReportOfTheSurgeonGeneral.txt	../Testing/example_data/sisters_pressrelease.txt	417
+../Testing/example_data/aReportOfTheSurgeonGeneral.txt	../Testing/example_data/small.txt	638
+../Testing/example_data/aReportOfTheSurgeonGeneral.txt	../Testing/example_data/small2.txt	626
 ../Testing/example_data/aReportOfTheSurgeonGeneral.txt	../Testing/example_data/socy642_f02_milkie.txt	197
 ../Testing/example_data/aReportOfTheSurgeonGeneral.txt	../Testing/example_data/spanish_place_namesA.txt	279
 ../Testing/example_data/aReportOfTheSurgeonGeneral.txt	../Testing/example_data/spanish_place_namesB.txt	226
@@ -2692,6 +2796,8 @@
 ../Testing/example_data/ashaam2.txt	../Testing/example_data/record_voting.txt	300
 ../Testing/example_data/ashaam2.txt	../Testing/example_data/rkc_flyer.txt	192
 ../Testing/example_data/ashaam2.txt	../Testing/example_data/sisters_pressrelease.txt	403
+../Testing/example_data/ashaam2.txt	../Testing/example_data/small.txt	594
+../Testing/example_data/ashaam2.txt	../Testing/example_data/small2.txt	604
 ../Testing/example_data/ashaam2.txt	../Testing/example_data/socy642_f02_milkie.txt	264
 ../Testing/example_data/ashaam2.txt	../Testing/example_data/spanish_place_namesA.txt	257
 ../Testing/example_data/ashaam2.txt	../Testing/example_data/spanish_place_namesB.txt	182
@@ -2716,6 +2822,8 @@
 ../Testing/example_data/billboard-021205.txt	../Testing/example_data/record_voting.txt	143
 ../Testing/example_data/billboard-021205.txt	../Testing/example_data/rkc_flyer.txt	276
 ../Testing/example_data/billboard-021205.txt	../Testing/example_data/sisters_pressrelease.txt	248
+../Testing/example_data/billboard-021205.txt	../Testing/example_data/small.txt	495
+../Testing/example_data/billboard-021205.txt	../Testing/example_data/small2.txt	489
 ../Testing/example_data/billboard-021205.txt	../Testing/example_data/socy642_f02_milkie.txt	423
 ../Testing/example_data/billboard-021205.txt	../Testing/example_data/spanish_place_namesA.txt	129
 ../Testing/example_data/billboard-021205.txt	../Testing/example_data/spanish_place_namesB.txt	287
@@ -2739,6 +2847,8 @@
 ../Testing/example_data/bio.txt	../Testing/example_data/record_voting.txt	168
 ../Testing/example_data/bio.txt	../Testing/example_data/rkc_flyer.txt	257
 ../Testing/example_data/bio.txt	../Testing/example_data/sisters_pressrelease.txt	268
+../Testing/example_data/bio.txt	../Testing/example_data/small.txt	469
+../Testing/example_data/bio.txt	../Testing/example_data/small2.txt	471
 ../Testing/example_data/bio.txt	../Testing/example_data/socy642_f02_milkie.txt	386
 ../Testing/example_data/bio.txt	../Testing/example_data/spanish_place_namesA.txt	155
 ../Testing/example_data/bio.txt	../Testing/example_data/spanish_place_namesB.txt	285
@@ -2761,6 +2871,8 @@
 ../Testing/example_data/cme2i05.txt	../Testing/example_data/record_voting.txt	380
 ../Testing/example_data/cme2i05.txt	../Testing/example_data/rkc_flyer.txt	208
 ../Testing/example_data/cme2i05.txt	../Testing/example_data/sisters_pressrelease.txt	396
+../Testing/example_data/cme2i05.txt	../Testing/example_data/small.txt	533
+../Testing/example_data/cme2i05.txt	../Testing/example_data/small2.txt	535
 ../Testing/example_data/cme2i05.txt	../Testing/example_data/socy642_f02_milkie.txt	315
 ../Testing/example_data/cme2i05.txt	../Testing/example_data/spanish_place_namesA.txt	345
 ../Testing/example_data/cme2i05.txt	../Testing/example_data/spanish_place_namesB.txt	204
@@ -2782,6 +2894,8 @@
 ../Testing/example_data/didges_brew_band_info.txt	../Testing/example_data/record_voting.txt	341
 ../Testing/example_data/didges_brew_band_info.txt	../Testing/example_data/rkc_flyer.txt	206
 ../Testing/example_data/didges_brew_band_info.txt	../Testing/example_data/sisters_pressrelease.txt	392
+../Testing/example_data/didges_brew_band_info.txt	../Testing/example_data/small.txt	583
+../Testing/example_data/didges_brew_band_info.txt	../Testing/example_data/small2.txt	593
 ../Testing/example_data/didges_brew_band_info.txt	../Testing/example_data/socy642_f02_milkie.txt	391
 ../Testing/example_data/didges_brew_band_info.txt	../Testing/example_data/spanish_place_namesA.txt	370
 ../Testing/example_data/didges_brew_band_info.txt	../Testing/example_data/spanish_place_namesB.txt	158
@@ -2802,6 +2916,8 @@
 ../Testing/example_data/exploring_dallas.txt	../Testing/example_data/record_voting.txt	317
 ../Testing/example_data/exploring_dallas.txt	../Testing/example_data/rkc_flyer.txt	276
 ../Testing/example_data/exploring_dallas.txt	../Testing/example_data/sisters_pressrelease.txt	454
+../Testing/example_data/exploring_dallas.txt	../Testing/example_data/small.txt	709
+../Testing/example_data/exploring_dallas.txt	../Testing/example_data/small2.txt	683
 ../Testing/example_data/exploring_dallas.txt	../Testing/example_data/socy642_f02_milkie.txt	201
 ../Testing/example_data/exploring_dallas.txt	../Testing/example_data/spanish_place_namesA.txt	310
 ../Testing/example_data/exploring_dallas.txt	../Testing/example_data/spanish_place_namesB.txt	227
@@ -2821,6 +2937,8 @@
 ../Testing/example_data/exxonmobil_climate_change_backgrounder.txt	../Testing/example_data/record_voting.txt	234
 ../Testing/example_data/exxonmobil_climate_change_backgrounder.txt	../Testing/example_data/rkc_flyer.txt	220
 ../Testing/example_data/exxonmobil_climate_change_backgrounder.txt	../Testing/example_data/sisters_pressrelease.txt	294
+../Testing/example_data/exxonmobil_climate_change_backgrounder.txt	../Testing/example_data/small.txt	530
+../Testing/example_data/exxonmobil_climate_change_backgrounder.txt	../Testing/example_data/small2.txt	495
 ../Testing/example_data/exxonmobil_climate_change_backgrounder.txt	../Testing/example_data/socy642_f02_milkie.txt	315
 ../Testing/example_data/exxonmobil_climate_change_backgrounder.txt	../Testing/example_data/spanish_place_namesA.txt	208
 ../Testing/example_data/exxonmobil_climate_change_backgrounder.txt	../Testing/example_data/spanish_place_namesB.txt	269
@@ -2839,6 +2957,8 @@
 ../Testing/example_data/fitnessTerms.txt	../Testing/example_data/record_voting.txt	321
 ../Testing/example_data/fitnessTerms.txt	../Testing/example_data/rkc_flyer.txt	216
 ../Testing/example_data/fitnessTerms.txt	../Testing/example_data/sisters_pressrelease.txt	429
+../Testing/example_data/fitnessTerms.txt	../Testing/example_data/small.txt	651
+../Testing/example_data/fitnessTerms.txt	../Testing/example_data/small2.txt	636
 ../Testing/example_data/fitnessTerms.txt	../Testing/example_data/socy642_f02_milkie.txt	228
 ../Testing/example_data/fitnessTerms.txt	../Testing/example_data/spanish_place_namesA.txt	281
 ../Testing/example_data/fitnessTerms.txt	../Testing/example_data/spanish_place_namesB.txt	205
@@ -2856,6 +2976,8 @@
 ../Testing/example_data/gogirls.2003-10.txt	../Testing/example_data/record_voting.txt	287
 ../Testing/example_data/gogirls.2003-10.txt	../Testing/example_data/rkc_flyer.txt	144
 ../Testing/example_data/gogirls.2003-10.txt	../Testing/example_data/sisters_pressrelease.txt	424
+../Testing/example_data/gogirls.2003-10.txt	../Testing/example_data/small.txt	608
+../Testing/example_data/gogirls.2003-10.txt	../Testing/example_data/small2.txt	591
 ../Testing/example_data/gogirls.2003-10.txt	../Testing/example_data/socy642_f02_milkie.txt	298
 ../Testing/example_data/gogirls.2003-10.txt	../Testing/example_data/spanish_place_namesA.txt	276
 ../Testing/example_data/gogirls.2003-10.txt	../Testing/example_data/spanish_place_namesB.txt	150
@@ -2872,6 +2994,8 @@
 ../Testing/example_data/greenhouse.txt	../Testing/example_data/record_voting.txt	335
 ../Testing/example_data/greenhouse.txt	../Testing/example_data/rkc_flyer.txt	176
 ../Testing/example_data/greenhouse.txt	../Testing/example_data/sisters_pressrelease.txt	451
+../Testing/example_data/greenhouse.txt	../Testing/example_data/small.txt	622
+../Testing/example_data/greenhouse.txt	../Testing/example_data/small2.txt	621
 ../Testing/example_data/greenhouse.txt	../Testing/example_data/socy642_f02_milkie.txt	288
 ../Testing/example_data/greenhouse.txt	../Testing/example_data/spanish_place_namesA.txt	295
 ../Testing/example_data/greenhouse.txt	../Testing/example_data/spanish_place_namesB.txt	159
@@ -2887,6 +3011,8 @@
 ../Testing/example_data/lac_rfp_inner-cities.txt	../Testing/example_data/record_voting.txt	372
 ../Testing/example_data/lac_rfp_inner-cities.txt	../Testing/example_data/rkc_flyer.txt	265
 ../Testing/example_data/lac_rfp_inner-cities.txt	../Testing/example_data/sisters_pressrelease.txt	486
+../Testing/example_data/lac_rfp_inner-cities.txt	../Testing/example_data/small.txt	681
+../Testing/example_data/lac_rfp_inner-cities.txt	../Testing/example_data/small2.txt	679
 ../Testing/example_data/lac_rfp_inner-cities.txt	../Testing/example_data/socy642_f02_milkie.txt	167
 ../Testing/example_data/lac_rfp_inner-cities.txt	../Testing/example_data/spanish_place_namesA.txt	329
 ../Testing/example_data/lac_rfp_inner-cities.txt	../Testing/example_data/spanish_place_namesB.txt	267
@@ -2901,6 +3027,8 @@
 ../Testing/example_data/ledger091505.txt	../Testing/example_data/record_voting.txt	260
 ../Testing/example_data/ledger091505.txt	../Testing/example_data/rkc_flyer.txt	173
 ../Testing/example_data/ledger091505.txt	../Testing/example_data/sisters_pressrelease.txt	348
+../Testing/example_data/ledger091505.txt	../Testing/example_data/small.txt	518
+../Testing/example_data/ledger091505.txt	../Testing/example_data/small2.txt	517
 ../Testing/example_data/ledger091505.txt	../Testing/example_data/socy642_f02_milkie.txt	383
 ../Testing/example_data/ledger091505.txt	../Testing/example_data/spanish_place_namesA.txt	225
 ../Testing/example_data/ledger091505.txt	../Testing/example_data/spanish_place_namesB.txt	175
@@ -2914,6 +3042,8 @@
 ../Testing/example_data/modelgeneralnotice.txt	../Testing/example_data/record_voting.txt	388
 ../Testing/example_data/modelgeneralnotice.txt	../Testing/example_data/rkc_flyer.txt	245
 ../Testing/example_data/modelgeneralnotice.txt	../Testing/example_data/sisters_pressrelease.txt	296
+../Testing/example_data/modelgeneralnotice.txt	../Testing/example_data/small.txt	536
+../Testing/example_data/modelgeneralnotice.txt	../Testing/example_data/small2.txt	491
 ../Testing/example_data/modelgeneralnotice.txt	../Testing/example_data/socy642_f02_milkie.txt	307
 ../Testing/example_data/modelgeneralnotice.txt	../Testing/example_data/spanish_place_namesA.txt	353
 ../Testing/example_data/modelgeneralnotice.txt	../Testing/example_data/spanish_place_namesB.txt	257
@@ -2926,6 +3056,8 @@
 ../Testing/example_data/parentarticle.txt	../Testing/example_data/record_voting.txt	384
 ../Testing/example_data/parentarticle.txt	../Testing/example_data/rkc_flyer.txt	234
 ../Testing/example_data/parentarticle.txt	../Testing/example_data/sisters_pressrelease.txt	508
+../Testing/example_data/parentarticle.txt	../Testing/example_data/small.txt	694
+../Testing/example_data/parentarticle.txt	../Testing/example_data/small2.txt	654
 ../Testing/example_data/parentarticle.txt	../Testing/example_data/socy642_f02_milkie.txt	233
 ../Testing/example_data/parentarticle.txt	../Testing/example_data/spanish_place_namesA.txt	346
 ../Testing/example_data/parentarticle.txt	../Testing/example_data/spanish_place_namesB.txt	217
@@ -2937,6 +3069,8 @@
 ../Testing/example_data/parentarticle.txt	../Testing/example_data/website_course_descriptors06-07.txt	197
 ../Testing/example_data/record_voting.txt	../Testing/example_data/rkc_flyer.txt	294
 ../Testing/example_data/record_voting.txt	../Testing/example_data/sisters_pressrelease.txt	253
+../Testing/example_data/record_voting.txt	../Testing/example_data/small.txt	494
+../Testing/example_data/record_voting.txt	../Testing/example_data/small2.txt	510
 ../Testing/example_data/record_voting.txt	../Testing/example_data/socy642_f02_milkie.txt	383
 ../Testing/example_data/record_voting.txt	../Testing/example_data/spanish_place_namesA.txt	145
 ../Testing/example_data/record_voting.txt	../Testing/example_data/spanish_place_namesB.txt	340
@@ -2947,6 +3081,8 @@
 ../Testing/example_data/record_voting.txt	../Testing/example_data/victim.txt	367
 ../Testing/example_data/record_voting.txt	../Testing/example_data/website_course_descriptors06-07.txt	248
 ../Testing/example_data/rkc_flyer.txt	../Testing/example_data/sisters_pressrelease.txt	385
+../Testing/example_data/rkc_flyer.txt	../Testing/example_data/small.txt	558
+../Testing/example_data/rkc_flyer.txt	../Testing/example_data/small2.txt	534
 ../Testing/example_data/rkc_flyer.txt	../Testing/example_data/socy642_f02_milkie.txt	368
 ../Testing/example_data/rkc_flyer.txt	../Testing/example_data/spanish_place_namesA.txt	265
 ../Testing/example_data/rkc_flyer.txt	../Testing/example_data/spanish_place_namesB.txt	178
@@ -2956,6 +3092,8 @@
 ../Testing/example_data/rkc_flyer.txt	../Testing/example_data/syllabus.txt	278
 ../Testing/example_data/rkc_flyer.txt	../Testing/example_data/victim.txt	194
 ../Testing/example_data/rkc_flyer.txt	../Testing/example_data/website_course_descriptors06-07.txt	127
+../Testing/example_data/sisters_pressrelease.txt	../Testing/example_data/small.txt	364
+../Testing/example_data/sisters_pressrelease.txt	../Testing/example_data/small2.txt	357
 ../Testing/example_data/sisters_pressrelease.txt	../Testing/example_data/socy642_f02_milkie.txt	444
 ../Testing/example_data/sisters_pressrelease.txt	../Testing/example_data/spanish_place_namesA.txt	258
 ../Testing/example_data/sisters_pressrelease.txt	../Testing/example_data/spanish_place_namesB.txt	428
@@ -2965,6 +3103,25 @@
 ../Testing/example_data/sisters_pressrelease.txt	../Testing/example_data/syllabus.txt	542
 ../Testing/example_data/sisters_pressrelease.txt	../Testing/example_data/victim.txt	454
 ../Testing/example_data/sisters_pressrelease.txt	../Testing/example_data/website_course_descriptors06-07.txt	380
+../Testing/example_data/small.txt	../Testing/example_data/small2.txt	221
+../Testing/example_data/small.txt	../Testing/example_data/socy642_f02_milkie.txt	649
+../Testing/example_data/small.txt	../Testing/example_data/spanish_place_namesA.txt	483
+../Testing/example_data/small.txt	../Testing/example_data/spanish_place_namesB.txt	624
+../Testing/example_data/small.txt	../Testing/example_data/sports_massage_and_recovery.txt	634
+../Testing/example_data/small.txt	../Testing/example_data/srilanka.txt	692
+../Testing/example_data/small.txt	../Testing/example_data/survey_mathtch.txt	567
+../Testing/example_data/small.txt	../Testing/example_data/syllabus.txt	721
+../Testing/example_data/small.txt	../Testing/example_data/victim.txt	626
+../Testing/example_data/small.txt	../Testing/example_data/website_course_descriptors06-07.txt	601
+../Testing/example_data/small2.txt	../Testing/example_data/socy642_f02_milkie.txt	664
+../Testing/example_data/small2.txt	../Testing/example_data/spanish_place_namesA.txt	474
+../Testing/example_data/small2.txt	../Testing/example_data/spanish_place_namesB.txt	607
+../Testing/example_data/small2.txt	../Testing/example_data/sports_massage_and_recovery.txt	623
+../Testing/example_data/small2.txt	../Testing/example_data/srilanka.txt	666
+../Testing/example_data/small2.txt	../Testing/example_data/survey_mathtch.txt	533
+../Testing/example_data/small2.txt	../Testing/example_data/syllabus.txt	694
+../Testing/example_data/small2.txt	../Testing/example_data/victim.txt	614
+../Testing/example_data/small2.txt	../Testing/example_data/website_course_descriptors06-07.txt	587
 ../Testing/example_data/socy642_f02_milkie.txt	../Testing/example_data/spanish_place_namesA.txt	377
 ../Testing/example_data/socy642_f02_milkie.txt	../Testing/example_data/spanish_place_namesB.txt	359
 ../Testing/example_data/socy642_f02_milkie.txt	../Testing/example_data/sports_massage_and_recovery.txt	300

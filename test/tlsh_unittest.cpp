@@ -89,7 +89,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 static void trendLSH_ut(char *compare_fname, char *dirname, char *listname, int listname_col, int listname_csv, char *fname, char *digestname,
-	int xref, bool xlen, int show_details, int threshold, int force_option, int path_option, char *splitlines)
+	int xref, bool xlen, int show_details, int threshold, int fc_cons_option, int path_option, char *splitlines)
 {
 int err;
 
@@ -98,7 +98,7 @@ int err;
 	inputd.tptr		= NULL;
 	inputd.max_files	= 0;
 	inputd.n_file		= 0;
-	err = set_input_desc(dirname, listname, listname_col, listname_csv, fname, digestname, show_details, force_option, splitlines, &inputd);
+	err = set_input_desc(dirname, listname, listname_col, listname_csv, fname, digestname, show_details, fc_cons_option, splitlines, &inputd);
 	if (err) {
 		return;
 	}
@@ -106,7 +106,7 @@ int err;
 	Tlsh *comp_th = NULL;
 	if (compare_fname) {
 		comp_th = new Tlsh();
-		err = read_file_eval_tlsh(compare_fname, comp_th, show_details, force_option);
+		err = read_file_eval_tlsh(compare_fname, comp_th, show_details, fc_cons_option);
 		if (err == 0) {
 			;
 		} else if (err == ERROR_READING_FILE) {
@@ -278,7 +278,8 @@ static void usage(const char *fullPathName, int fullUsage)
 
 	printf("  -xlen:              Passed as the len_diff parameter to Tlsh::totalDiff().  If not specified, len_diff will be true, else false.  Determines if the lengths\n");
 	printf("                      of the compared files is to be included in determining the distance.  See tlsh.h for details.\n");
-	printf("  -force:             Force a digest to be created even when the input string is as short as %d characters.\n", MIN_FORCE_DATA_LENGTH);
+	printf("  -force:             Old option. Changed in version 3.17.0 to be default behaviour\n");
+	printf("  -conservative:      Original behaviour. Changed in version 3.17.0. Only create a TLSH digest if the input string is >= %d characters.\n", MIN_CONSERVATIVE_DATA_LENGTH);
 	printf("  -details:           Results in extra detailed output.\n");
 	printf("  -T threshold_value: Used only during comparisons (-c file|digset or -xref).  Specifies the maximum distance that a comparison must\n"); 
 	printf("                      generate before it is reported. (defaults to %d)\n", DEFAULT_THRESHOLD);
@@ -289,7 +290,7 @@ static void usage(const char *fullPathName, int fullUsage)
 	printf("\n");
 	printf("Restrictions:\n");
 	printf("  The input string to create a TLSH digest should be >= %d characters\n", MIN_DATA_LENGTH);
-	printf("  If the -force option is used - then the string can be as short as %d characters\n", MIN_FORCE_DATA_LENGTH);
+	printf("  If the -conservative option is used - then the string must >= %d characters\n", MIN_CONSERVATIVE_DATA_LENGTH);
 	printf("\n");
 	printf("Example usages:\n");
 	printf("  To calculate the distance between two files, run the command:\n");
@@ -325,7 +326,7 @@ int main(int argc, char *argv[])
 	int show_details		= 0;
 	int threshold			= DEFAULT_THRESHOLD;
 	char *splitlines		= NULL;
-	int force_option		= 0;
+	int fc_cons_option		= 0;
 	int path_option			= PATH_OPTION_FULL;
 
 #ifdef TLSH_DISTANCE_PARAMETERS
@@ -383,7 +384,9 @@ int main(int argc, char *argv[])
 			xref = 1;
 			argIdx = argIdx+1;
 		} else if (strcmp(argv[argIdx], "-force") == 0) {
-			force_option = 1;
+			argIdx = argIdx+1;
+		} else if (strcmp(argv[argIdx], "-conservative") == 0) {
+			fc_cons_option = 2;
 			argIdx = argIdx+1;
 		} else if (strcmp(argv[argIdx], "-details") == 0) {
 			show_details ++;
@@ -491,5 +494,5 @@ int main(int argc, char *argv[])
 	set_tlsh_distance_parameters(length_mult_value, qratio_mult_value, hist_diff1_add_value, hist_diff2_add_value, hist_diff3_add_value);
 #endif
 	trendLSH_ut(compare_fname, dirname, listname, listname_col, listname_csv, fname, digestname, xref,
-		xlen, show_details, threshold, force_option, path_option, splitlines);
+		xlen, show_details, threshold, fc_cons_option, path_option, splitlines);
 }

@@ -110,7 +110,7 @@ public:
 public:
     void       update(const unsigned char* data, unsigned int len);
     void  fast_update(const unsigned char* data, unsigned int len);
-    void final(int force_option = 0);
+    void final(int fc_cons_option = 0);
     void reset();
     const char* hash() const;
     const char* hash(char *buffer, unsigned int bufSize) const;  // saves allocating hash string in TLSH instance - bufSize should be TLSH_STRING_LEN + 1

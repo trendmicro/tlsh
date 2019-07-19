@@ -306,7 +306,7 @@ int nlines;
 	return(0);
 }
 
-static void tlsh_pattern(char *dirname, char *listname, int listname_col, int listname_csv, char *fname, char *digestname, bool xlen, int force_option, char *pattern_fname, int showmiss)
+static void tlsh_pattern(char *dirname, char *listname, int listname_col, int listname_csv, char *fname, char *digestname, bool xlen, int fc_cons_option, char *pattern_fname, int showmiss)
 {
 int show_details = 0;
 	
@@ -323,7 +323,7 @@ int show_details = 0;
 	inputd.max_files	= 0;
 	inputd.n_file		= 0;
 	char *splitlines	= NULL;
-	err = set_input_desc(dirname, listname, listname_col, listname_csv, fname, digestname, show_details, force_option, splitlines, &inputd);
+	err = set_input_desc(dirname, listname, listname_col, listname_csv, fname, digestname, show_details, fc_cons_option, splitlines, &inputd);
 	if (err) {
 		return;
 	}
@@ -355,10 +355,10 @@ int show_details = 0;
 #define DEFAULT_THRESHOLD 9999
 static void usage()
 {
-	printf("usage: tlsh_pattern -f <file>                     [-showmiss T] -pat <pattern_file> [-xlen] [-force]\n" );
-	printf("     : tlsh_pattern -d <digest>                   [-showmiss T] -pat <pattern_file> [-xlen] [-force]\n" );
-	printf("     : tlsh_pattern -r <dir>                      [-showmiss T] -pat <pattern_file> [-xlen] [-force]\n" );
-	printf("     : tlsh_pattern -l <listfile> [-l1|-l2|-lcsv] [-showmiss T] -pat <pattern_file> [-xlen] [-force]\n" );
+	printf("usage: tlsh_pattern -f <file>                     [-showmiss T] -pat <pattern_file> [-xlen] [-conservative]\n" );
+	printf("     : tlsh_pattern -d <digest>                   [-showmiss T] -pat <pattern_file> [-xlen] [-conservative]\n" );
+	printf("     : tlsh_pattern -r <dir>                      [-showmiss T] -pat <pattern_file> [-xlen] [-conservative]\n" );
+	printf("     : tlsh_pattern -l <listfile> [-l1|-l2|-lcsv] [-showmiss T] -pat <pattern_file> [-xlen] [-conservative]\n" );
 	printf("     : tlsh_pattern -version: prints version of tlsh library\n");
 	printf("\n");
 	printf("where the pattern file consists of 5 columns\n");
@@ -382,7 +382,8 @@ static void usage()
 	printf("  -r dir:             Specifies a recursive directory search for files whose TLSH values are to be compared to the pattern file\n");
 	printf("  -xlen:              Determines if the lengths of the compared files is to be included in determining the distance\n");
 	printf("                      of the compared files is to be included in determining the distance.  See tlsh.h for details.\n");
-	printf("  -force:             Force a digest to be created even when the input string is as short as %d characters.\n", MIN_FORCE_DATA_LENGTH);
+	printf("  -force:             Old option. Changed in version 3.17.0 to be default behaviour\n");
+	printf("  -conservative:      Original behaviour. Changed in version 3.17.0. Only create a TLSH digest if the input string is >= %d characters.\n", MIN_CONSERVATIVE_DATA_LENGTH);
 	printf("  -l listfile:        Used for comparison purposes only (-c file|digset or -xref).  Each line in listfile can contain either:\n");
 	printf("                      - a TLSH digest value (comparison output will display TLSH digests)\n");
 	printf("                      - a tab separated TLSH digest value and its corresponding filename (comparison output will display filenames)\n");
@@ -393,7 +394,7 @@ static void usage()
 	printf("\n");
 	printf("Restrictions:\n");
 	printf("  The input string to create a TLSH digest should be >= %d characters\n", MIN_DATA_LENGTH);
-	printf("  If the -force option is used - then the string can be as short as %d characters\n", MIN_FORCE_DATA_LENGTH);
+	printf("  If the -conservative option is used - then the string must >= %d characters\n", MIN_CONSERVATIVE_DATA_LENGTH);
 	printf("\n");
 	exit(0);
 }
@@ -410,7 +411,7 @@ int main(int argc, char *argv[])
 	int showmiss			= 0;
 
 	bool xlen                       = true;
-	int force_option		= 0;
+	int fc_cons_option		= 0;
 
 	int argIdx		= 1;
 	while (argc > argIdx) {
@@ -449,7 +450,9 @@ int main(int argc, char *argv[])
 			}
 			argIdx = argIdx+2;
 		} else if (strcmp(argv[argIdx], "-force") == 0) {
-			force_option = 1;
+			argIdx = argIdx+1;
+		} else if (strcmp(argv[argIdx], "-conservative") == 0) {
+			fc_cons_option = 2;
 			argIdx = argIdx+1;
                 } else if (strcmp(argv[argIdx], "-xlen") == 0) {
                         xlen = false;
@@ -482,5 +485,5 @@ int main(int argc, char *argv[])
 		usage();
 	}
 
-	tlsh_pattern(dirname, listname, listname_col, listname_csv, fname, digestname, xlen, force_option, pattern_fname, showmiss);
+	tlsh_pattern(dirname, listname, listname_col, listname_csv, fname, digestname, xlen, fc_cons_option, pattern_fname, showmiss);
 }

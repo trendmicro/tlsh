@@ -83,9 +83,10 @@ class TlshImpl;
     #define TLSH_STRING_LEN 134
   #endif
   // changed the minimum data length to 256 for version 3.3
-  #define MIN_DATA_LENGTH		256
+  #define MIN_DATA_LENGTH		50
   // added the -force option for version 3.5
-  #define MIN_FORCE_DATA_LENGTH	50
+  // added the -conservatibe option for version 3.17
+  #define MIN_CONSERVATIVE_DATA_LENGTH	256
 #endif
 
 #if defined BUCKETS_128
@@ -95,9 +96,10 @@ class TlshImpl;
     #define TLSH_STRING_LEN 70
   #endif
   // changed the minimum data length to 256 for version 3.3
-  #define MIN_DATA_LENGTH		256
+  #define MIN_DATA_LENGTH		50
   // added the -force option for version 3.5
-  #define MIN_FORCE_DATA_LENGTH	50
+  // added the -conservatibe option for version 3.17
+  #define MIN_CONSERVATIVE_DATA_LENGTH	256
 #endif
 
 #if defined BUCKETS_48
@@ -106,7 +108,7 @@ class TlshImpl;
   // changed the minimum data length to 256 for version 3.3
   #define MIN_DATA_LENGTH		10
   // added the -force option for version 3.5
-  #define MIN_FORCE_DATA_LENGTH		10
+  #define MIN_CONSERVATIVE_DATA_LENGTH	10
 #endif
 
 #define TLSH_STRING_BUFFER_LEN (TLSH_STRING_LEN+1)
@@ -131,7 +133,7 @@ public:
     void update(const unsigned char* data, unsigned int len);
 
     /* to signal the class there is no more data to be added */
-    void final(const unsigned char* data = NULL, unsigned int len = 0, int force_option = 0);
+    void final(const unsigned char* data = NULL, unsigned int len = 0, int fc_cons_option = 0);
 
     /* to get the hex-encoded hash code */
     const char* getHash() const ;

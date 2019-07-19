@@ -390,20 +390,23 @@ void TlshImpl::fast_update(const unsigned char* data, unsigned int len)
 	this->data_len += len;
 }
 
+/////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
+
 /* to signal the class there is no more data to be added */
-void TlshImpl::final(int force_option) 
+void TlshImpl::final(int fc_cons_option) 
 {
     if (this->lsh_code_valid) {
       fprintf(stderr, "call to final() on a tlsh that is already valid\n");
       return;
     }   
     // incoming data must more than or equal to MIN_DATA_LENGTH bytes
-    if ((force_option == 0) && (this->data_len < MIN_DATA_LENGTH)) {
+    if ((fc_cons_option <= 1) && (this->data_len < MIN_DATA_LENGTH)) {
       // this->lsh_code be empty
       delete [] this->a_bucket; this->a_bucket = NULL;
       return;
     }
-    if ((force_option) && (this->data_len < MIN_FORCE_DATA_LENGTH)) {
+    if ((fc_cons_option == 2) && (this->data_len < MIN_CONSERVATIVE_DATA_LENGTH)) {
       // this->lsh_code be empty
       delete [] this->a_bucket; this->a_bucket = NULL;
       return;
