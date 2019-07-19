@@ -12,11 +12,11 @@ a byte stream of identical bytes will not generate a hash value.
 
 ## Minimum byte stream length
 
-The program in default mode requires an input byte stream with a minimum length of 256 bytes
+The program in default mode requires an input byte stream with a minimum length of 50 bytes
 (and a minimum amount of randomness - see note in Python extension below).
 
-In addition the -force option allows strings down to length 50.
-See notes for version 3.5.0 of TLSH
+For consistency with older versions, there is a -conservative option which enforces a 256 byte limit.
+See notes for version 3.17.0 of TLSH
 
 ## Computed hash
 
@@ -119,9 +119,9 @@ tlsh.hash(data)
 ```
 
 
-Note that in default mode the data must contain at least 256 bytes to generate a hash value and that
+Note that in default mode the data must contain at least 50 bytes to generate a hash value and that
 it must have a certain amount of randomness.
-If you use the "force" option, then the data must contain at least 50 characters.
+If you use the "conservative" option, then the data must contain at least 256 characters.
 For example, `tlsh.hash(str(os.urandom(256)))`, should always generate a hash.  
 To get the hash value of a file, try `tlsh.hash(open(file, 'rb').read())`.
 
