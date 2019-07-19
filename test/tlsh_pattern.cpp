@@ -77,318 +77,10 @@
 #include <errno.h>
 
 #include "tlsh.h"
+#include "input_desc.h"
+#include "shared_file_functions.h"
 
 ////////////////////////////////////////////////////////////////////////////////
-
-#define	ERROR_READING_FILE	1
-#define	WARNING_FILE_TOO_SMALL	2
-#define	WARNING_CANNOT_HASH	3
-
-#define CONVERT_TAB "_<tlsh_convert_tab>_"
-#define CONVERT_NEWLINE "_<tlsh_convert_newline>_"
-#define CONVERT_LINEFEED "_<tlsh_convert_linefeed>_"
-
-typedef enum {
-	TAB,
-	NEWLINE,
-	LINEFEED
-} SpecialChar;
-
-SpecialChar getSpecialChar(const char *tab, const char *newline, const char *linefeed)
-{
-    // To call this function, there has to be at least 1 special character
-	assert (tab != NULL || newline != NULL || linefeed != NULL);  
-
-	if (tab == NULL) return (newline == NULL) ? LINEFEED : (linefeed == NULL) ? NEWLINE : (newline < linefeed) ? NEWLINE : LINEFEED;
-	if (newline == NULL) return (tab == NULL) ? LINEFEED : (linefeed == NULL) ? TAB : (tab < linefeed) ? TAB : LINEFEED;
-	if (linefeed == NULL) return (tab == NULL) ? NEWLINE : (newline == NULL) ? TAB : (tab < newline) ? TAB : NEWLINE;
-
-	assert (false);  // We should never get here
-	return TAB;      // To remove compiler warning about reaching end of non-void function
-}
-
-static const char *convert_special_chars(char *filename, char *buf, size_t bufSize)
-{
-const char *curTab		= CONVERT_TAB;
-const char *replaceTab		= "\t";
-const char *curNewline		= CONVERT_NEWLINE;
-const char *replaceNewline	= "\n";
-const char *curLinefeed		= CONVERT_LINEFEED;
-const char *replaceLinefeed	= "\r";
-
-size_t fname_offset = 0;
-size_t buf_offset = 0;
-
-	while (true) {
-		char *tab = strstr(filename+fname_offset, curTab);
-		char *newline = strstr(filename+fname_offset, curNewline);
-		char *linefeed = strstr(filename+fname_offset, curLinefeed);
-
-		// when no more special characters to replace, copy the remaining part of filename and then return.
-		if (tab == NULL && newline == NULL && linefeed == NULL) {
-			snprintf(buf+buf_offset, bufSize-buf_offset, "%s", filename+fname_offset);
-			return buf;
-		}
-
-		SpecialChar sp = getSpecialChar(tab, newline, linefeed);
-		if (sp == TAB) {
-			char save = *tab;
-			*tab = '\0';  // terminate for snprintf
-			buf_offset += snprintf(buf+buf_offset, bufSize-buf_offset, "%s%s", filename+fname_offset, replaceTab);
-			fname_offset = tab - filename + strlen(curTab);
-			*tab = save;  // replace tab
-		}
-		else if (sp == NEWLINE) {
-			char save = *newline;
-			*newline = '\0';  // terminate for snprintf
-			buf_offset += snprintf(buf+buf_offset, bufSize-buf_offset, "%s%s", filename+fname_offset, replaceNewline);
-			fname_offset = newline - filename + strlen(curNewline);
-			*newline = save;  // replace newline
-		}
-		else {
-			assert (sp == LINEFEED);
-			char save = *linefeed;
-			*linefeed = '\0';  // terminate for snprintf
-			buf_offset += snprintf(buf+buf_offset, bufSize-buf_offset, "%s%s", filename+fname_offset, replaceLinefeed);
-			fname_offset = linefeed - filename + strlen(curLinefeed);
-			*linefeed = save;  // replace linefeed
-		}
-	}
-}
-
-static int read_file_eval_tlsh(char *fname, Tlsh *th, int show_details, int force_option)
-{
-	///////////////////////////////////////
-	// 1. How big is the file?
-	///////////////////////////////////////
-	FILE *fd = fopen(fname, "r");
-	if(fd==NULL)
-		return(ERROR_READING_FILE);
-	int ret = 1;
-	int sizefile = 0;
-
-	fseek(fd, 0L, SEEK_END);
-	sizefile = ftell(fd);
-
-	fclose(fd);
-
-	if (force_option == 0) {
-		if (sizefile < MIN_DATA_LENGTH)
-			return(WARNING_FILE_TOO_SMALL);
-	} else {
-		if (sizefile < MIN_FORCE_DATA_LENGTH)
-			return(WARNING_FILE_TOO_SMALL);
-	}
-
-	///////////////////////////////////////
-	// 2. allocate the memory
-	///////////////////////////////////////
-	unsigned char* data = (unsigned char*)malloc(sizefile);
-	if (data == NULL) {
-		fprintf(stderr, "out of memory...\n");
-		exit(0);
-	}
-
-	///////////////////////////////////////
-	// 3. read the file
-	///////////////////////////////////////
-#ifdef WINDOWS
-	// Handle differently for Windows because the fread function in msvcr80.dll has a bug
-	// and it does not always read the entire file.
-	if (!read_file_win(fname, sizefile, data)) {
-		free(data);
-		return(ERROR_READING_FILE);
-	}
-#else
-	fd = fopen(fname, "r");
-	if (fd==NULL) {
-		free(data);
-		return(ERROR_READING_FILE);
-	}
-
-	ret = fread(data, sizeof(unsigned char), sizefile, fd);
-	fclose(fd);
-
-	if (ret != sizefile) {
-		fprintf(stderr, "fread %d bytes from %s failed: only %d bytes read\n", sizefile, fname, ret);
-		return(ERROR_READING_FILE);
-	}
-#endif
-
-	///////////////////////////////////////
-	// 4. calculate the digest
-	///////////////////////////////////////
-	th->final(data, sizefile, force_option);
-
-	///////////////////////////////////////
-	// 5. clean up and return
-	///////////////////////////////////////
-	free(data);
-	if (th->getHash() == NULL || th->getHash()[0] == '\0') {
-		return(WARNING_CANNOT_HASH);
-	}
-	if (show_details >= 1) {
-		printf("eval	%s	%s\n", fname, th->getHash() );
-	}
-	return(0);
-}
-
-bool is_dir(char *dirname)
-{
-DIR	  *dip;
-	if (dirname == NULL) {
-		return(false);
-	}
-	dip = opendir(dirname);
-	if (dip == NULL) {
-		return(false);
-	}
-	closedir(dip);
-	return(true);
-}
-
-//
-// if	full_fname == "user/jon/abcdef.txt"
-// then	only_fname ==          "abcdef.txt"
-// 	dirname    ==          "jon"
-//
-struct FileName {
-        char *tlsh;  // Only used with -l parameter
-        char *full_fname;
-        char *only_fname;
-        char *dirname;
-};
-
-static int count_files_in_dir(char *dirname)
-{
-DIR     *dip;
-struct dirent   *dit;
-
-	dip = opendir(dirname);
-	if (dip == NULL) {
-		return(0);
-	}
-	dit = readdir(dip);
-	int n_file = 0;
-	while (dit != NULL) {
-		char tmp_fname[2000];
-		int len = snprintf(tmp_fname,	sizeof(tmp_fname)-1, "%s/%s", dirname, dit->d_name);
-		if (len < sizeof(tmp_fname) - 2) {
-			if (is_dir(tmp_fname) ) {
-				if ((strcmp(dit->d_name, ".") == 0) || (strcmp(dit->d_name, "..") == 0)) {
-					;
-				} else {
-					int file_in_dir = count_files_in_dir(tmp_fname);
-					n_file = n_file + file_in_dir;
-				}
-			} else {
-				n_file ++;
-			}
-		}
-		dit = readdir(dip);
-	}
-	closedir(dip);
-	return(n_file);
-}
-
-static int count_lines_in_file(char *fname)
-{
-char buf[1000];
-	FILE *f = fopen(fname, "r");
-	if (f == NULL) {
-		fprintf(stderr, "error: cannot read file %s\n", fname);
-		return(-1);
-	}
-	int count = 0;
-	char *x = fgets(buf, sizeof(buf), f);
-	while (x != NULL) {
-		count ++;
-		x = fgets(buf, sizeof(buf), f);
-	}
-	fclose(f);
-	return(count);
-}
-
-static int recursive_read_files_from_dir(char *dirname, char *thisdirname, struct FileName *fnames, int max_fnames, int *n_file)
-{
-DIR     *dip;
-struct dirent   *dit;
-
-	dip = opendir(dirname);
-	if (dip == NULL) {
-		fprintf(stderr, "cannot open directory %s\n", dirname);
-		return(1);
-	}
-	dit = readdir(dip);
-	while (dit != NULL) {
-		char tmp_fname[2000];
-		int len = snprintf(tmp_fname,	sizeof(tmp_fname)-1, "%s/%s", dirname, dit->d_name);
-		// -2 for safety
-		if (len < sizeof(tmp_fname) - 2) {
-			if (is_dir(tmp_fname) ) {
-				if ((strcmp(dit->d_name, ".") == 0) || (strcmp(dit->d_name, "..") == 0)) {
-					;
-				} else {
-					int err = recursive_read_files_from_dir(tmp_fname, dit->d_name, fnames, max_fnames, n_file);
-					if (err) {
-						closedir(dip);
-						return(1);
-					}
-				}
-			} else {
-				if (*n_file >= max_fnames) {
-					fprintf(stderr, "warning too many files max_fnames=%d *n_file=%d\n", max_fnames, *n_file);
-					closedir(dip);
-					return(1);
-				}
-				fnames[*n_file].full_fname = strdup(tmp_fname);
-				fnames[*n_file].only_fname = strdup(dit->d_name);
-				fnames[*n_file].dirname    = strdup(thisdirname);
-// printf("this_dirname=%s\n", this_dirname);
-				*n_file = *n_file + 1;
-			}
-		}
-		dit = readdir(dip);
-	}
-	closedir(dip);
-	return(0);
-}
-
-static int read_files_from_dir(char *dirname, struct FileName *fnames, int max_fnames, int *n_file)
-{
-	*n_file = 0;
-	int err = recursive_read_files_from_dir(dirname, dirname, fnames, max_fnames, n_file);
-	return(err);
-}
-
-static int compar_FileName(const void *x1, const void *x2)
-{
-struct FileName *r1;
-struct FileName *r2;
-        r1 = (struct FileName *) x1;
-        r2 = (struct FileName *) x2;
-	// printf("compare %s %s\n", r1->name, r2->name);
-        return (strcmp(r1->full_fname, r2->full_fname));
-}
-
-static void freeFileName(struct FileName *fnames, int count)
-{
-    for (int i=0; i<count; i++) {
-		if (fnames[i].tlsh != NULL) {
-			free(fnames[i].tlsh);
-		}
-		if (fnames[i].full_fname != NULL) {
-			free(fnames[i].full_fname);
-		}
-		if (fnames[i].only_fname != NULL) {
-			free(fnames[i].only_fname);
-		}
-		if (fnames[i].dirname != NULL) {
-			free(fnames[i].dirname);
-		}
-	}
-	free(fnames);
-}
 
 class pattern_tlsh {
 public:
@@ -513,6 +205,24 @@ int read_line(char *buf, char **col1, char **col2, char **col3, char **col4, cha
 	return(0);
 }
 
+static int count_lines_in_file(char *fname)
+{
+char buf[1000];
+	FILE *f = fopen(fname, "r");
+	if (f == NULL) {
+		fprintf(stderr, "error: cannot read file %s\n", fname);
+		return(-1);
+	}
+	int count = 0;
+	char *x = fgets(buf, sizeof(buf), f);
+	while (x != NULL) {
+		count ++;
+		x = fgets(buf, sizeof(buf), f);
+	}
+	fclose(f);
+	return(count);
+}
+
 int pattern_tlsh::read_pattern_file(char *pattern_fname)
 {
 char buf[1000];
@@ -579,7 +289,7 @@ char buf[1000];
 static void tlsh_pattern(char *dirname, char *listname, char *fname, char *digestname, bool xlen, int force_option, char *pattern_fname)
 {
 int show_details = 0;
-int max_files;
+
 	pattern_tlsh pat;
 	int err = pat.read_pattern_file(pattern_fname);
 	if (err) {
@@ -587,160 +297,22 @@ int max_files;
 		exit(1);
 	}
 
-	if (dirname) {
-		if (! is_dir(dirname)) {
-			fprintf(stderr, "error opening dir: %s\n", dirname);
-			exit(1);
-		}
-		max_files = count_files_in_dir(dirname);
-	}
-	if (listname) {
-		FILE *f;
-		char *x;
-		char buf[1000];
-		f = fopen(listname, "r");
-		if (f == NULL) {
-			fprintf(stderr, "error: cannot read file %s\n", listname);
-			exit(1);
-		}
-		max_files = 0;
-		x = fgets(buf, 1000, f);
-		while (x != NULL) {
-			max_files ++;
-			x = fgets(buf, 1000, f);
-		}
-		fclose(f);
-	}
-	if (fname || digestname) {
-		max_files = 1;
-	}
-	if (max_files == 0)
-		return;
-
-	struct FileName *fnames;
-	fnames = (struct FileName *) calloc ( max_files+1, sizeof(struct FileName));
-	if (fnames == NULL) {
-		fprintf(stderr, "error: unable to allocate memory for %d files\n", max_files);
-		exit(1);
-	}
-	
-	int n_file = 0;
-	if (dirname) {
-		err = read_files_from_dir(dirname, fnames, max_files+1, &n_file);
-		if (err) {
-			freeFileName(fnames, max_files+1);
-			return;
-		}
-
-		qsort(fnames, n_file, sizeof(struct FileName), compar_FileName);
-
-		// printf("after sort\n");
-		// for (int fi=0; fi<n_file; fi++) {
-		// 	printf("file = %s\n", fnames[fi].full_fname );
-		// }
-	}
-	if (listname) {
-		FILE *f;
-		char *x;
-		char buf[1000];
-		f = fopen(listname, "r");
-		if (f == NULL) {
-			fprintf(stderr, "error: cannot read file %s\n", listname);
-			freeFileName(fnames, max_files+1);
-			exit(1);
-		}
-		int count = 0;
-		x = fgets(buf, 1000, f);
-		while (x != NULL) {
-		    // Make sure that buf is null terminated
-			int len = strlen(buf);
-			char lastc = buf[len-1];
-			if ((lastc == '\n') || (lastc == '\r'))
-				buf[len-1] = '\0';
-
-			// If buf contains tab character, then assume listname contains tlsh, filename pair 
-			// (i.e. is output of runnint tlsh_unittest -r), so advance x to filename
-			x = strchr(buf, '\t');
-			if (x == NULL) {
-				x = buf; // No tab character, so set x to buf
-			}
-			else {
-				buf[x-buf] = '\0';  // separate tlsh from filename for strdup below
-		 		x++;     // advance past tab character to filename
-			}
-
-			fnames[count].tlsh = strdup(buf);
-			const char *convert_buf = convert_special_chars(x, buf, sizeof(buf));
-			fnames[count].full_fname = strdup(convert_buf);
-			fnames[count].only_fname = strdup(convert_buf);
-			fnames[count].dirname    = strdup(convert_buf);
-
-			count ++;
-
-			x = fgets(buf, 1000, f);
-		}
-		n_file = count;
-		fclose(f);
-	}
-	if (fname) {
-		fnames[0].full_fname = strdup(fname);
-		fnames[0].only_fname = strdup(fname);
-		fnames[0].dirname    = strdup(fname);
-		n_file = 1;
-	}
-	if (digestname) {
-		fnames[0].full_fname = strdup(digestname);  // set for error display
-		fnames[0].only_fname = strdup(digestname);  // set for error display
-		fnames[0].dirname    = strdup(digestname);  // set for error display
-		fnames[0].tlsh = strdup(digestname);
-		n_file = 1;
-	}
-
-	Tlsh **tptr;
-	tptr = (Tlsh **) malloc ( sizeof(Tlsh *) * (max_files+1) );
-	if (n_file > max_files) {
-		fprintf(stderr, "error: too many files n_file=%d max_files=%d\n", n_file, max_files);
-		free(tptr);
-		freeFileName(fnames, max_files+1);
+	struct InputDescr inputd;
+	inputd.fnames		= NULL;
+	inputd.tptr		= NULL;
+	inputd.max_files	= 0;
+	inputd.n_file		= 0;
+	char *splitlines	= NULL;
+	int listname_col	= 1;
+	int listname_csv	= 0;
+	err = set_input_desc(dirname, listname, listname_col, listname_csv, fname, digestname, show_details, force_option, splitlines, &inputd);
+	if (err) {
 		return;
 	}
 
-	for (int ti=0; ti<n_file; ti++) {
-		int err;
-		tptr[ti] = NULL;
-		if (listname || digestname) {
-			Tlsh *th = new Tlsh();
-			err = th->fromTlshStr(fnames[ti].tlsh);
-			if (err) {
-				fprintf(stderr, "warning: cannot read TLSH code %s\n", fnames[ti].full_fname);
-				delete th;
-			} else {
-				tptr[ti] = th;
-			}
-		} else {
-			char *curr_fname = fnames[ti].full_fname;
-			Tlsh *th = new Tlsh();
-			err = read_file_eval_tlsh(curr_fname, th, show_details, force_option);
-			if (err == 0) {
-				tptr[ti] = th;
-			} else if (err == ERROR_READING_FILE) {
-				fprintf(stderr, "error file %s: cannot read file\n", curr_fname);
-				delete th;
-			} else if (err == WARNING_FILE_TOO_SMALL) {
-				fprintf(stderr, "file %s: file too small\n", curr_fname);
-				delete th;
-			} else if (err == WARNING_CANNOT_HASH) {
-				fprintf(stderr, "file %s: cannot hash\n", curr_fname);
-				delete th;
-			} else {
-				fprintf(stderr, "file %s: unknown error\n", curr_fname);
-				delete th;
-			}
-		}
-	}
-
-	for (int ti=0; ti<n_file; ti++) {
-		Tlsh *tlsh = tptr[ti];
+	for (int ti=0; ti<inputd.n_file; ti++) {
+		Tlsh *tlsh = inputd.tptr[ti];
+		// char *ti_fname  = inputd.fnames[ti].only_fname;
 		if (tlsh != NULL) {
 			// printf("compare TLSH %s\n", tlsh->getHash());
 			int nmatch = pat.match_pattern(tlsh, xlen);
@@ -751,13 +323,13 @@ int max_files;
 	}
 
     // free allocated memory
-	for (int ti=0; ti<n_file; ti++) {
-		if (tptr[ti] != NULL) {
-			delete tptr[ti];
+	for (int ti=0; ti<inputd.n_file; ti++) {
+		if (inputd.tptr[ti] != NULL) {
+			delete inputd.tptr[ti];
 		}
 	}
-	free(tptr);
-	freeFileName(fnames, max_files+1);
+	free(inputd.tptr);
+	freeFileName(inputd.fnames, inputd.max_files+1);
 }
 
 ////////////////////////////////////////////////////////////////////////////////

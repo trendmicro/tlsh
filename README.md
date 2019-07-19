@@ -556,3 +556,9 @@ Also, preparing for things like csv input files.
 19/July/2019
 added command line option -help to show full help information
 </PRE>
+
+**3.15.2**
+<PRE>
+19/July/2019
+tlsh_pattrern uses refactored code introduced in 3.15.0
+</PRE>
