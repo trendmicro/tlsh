@@ -562,3 +562,19 @@ added command line option -help to show full help information
 19/July/2019
 tlsh_pattrern uses refactored code introduced in 3.15.0
 </PRE>
+
+**3.16.0**
+<PRE>
+19/July/2019
+improved tlsh_pattern functionality
+usage: tlsh_pattern -f <file>                     [-showmiss T] -pat <pattern_file> [-xlen] [-force]
+     : tlsh_pattern -d <digest>                   [-showmiss T] -pat <pattern_file> [-xlen] [-force]
+     : tlsh_pattern -r <dir>                      [-showmiss T] -pat <pattern_file> [-xlen] [-force]
+     : tlsh_pattern -l <listfile> [-l1|-l2|-lcsv] [-showmiss T] -pat <pattern_file> [-xlen] [-force]
+     : tlsh_pattern -version: prints version of tlsh library
+add options
+- to have different columns of a listfile be processed (-l1 or -l2)
+- to allow a listfile to be in CSV format (-lcsv)
+- to show misses up to threshold T (-showmiss T)
+added regression tests for tlsh_pattern
+</PRE>

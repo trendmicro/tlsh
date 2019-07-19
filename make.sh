@@ -62,5 +62,11 @@ then
 	echo "====================="
 	cd Testing
 	./test.sh | grep -E "(^test|^passed|error|^Running|Scenario)"
+
+	echo "====================="
+	echo "tests tlsh_pattern"
+	echo "====================="
+	./test_pattern.sh | grep -E "(^test|^passed|error|^Running|Scenario)"
+
 	cd ..
 fi

@@ -87,7 +87,7 @@ public:
 	pattern_tlsh();
 	~pattern_tlsh();
 	int read_pattern_file(char *pattern_fname);
-	int match_pattern(Tlsh *tlsh, bool xlen);
+	int match_pattern(Tlsh *tlsh, bool xlen, char *ti_fname, int showmiss);
 	
 	Tlsh	**tlsh_array;
 	char	**pattern_name;
@@ -123,11 +123,13 @@ pattern_tlsh::~pattern_tlsh()
 		free(tlsh_radius);
 }
 
-int pattern_tlsh::match_pattern(Tlsh *tlsh, bool xlen)
+int pattern_tlsh::match_pattern(Tlsh *tlsh, bool xlen, char *ti_fname, int showmiss)
 {
 	int nmatch = 0;
 	int best_ti = -1;
 	int best_dist = -1;
+	int miss_best_ti = -1;
+	int miss_best_dist = -1;
 	for (int ti=0; ti<npattern; ti++) {
 		Tlsh *tp = tlsh_array[ti];
 		if (tp != NULL) {
@@ -138,12 +140,21 @@ int pattern_tlsh::match_pattern(Tlsh *tlsh, bool xlen)
 					best_ti	  = ti;
 				}
 				nmatch ++;
+			} else {
+				if ((miss_best_dist == -1) || (dist < miss_best_dist)) {
+					miss_best_dist	= dist;
+					miss_best_ti	= ti;
+				}
 			}
 		}
 	}
 	if (best_ti != -1) {
 		Tlsh *tp = tlsh_array[best_ti];
-		printf("match	pat_%d	%s	%s	%d	%s\n", best_ti, tlsh->getHash(), tp->getHash(), best_dist, pattern_name[best_ti]);
+		printf("%s	%s	%d\n", ti_fname, pattern_name[best_ti], best_dist);
+		// printf("match	pat_%d	%s	%s	%d	%s\n", best_ti, tlsh->getHash(), tp->getHash(), best_dist, pattern_name[best_ti]);
+	} else if ((showmiss > 0) && (miss_best_ti != -1) && (miss_best_dist <= showmiss)) {
+		Tlsh *tp = tlsh_array[miss_best_ti];
+		printf("NEAR-MISS	%s	%s	%d\n", ti_fname, pattern_name[miss_best_ti], miss_best_dist);
 	}
 	return(nmatch);
 }
@@ -226,22 +237,24 @@ char buf[1000];
 int pattern_tlsh::read_pattern_file(char *pattern_fname)
 {
 char buf[1000];
-	npattern = count_lines_in_file(pattern_fname);
-	if (npattern <= 0) {
+int nlines;
+	nlines = count_lines_in_file(pattern_fname);
+	if (nlines <= 0) {
+		printf("warning: empty pattern file %s\n", pattern_fname);
 		return(1);
 	}
 
-	tlsh_array	= (Tlsh **)	malloc ( sizeof(Tlsh *) * (npattern+1) );
-	pattern_name	= (char **)	malloc ( sizeof(char *) * (npattern+1) );
-	tlsh_radius	= (int *)	malloc ( sizeof(int)	* (npattern+1) );
+	tlsh_array	= (Tlsh **)	malloc ( sizeof(Tlsh *) * (nlines+1) );
+	pattern_name	= (char **)	malloc ( sizeof(char *) * (nlines+1) );
+	tlsh_radius	= (int *)	malloc ( sizeof(int)	* (nlines+1) );
 	if ((tlsh_array == NULL) ||(tlsh_radius == NULL)) {
-		fprintf(stderr, "error: unable to allocate memory for %d lines in pattern file\n", npattern);
-		exit(1);
+		fprintf(stderr, "error: unable to allocate memory for %d lines in pattern file\n", nlines);
+		return(1);
 	}
-	for (int ti=0; ti<npattern; ti++) {
+	for (int ti=0; ti<nlines; ti++) {
 		tlsh_array[ti]		= NULL;
 		pattern_name[ti]	= NULL;
-		tlsh_radius[ti]		= NULL;
+		tlsh_radius[ti]		= 0;
 	}
 
 	FILE *f = fopen(pattern_fname, "r");
@@ -259,13 +272,15 @@ char buf[1000];
 		int err = read_line(buf, &col1, &col2, &col3, &col4, &col5);
 		if (err) {
 			printf("error reading line %d of %s\n", count+2, pattern_fname);
-		} else if (count >= npattern) {
+		} else if (count >= nlines) {
 			printf("memory error in pattern file: line %d of %s\n", count+2, pattern_fname);
 		} else {
 			Tlsh *th = new Tlsh();
 			err = th->fromTlshStr(col3);
 			if (err) {
-				fprintf(stderr, "warning: line %d of %s: cannot read TLSH code %s\n", count+2, pattern_fname, col3);
+				if (strcasecmp(col3, "tlsh") != 0) {
+					fprintf(stderr, "warning: line %d of %s: cannot read TLSH code %s\n", count+2, pattern_fname, col3);
+				}
 				delete th;
 			} else {
 				tlsh_array[count]	= th;
@@ -276,20 +291,25 @@ char buf[1000];
 					fprintf(stderr, "warning: line %d of %s: cannot read distance %s\n", count+2, pattern_fname, col4);
 					tlsh_radius[count] = -1;
 				}
+				count ++;
 			}
 			// printf("line %d	%s	%d\n", count+2, col3, tlsh_radius[count]);
 		}
-		count ++;
 		x = fgets(buf, sizeof(buf), f);
 	}
 	fclose(f);
+	if (count == 0) {
+		printf("error: no valid patterns in %s\n", pattern_fname);
+		return(1);
+	}
+	npattern=count;
 	return(0);
 }
 
-static void tlsh_pattern(char *dirname, char *listname, char *fname, char *digestname, bool xlen, int force_option, char *pattern_fname)
+static void tlsh_pattern(char *dirname, char *listname, int listname_col, int listname_csv, char *fname, char *digestname, bool xlen, int force_option, char *pattern_fname, int showmiss)
 {
 int show_details = 0;
-
+	
 	pattern_tlsh pat;
 	int err = pat.read_pattern_file(pattern_fname);
 	if (err) {
@@ -303,22 +323,20 @@ int show_details = 0;
 	inputd.max_files	= 0;
 	inputd.n_file		= 0;
 	char *splitlines	= NULL;
-	int listname_col	= 1;
-	int listname_csv	= 0;
 	err = set_input_desc(dirname, listname, listname_col, listname_csv, fname, digestname, show_details, force_option, splitlines, &inputd);
 	if (err) {
 		return;
 	}
 
 	for (int ti=0; ti<inputd.n_file; ti++) {
-		Tlsh *tlsh = inputd.tptr[ti];
-		// char *ti_fname  = inputd.fnames[ti].only_fname;
+		Tlsh *tlsh	= inputd.tptr[ti];
+		char *ti_fname	= inputd.fnames[ti].only_fname;
 		if (tlsh != NULL) {
 			// printf("compare TLSH %s\n", tlsh->getHash());
-			int nmatch = pat.match_pattern(tlsh, xlen);
-			if (nmatch == 0) {
-				printf("nomatch	%s\n", tlsh->getHash());
-			}
+			int nmatch = pat.match_pattern(tlsh, xlen, ti_fname, showmiss);
+			// if (nmatch == 0) {
+			// 	printf("nomatch	%s\n", tlsh->getHash());
+			// }
 		}
 	}
 
@@ -337,11 +355,18 @@ int show_details = 0;
 #define DEFAULT_THRESHOLD 9999
 static void usage()
 {
-	printf("usage: tlsh_pattern -f <file>      -pat <pattern_file> [-xlen] [-force]\n" );
-	printf("     : tlsh_pattern -d <digest>    -pat <pattern_file> [-xlen] [-force]\n" );
-	printf("     : tlsh_pattern -r <dir>       -pat <pattern_file> [-xlen] [-force]\n" );
-	printf("     : tlsh_pattern -l <listfile>  -pat <pattern_file> [-xlen] [-force]\n" );
+	printf("usage: tlsh_pattern -f <file>                     [-showmiss T] -pat <pattern_file> [-xlen] [-force]\n" );
+	printf("     : tlsh_pattern -d <digest>                   [-showmiss T] -pat <pattern_file> [-xlen] [-force]\n" );
+	printf("     : tlsh_pattern -r <dir>                      [-showmiss T] -pat <pattern_file> [-xlen] [-force]\n" );
+	printf("     : tlsh_pattern -l <listfile> [-l1|-l2|-lcsv] [-showmiss T] -pat <pattern_file> [-xlen] [-force]\n" );
 	printf("     : tlsh_pattern -version: prints version of tlsh library\n");
+	printf("\n");
+	printf("where the pattern file consists of 5 columns\n");
+	printf("col 1: pattern number\n");
+	printf("col 2: nitems in group\n");
+	printf("col 3: TLSH\n");
+	printf("col 4: radius\n");
+	printf("col 5: pattern label\n");
 	printf("\n");
 	printf("tlsh can be used to compute TLSH digest values or the distance between digest values in the following ways:\n");
 	printf("  1) To compute the TLSH digest value of a single file (-f file), or a directory of files (-r dir).\n");
@@ -358,6 +383,13 @@ static void usage()
 	printf("  -xlen:              Determines if the lengths of the compared files is to be included in determining the distance\n");
 	printf("                      of the compared files is to be included in determining the distance.  See tlsh.h for details.\n");
 	printf("  -force:             Force a digest to be created even when the input string is as short as %d characters.\n", MIN_FORCE_DATA_LENGTH);
+	printf("  -l listfile:        Used for comparison purposes only (-c file|digset or -xref).  Each line in listfile can contain either:\n");
+	printf("                      - a TLSH digest value (comparison output will display TLSH digests)\n");
+	printf("                      - a tab separated TLSH digest value and its corresponding filename (comparison output will display filenames)\n");
+	printf("                      The tab separated listfile can be generated by running 'tlsh' with either the -f or -r flag\n");
+	printf("  -l1                 (default) listfile contains TLSH value in column 1\n");
+	printf("  -l2                           listfile contains TLSH value in column 2\n");
+	printf("  -lcsv               listfile is csv (comma seperated) file (default is TAB seperated file)\n");
 	printf("\n");
 	printf("Restrictions:\n");
 	printf("  The input string to create a TLSH digest should be >= %d characters\n", MIN_DATA_LENGTH);
@@ -370,9 +402,12 @@ int main(int argc, char *argv[])
 {
 	char *digestname		= NULL;
 	char *dirname			= NULL;
-	char *listname			= NULL;
 	char *fname			= NULL;
 	char *pattern_fname		= NULL;
+	char *listname			= NULL;
+	int   listname_col		= 1;		// default is col 1
+	int   listname_csv		= 0;		// default is TAB seperated
+	int showmiss			= 0;
 
 	bool xlen                       = true;
 	int force_option		= 0;
@@ -382,6 +417,16 @@ int main(int argc, char *argv[])
 		if (strcmp(argv[argIdx], "-l") == 0) {
 			listname = argv[argIdx+1];
 			argIdx = argIdx+2;
+		} else if (strcmp(argv[argIdx], "-l1") == 0) {
+			listname_col = 1;
+			argIdx = argIdx+1;
+		} else if (strcmp(argv[argIdx], "-l2") == 0) {
+			listname_col = 2;
+			argIdx = argIdx+1;
+		} else if (strcmp(argv[argIdx], "-lcsv") == 0) {
+			listname_csv = 1;
+			argIdx = argIdx+1;
+
 		} else if (strcmp(argv[argIdx], "-r") == 0) {
 			dirname = argv[argIdx+1];
 			argIdx = argIdx+2;
@@ -393,6 +438,15 @@ int main(int argc, char *argv[])
 			argIdx = argIdx+2;
 		} else if (strcmp(argv[argIdx], "-pat") == 0) {
 			pattern_fname = argv[argIdx+1];
+			argIdx = argIdx+2;
+		} else if (strcmp(argv[argIdx], "-showmiss") == 0) {
+			char *threshold_str = argv[argIdx+1];
+			if ((threshold_str[0] >= '0') && (threshold_str[0] <= '9')) {
+				showmiss = atoi(argv[argIdx+1]);
+			} else {
+				printf("\nBad showmiss threshold '%s' - must be a numeric value\n", argv[argIdx+1]);
+				usage();
+			}
 			argIdx = argIdx+2;
 		} else if (strcmp(argv[argIdx], "-force") == 0) {
 			force_option = 1;
@@ -428,5 +482,5 @@ int main(int argc, char *argv[])
 		usage();
 	}
 
-	tlsh_pattern(dirname, listname, fname, digestname, xlen, force_option, pattern_fname);
+	tlsh_pattern(dirname, listname, listname_col, listname_csv, fname, digestname, xlen, force_option, pattern_fname, showmiss);
 }
