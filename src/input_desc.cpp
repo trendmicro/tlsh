@@ -64,6 +64,83 @@
 #include "input_desc.h"
 #include "shared_file_functions.h"
 
+static int read_file_eval_tlsh_splitline(char *fname, struct InputDescr *inputd, int show_details, int force_option)
+{
+	///////////////////////////////////////
+	// 1. How big is the file?
+	///////////////////////////////////////
+	FILE *fd = fopen(fname, "r");
+	if(fd==NULL)
+		return(ERROR_READING_FILE);
+	int ret = 1;
+	int sizefile = 0;
+
+	fseek(fd, 0L, SEEK_END);
+	sizefile = ftell(fd);
+
+	fclose(fd);
+
+	if (force_option == 0) {
+		if (sizefile < MIN_DATA_LENGTH)
+			return(WARNING_FILE_TOO_SMALL);
+	} else {
+		if (sizefile < MIN_FORCE_DATA_LENGTH)
+			return(WARNING_FILE_TOO_SMALL);
+	}
+
+	///////////////////////////////////////
+	// 2. read the file
+	///////////////////////////////////////
+	char *x;
+	char linebuf[2048];
+
+	fd = fopen(fname, "r");
+	if (fd==NULL) {
+		return(ERROR_READING_FILE);
+	}
+
+	Tlsh *th = new Tlsh();
+	x = linebuf;
+	int lineno = 1;
+	int ti = 0;
+	while (x != NULL) {
+		x = fgets(linebuf, sizeof(linebuf), fd);
+		if (x != NULL) {
+			unsigned int lenx = strlen(x);
+			th->update((const unsigned char *)x, lenx);
+			if (lineno == inputd->split_line_pos[ti]) {
+				th->final(NULL, 0, force_option);
+				if (ti > inputd->max_files) {
+					fprintf(stderr, "too many sections of file '%s'\n", fname);
+					return(ERROR_READING_FILE);
+				}
+				inputd->tptr[ti] = th;
+				if (show_details >= 1) {
+					printf("eval	ti=%d	%s	%s\n", ti, fname, th->getHash() );
+				}
+				ti ++;
+				th = new Tlsh();
+			}
+		}
+		lineno ++;
+	}
+	if (ti > inputd->max_files) {
+		fprintf(stderr, "too many sections of file '%s'\n", fname);
+		return(ERROR_READING_FILE);
+	}
+	th->final(NULL, 0, force_option);
+	inputd->tptr[ti] = th;
+	if (show_details >= 1) {
+		printf("eval	ti=%d	%s	%s\n", ti, fname, th->getHash() );
+	}
+	fclose(fd);
+
+	///////////////////////////////////////
+	// 3. clean up and return
+	///////////////////////////////////////
+	return(0);
+}
+
 static int compar_FileName(const void *x1, const void *x2)
 {
 struct FileName *r1;
@@ -104,7 +181,15 @@ int set_input_desc(char *dirname, char *listname, int listname_col, int listname
 		}
 		fclose(f);
 	}
-	if (fname || digestname) {
+	if (splitlines != NULL) {
+		int len = strlen(splitlines);
+		inputd->max_files = 2;
+		for (int si=0; si<len; si++) {
+			if (splitlines[si] == ',') {
+				inputd->max_files ++;
+			}
+		}
+	} else if (fname || digestname) {
 		inputd->max_files = 1;
 	}
 	if (inputd->max_files == 0)
@@ -118,6 +203,14 @@ int set_input_desc(char *dirname, char *listname, int listname_col, int listname
 	if (inputd->fnames == NULL) {
 		fprintf(stderr, "error: unable to allocate memory for %d files\n", inputd->max_files);
 		exit(1);
+	}
+	inputd->split_line_pos = NULL;
+	if (splitlines != NULL) {
+		inputd->split_line_pos = (int *) malloc ( (inputd->max_files+1) * sizeof(int));
+		if (inputd->split_line_pos == NULL) {
+			fprintf(stderr, "error: unable to allocate memory for %d split_line_pos\n", inputd->max_files);
+			exit(1);
+		}
 	}
 
 	////////////////////////////
@@ -197,7 +290,80 @@ int set_input_desc(char *dirname, char *listname, int listname_col, int listname
 		fclose(f);
 	}
 ////////////////////////////
-	if (fname) {
+	if (splitlines != NULL) {
+#define SPLIT_COMMA	1
+#define SPLIT_NUMBER	2
+		int len = strlen(splitlines);
+		int curr = SPLIT_COMMA;
+		int num_start_idx = 0;
+		int sl_idx = 0;
+		int prev_sl = 0;
+
+		for (int si=0; si<len; si++) {
+			if (splitlines[si] == ',') {
+				if (curr == SPLIT_COMMA) {
+					fprintf(stderr, "error: bad -split option '%s'\n", splitlines);
+					return(1);
+				}
+				curr = SPLIT_COMMA;
+
+				int sl = atoi( &splitlines[num_start_idx] );
+				if (sl < prev_sl) {
+					fprintf(stderr, "error: bad -split option '%s'\n", splitlines);
+					return(1);
+				}
+				prev_sl = sl;
+				inputd->split_line_pos[sl_idx] = sl - 1;
+				sl_idx ++;
+			} else if ((splitlines[si] >= '0') && (splitlines[si] <= '9') ) {
+				if (curr == SPLIT_COMMA) {
+					num_start_idx = si;
+				}
+				curr = SPLIT_NUMBER;
+			} else {
+				fprintf(stderr, "error: bad -split option '%s'\n", splitlines);
+				return(1);
+			}
+		}
+		//////////////////////
+		// second last one:	...,prev,xxx	prev -> xxx
+		//////////////////////
+		int sl = atoi( &splitlines[num_start_idx] );
+		if (sl < prev_sl) {
+			fprintf(stderr, "error: bad -split option '%s'\n", splitlines);
+			return(1);
+		}
+		inputd->split_line_pos[sl_idx] = sl;
+		sl_idx ++;
+		//////////////////////
+		// last one:		...,prev,xxx	xxx -> end
+		//////////////////////
+		inputd->split_line_pos[sl_idx] = -1;
+		sl_idx ++;
+
+		//////////////////////
+		if (sl_idx != inputd->max_files) {
+			fprintf(stderr, "error: found %d positions but alloc %d positions\n", sl_idx, inputd->max_files);
+			return(1);
+		}
+
+		prev_sl = 0;
+		for (int mi=0; mi<inputd->max_files; mi++) {
+			char buf[1000];
+			strncpy(buf, fname, sizeof(buf));
+			if (inputd->split_line_pos[mi] == -1) {
+				snprintf(buf, sizeof(buf), "%s_%d_end", fname, prev_sl);
+			} else {
+				snprintf(buf, sizeof(buf), "%s_%d_%d", fname, prev_sl+1, inputd->split_line_pos[mi] );
+			}
+			prev_sl = inputd->split_line_pos[mi];
+
+			inputd->fnames[mi].full_fname = strdup(buf);
+			inputd->fnames[mi].only_fname = strdup(buf);
+			inputd->fnames[mi].dirname    = strdup(buf);
+			inputd->n_file = inputd->max_files;
+		}
+	} else if (fname) {
 		inputd->fnames[0].full_fname = strdup(fname);
 		inputd->fnames[0].only_fname = strdup(fname);
 		inputd->fnames[0].dirname    = strdup(fname);
@@ -233,6 +399,12 @@ int set_input_desc(char *dirname, char *listname, int listname_col, int listname
 				delete th;
 			} else {
 				inputd->tptr[ti] = th;
+			}
+		} else if (splitlines) {
+			err = read_file_eval_tlsh_splitline(fname, inputd, show_details, force_option);
+			ti = inputd->n_file;
+			if (err) {
+				fprintf(stderr, "error processing file %s\n", fname);
 			}
 		} else {
 			char *curr_fname = inputd->fnames[ti].full_fname;

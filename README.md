@@ -578,3 +578,21 @@ add options
 - to show misses up to threshold T (-showmiss T)
 added regression tests for tlsh_pattern
 </PRE>
+
+**3.16.1**
+<PRE>
+19/July/2019
+improved tlsh functionality
+add options
+  -out_fname:         Specifies that only the filename is outputted when using the -r option (no path included in output)
+  -out_dirname        Specifies that the dirname and filename are outputted when using the -r option (no path included in output)
+
+  -l1                 (default) listfile contains TLSH value in column 1
+  -l2                           listfile contains TLSH value in column 2
+  -lcsv               listfile is csv (comma seperated) file (default is TAB seperated file)
+
+  -split linenumbers: linenumbers is a comma seperated list of line numbers (example 50,100,200 )
+                      split the file into components and eval the TLSH for each component
+                      example. -split 50,100,200 evals 4 TLSH digests. lines 1-49, 50-99, 100-199, 200-end
+                      for the purpose of splitting the file, each line has a max length of 2048 bytes
+</PRE>
