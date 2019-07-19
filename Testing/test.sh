@@ -411,12 +411,118 @@ echo "passed"
 # END OF test 7
 ############################
 
+############################
+# Test 8
+#	Test the -l2 and -lcsv options
+############################
+testnum=8
+echo
+echo "test $testnum"
+echo
+
+#
+# Test 8(a): -l2
+#
+echo "../bin/${TLSH_PROG} -T 201 -l2 -l example_data_col_swap.tlsh -c ../Testing/example_data/website_course_descriptors06-07.txt > $TMP/example_data.scores.l2.T-201"
+      ../bin/${TLSH_PROG} -T 201 -l2 -l example_data_col_swap.tlsh -c ../Testing/example_data/website_course_descriptors06-07.txt > $TMP/example_data.scores.l2.T-201 2>/dev/null
+
+# same expected output as Test 5
+
+EXPECTED_SCO=exp/example_data.$HASH.$CHKSUM.len.scores.2.T-201_EXP
+if test ! -f $EXPECTED_SCO
+then
+	echoerr "error: ($testnum), Expected Result file $EXPECTED_SCO does not exist"
+	popd > /dev/null
+	exit 1
+fi
+
+diff --ignore-all-space $TMP/example_data.scores.l2.T-201 $EXPECTED_SCO > /dev/null 2>/dev/null
+if [ $? -ne 0 ]; then
+	echoerr "error: ($testnum) diff $TMP/example_data.scores.l2.T-201 $EXPECTED_SCO"
+	popd > /dev/null
+	exit $testnum
+fi
+
+#
+# Test 8(a): -l2 -lcsv
+#
+echo "../bin/${TLSH_PROG} -T 201 -l2 -lcsv -l example_data_col_swap.csv -c ../Testing/example_data/website_course_descriptors06-07.txt > $TMP/example_data.scores.l2csv.T-201"
+      ../bin/${TLSH_PROG} -T 201 -l2 -lcsv -l example_data_col_swap.csv -c ../Testing/example_data/website_course_descriptors06-07.txt > $TMP/example_data.scores.l2csv.T-201 2>/dev/null
+
+# same expected output as Test 8(a) above
+
+diff --ignore-all-space $TMP/example_data.scores.l2csv.T-201 $EXPECTED_SCO > /dev/null 2>/dev/null
+if [ $? -ne 0 ]; then
+	echoerr "error: ($testnum) diff $TMP/example_data.scores.l2csv.T-201 $EXPECTED_SCO"
+	popd > /dev/null
+	exit $testnum
+fi
+
+echo "passed"
+
+############################
+# END OF test 8
+############################
+
+############################
+# Test 9
+#	Test the -split option
+############################
+testnum=9
+echo
+echo "test $testnum"
+echo
+
+echo "../bin/${TLSH_PROG} -split 50,100,200 -f ../Testing/example_data/Week3.txt > $TMP/example_data.Week3.split.tlsh"
+      ../bin/${TLSH_PROG} -split 50,100,200 -f ../Testing/example_data/Week3.txt > $TMP/example_data.Week3.split.tlsh   2>/dev/null
+
+EXPECTED_RES=exp/example_data.Week3.split.tlsh
+if test ! -f $EXPECTED_RES
+then
+	echoerr "error: ($testnum), Expected Result file $EXPECTED_RES does not exist"
+	popd > /dev/null
+	exit 1
+fi
+
+diff --ignore-all-space $TMP/example_data.Week3.split.tlsh $EXPECTED_RES > /dev/null 2>/dev/null
+if [ $? -ne 0 ]; then
+	echoerr "error: ($testnum) diff $TMP/example_data.Week3.split.tlsh $EXPECTED_RES"
+	popd > /dev/null
+	exit $testnum
+fi
+
+echo "passed"
+
+############################
+# END OF test 9
+############################
+
+############################
+# test 10
+############################
+testnum=10
+
 echo
 echo "Running simple_unittest"
 ../bin/simple_unittest > $TMP/simple_unittest.out
-diff --ignore-all-space $TMP/simple_unittest.out exp/simple_unittest_EXP > /dev/null 2>/dev/null
+
+EXPECTED_STEST=exp/simple_unittest.$HASH.$CHKSUM.EXP
+if test ! -f $EXPECTED_STEST
+then
+	if test $CREATE_EXP_FILE = 0
+	then
+		echoerr "error: ($testnum), Expected Result file $EXPECTED_STEST does not exist"
+		popd > /dev/null
+		exit 1
+	else
+		echo "cp $TMP/simple_unittest.out $EXPECTED_STEST"
+		      cp $TMP/simple_unittest.out $EXPECTED_STEST
+	fi
+fi
+
+diff --ignore-all-space $TMP/simple_unittest.out $EXPECTED_STEST > /dev/null 2>/dev/null
 if [ $? -ne 0 ]; then
-	echoerr "error: diff $TMP/simple_unittest.out exp/simple_unittest_EXP"
+	echoerr "error: ($testnum) diff $TMP/simple_unittest.out $EXPECTED_STEST"
         popd > /dev/null
 	exit -1
 fi

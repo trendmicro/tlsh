@@ -596,3 +596,10 @@ add options
                       example. -split 50,100,200 evals 4 TLSH digests. lines 1-49, 50-99, 100-199, 200-end
                       for the purpose of splitting the file, each line has a max length of 2048 bytes
 </PRE>
+
+**3.16.2**
+<PRE>
+19/July/2019
+added regression tests for 3.16.1
+by adding tests for -split, swapping columns in input files, and for CVS input file
+</PRE>
