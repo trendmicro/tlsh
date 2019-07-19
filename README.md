@@ -541,3 +541,12 @@ changing test.sh to read the sliding window size
 fixing error in test script for -xlen option (print statements about considering length were incorrect)
 improved test.sh - tests for existance of expected output files
 </PRE>
+
+**3.15.0**
+<PRE>
+19/July/2019
+Refactor code - so that input of directory or digest is in a struct.
+The code to process input is in library code (input_desc.cpp, shared_file_functions.cpp).
+The input routines can be used by myultiple programs.
+Also, preparing for things like csv input files.
+</PRE>
