@@ -193,20 +193,24 @@ int err;
 ////////////////////////////////////////////////////////////////////////////////
 
 #define DEFAULT_THRESHOLD 9999
-static void usage(const char *fullPathName)
+static void usage(const char *fullPathName, int fullUsage)
 {
 	const char *pgmName = strrchr(fullPathName, '/');
 	if (pgmName != NULL) pgmName++;
 	else pgmName = fullPathName;
 
-	printf("usage: %s [-c <file|digest>]         -f <file>     [-T <threshold_value>] [-xlen] [-force] [-details]\n", pgmName);
-	printf("     : %s  -c <file|digest>          -d <digest>   [-T <threshold_value>] [-xlen] [-force] [-details]\n", pgmName);
-	printf("     : %s [-c <file|digest> | -xref] -r <dir>      [-T <threshold_value>] [-xlen] [-force] [-details]\n", pgmName);
-	printf("     : %s [-c <file|digest> | -xref] -l <listfile> [-T <threshold_value>] [-xlen] [-force] [-details]\n", pgmName);
-	printf("     : %s -version: prints version of tlsh library\n", pgmName);
+	printf("usage: tlsh [-c <file|digest>]         -f <file>     [-T <threshold_value>] [-xlen] [-force] [-details]\n" );
+	printf("     : tlsh  -c <file|digest>          -d <digest>   [-T <threshold_value>] [-xlen] [-force] [-details]\n" );
+	printf("     : tlsh [-c <file|digest> | -xref] -r <dir>      [-T <threshold_value>] [-xlen] [-force] [-details]\n" );
+	printf("     : tlsh [-c <file|digest> | -xref] -l <listfile> [-T <threshold_value>] [-xlen] [-force] [-details]\n" );
+	printf("     : tlsh -version: prints version of tlsh library\n" );
 	printf("     : tlsh -notice:  prints NOTICE.txt of tlsh library\n");
+	printf("     : tlsh -help: prints full usage information\n");
+	if (fullUsage == 0) {
+		exit(0);
+	}
 	printf("\n");
-	printf("%s can be used to compute TLSH digest values or the distance between digest values in the following ways:\n", pgmName);
+	printf("tlsh can be used to compute TLSH digest values or the distance between digest values in the following ways:\n" );
 	printf("  1) To compute the TLSH digest value of a single file (-f file), or a directory of files (-r dir).\n");
 	printf("     This output can be used to create the listfile required by the -l option described below.\n");
 	printf("  2) To compute the distance between a comparison file or TLSH digest (-c file|digest) and the\n");
@@ -300,7 +304,7 @@ int main(int argc, char *argv[])
 				threshold = atoi(argv[argIdx+1]);
 			} else {
 				printf("\nBad threshold '%s' - must be a numeric value\n", argv[argIdx+1]);
-				usage(argv[0]);
+				usage(argv[0], 0);
 			}
 			argIdx = argIdx+2;
 		} else if (strcmp(argv[argIdx], "-xref") == 0) {
@@ -321,6 +325,8 @@ int main(int argc, char *argv[])
                 } else if (strcmp(argv[argIdx], "-version") == 0) {
 		        printf("%s\n", Tlsh::version());
 			return 0;
+                } else if (strcmp(argv[argIdx], "-help") == 0) {
+			usage(argv[0], 1);
 #ifdef TLSH_DISTANCE_PARAMETERS
 		} else if (strcmp(argv[argIdx], "-SPlen") == 0) {
 			char *len_mult_str = argv[argIdx+1];
@@ -328,7 +334,7 @@ int main(int argc, char *argv[])
 				length_mult_value	= atoi(argv[argIdx+1]);
 			} else {
 				printf("\nBad SPlen '%s' - must be a numeric value\n", argv[argIdx+1]);
-				usage(argv[0]);
+				usage(argv[0], 0);
 			}
 			argIdx = argIdx+2;
 		} else if (strcmp(argv[argIdx], "-SPqrat") == 0) {
@@ -337,7 +343,7 @@ int main(int argc, char *argv[])
 				qratio_mult_value	= atoi(argv[argIdx+1]);
 			} else {
 				printf("\nBad SPqrat '%s' - must be a numeric value\n", argv[argIdx+1]);
-				usage(argv[0]);
+				usage(argv[0], 0);
 			}
 			argIdx = argIdx+2;
 		} else if (strcmp(argv[argIdx], "-SPdiff1") == 0) {
@@ -346,7 +352,7 @@ int main(int argc, char *argv[])
 				hist_diff1_add_value	= atoi(argv[argIdx+1]);
 			} else {
 				printf("\nBad SPdiff1 '%s' - must be a numeric value\n", argv[argIdx+1]);
-				usage(argv[0]);
+				usage(argv[0], 0);
 			}
 			argIdx = argIdx+2;
 		} else if (strcmp(argv[argIdx], "-SPdiff2") == 0) {
@@ -355,7 +361,7 @@ int main(int argc, char *argv[])
 				hist_diff2_add_value	= atoi(argv[argIdx+1]);
 			} else {
 				printf("\nBad SPdiff2 '%s' - must be a numeric value\n", argv[argIdx+1]);
-				usage(argv[0]);
+				usage(argv[0], 0);
 			}
 			argIdx = argIdx+2;
 		} else if (strcmp(argv[argIdx], "-SPdiff3") == 0) {
@@ -364,13 +370,13 @@ int main(int argc, char *argv[])
 				hist_diff3_add_value	= atoi(argv[argIdx+1]);
 			} else {
 				printf("\nBad SPdiff3 '%s' - must be a numeric value\n", argv[argIdx+1]);
-				usage(argv[0]);
+				usage(argv[0], 0);
 			}
 			argIdx = argIdx+2;
 #endif
 		} else {
 			printf("\nunknown option '%s'\n\n", argv[argIdx]);
-			usage(argv[0]);
+			usage(argv[0], 0);
 		}
 	}
 
@@ -379,14 +385,14 @@ int main(int argc, char *argv[])
 	if (fname) {
 		if (xref) {
 			printf("\n-xref option does not work with -f option\n\n");
-			usage(argv[0]);
+			usage(argv[0], 0);
 		}
 		count ++;
 	}
 	if (digestname) {
 		if (!compare_fname) {
 			printf("\nA file or digest comparison (-c option) must be specified with the digest (-d) option\n\n");
-			usage(argv[0]);
+			usage(argv[0], 0);
 		}
 		count ++;
 	}
@@ -396,11 +402,11 @@ int main(int argc, char *argv[])
 		count ++;
 	if (count != 1) {
 		if (count > 0) printf("\nSpecify EITHER option -f OR -d OR -r OR -l\n\n"); 
-		usage(argv[0]);
+		usage(argv[0], 0);
 	}
 	if (compare_fname && xref) {
 		printf("\nSpecify either the -c or -xref option, but not both.\n\n");
-		usage(argv[0]);
+		usage(argv[0], 0);
 	}
 
 #ifdef TLSH_DISTANCE_PARAMETERS

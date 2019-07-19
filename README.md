@@ -550,3 +550,9 @@ The code to process input is in library code (input_desc.cpp, shared_file_functi
 The input routines can be used by myultiple programs.
 Also, preparing for things like csv input files.
 </PRE>
+
+**3.15.1**
+<PRE>
+19/July/2019
+added command line option -help to show full help information
+</PRE>
