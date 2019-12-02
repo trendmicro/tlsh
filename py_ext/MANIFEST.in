@@ -1,0 +1,6 @@
+include setup.py
+include CMakeLists.txt
+include tlshmodule.cpp
+inlcude LICENSE
+recursive-include ./include/ *.h
+recursive-include ./src/ *.cpp

@@ -29,3 +29,7 @@ Windows/rand_tags/rand_tags.VC2008.vcproj.*
 Windows/rand_tags/Debug/
 Windows/rand_tags/Release/
 *.log
+.idea/
+.vscode/
+**/dist
+*.egg*
