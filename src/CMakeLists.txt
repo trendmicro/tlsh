@@ -65,16 +65,15 @@ set_target_properties(tlsh PROPERTIES OUTPUT_NAME tlsh${BUILD_POSTFIX})
 # it was causing problems when compiling / testing tools on Linux
 ##########################
 
-set(TLSH_SHARED_LIBRARY 0)
-if(TLSH_SHARED_LIBRARY EQUAL 1)
+if(TLSH_SHARED_LIBRARY)
     add_library(tlsh_shared SHARED ${TLSH_SRCS})
     set_target_properties(tlsh_shared PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/lib)
     set_target_properties(tlsh_shared PROPERTIES OUTPUT_NAME tlsh${BUILD_POSTFIX})
     set_target_properties(tlsh_shared PROPERTIES VERSION "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}"
-                                                 SOVERSION "0")
+                                                 SOVERSION "${VERSION_MAJOR}")
 endif()
 
-if(TLSH_SHARED_LIBRARY EQUAL 1)
+if(TLSH_SHARED_LIBRARY)
     install(TARGETS tlsh tlsh_shared DESTINATION lib)
 else()
     install(TARGETS tlsh             DESTINATION lib)
