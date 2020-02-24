@@ -85,3 +85,5 @@ target_link_libraries(tlsh_parts tlsh)
 set_target_properties(tlsh_parts PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
 set_target_properties(tlsh_parts PROPERTIES OUTPUT_NAME tlsh_parts${BUILD_POSTFIX})
 set_target_properties(tlsh_parts PROPERTIES SKIP_BUILD_RPATH TRUE)
+
+install(TARGETS tlsh_unittest DESTINATION bin)
