@@ -1,23 +1,21 @@
-#!/bin/bash
+#!/bin/sh
 
 export LC_ALL='C'
 
 echoerr() { echo "$@" 1>&2; }
 
 BASEDIR=$(dirname $0)
-pushd $BASEDIR > /dev/null
+cd $BASEDIR > /dev/null
 
 if test ! -f ../bin/tlsh
 then
 	echoerr "error: (127), you must compile tlsh"
-        popd > /dev/null
 	exit 127
 fi
 
 if test ! -f ../bin/tlsh_parts
 then
 	echoerr "error: (127), you must compile ../bin/tlsh_parts"
-        popd > /dev/null
 	exit 127
 fi
 
@@ -34,14 +32,12 @@ EXPECTED_PARTS=exp/out.parts_EXP
 if test ! -f $EXPECTED_PARTS
 then
 	echoerr "error: Expected parts file $EXPECTED_PARTS does not exist"
-	popd > /dev/null
 	exit 1
 fi
 
 diff --ignore-all-space out.parts $EXPECTED_PARTS > /dev/null 2>/dev/null
 if [ $? -ne 0 ]; then
 	echoerr "error: diff out.parts $EXPECTED_PARTS"
-	popd > /dev/null
 	exit 1
 fi
 echo "passed"

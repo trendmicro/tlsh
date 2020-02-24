@@ -13,7 +13,7 @@ fi
 
 ####################################################
 
-if [ $# -eq 1 -a "$1" = "debug" ]; then
+if [ $# -eq 1 ] && [ "$1" = "debug" ]; then
   mkdir -p build/debug
   cd build/debug
   cmake -DTLSH_SHARED_LIBRARY=1 -DCMAKE_BUILD_TYPE=Debug ../..
@@ -23,7 +23,7 @@ else
   cmake -DTLSH_SHARED_LIBRARY=1 ../.. 
 fi
 makecversion=0
-if [ $# -eq 1 -a "$1" = "-c" ]; then
+if [ $# -eq 1 ] && [ "$1" = "-c" ]; then
   makecversion=1
 fi
 
