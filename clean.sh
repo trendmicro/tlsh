@@ -1,7 +1,7 @@
 #!/bin/sh
 
-echo "rm -rf bin build lib Testing/tmp test/simple_unittest test/tlsh_unittest VERSION include/version.h"
-      rm -rf bin build lib Testing/tmp test/simple_unittest test/tlsh_unittest VERSION include/version.h
+echo "rm -rf bin build lib Testing/tmp Testing/out.parts test/simple_unittest test/tlsh_unittest VERSION include/tlsh_version.h"
+      rm -rf bin build lib Testing/tmp Testing/out.parts test/simple_unittest test/tlsh_unittest VERSION include/tlsh_version.h
 
 echo "rm -rf py_ext/build"
       rm -rf py_ext/build

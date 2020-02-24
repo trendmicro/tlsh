@@ -79,4 +79,5 @@ else()
     install(TARGETS tlsh             DESTINATION lib)
 endif()
 
-install(FILES ../include/tlsh.h DESTINATION include)
+install(FILES ../include/tlsh.h DESTINATION include/tlsh)
+install(FILES ../include/tlsh_version.h DESTINATION include/tlsh)

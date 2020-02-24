@@ -56,9 +56,9 @@
  */
 
 #if defined WINDOWS || defined MINGW
-#include "win_version.h"
+#include "tlsh_win_version.h"
 #else
-#include "version.h"
+#include "tlsh_version.h"
 #endif
 
 #ifndef HEADER_TLSH_IMPL_H
