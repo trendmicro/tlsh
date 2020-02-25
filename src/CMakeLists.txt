@@ -56,9 +56,9 @@ if(MSVC)
 endif()
 
 set(TLSH_SRCS tlsh.cpp tlsh_impl.cpp tlsh_util.cpp input_desc.cpp shared_file_functions.cpp)
-add_library(tlsh STATIC ${TLSH_SRCS})
-set_target_properties(tlsh PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/lib)
-set_target_properties(tlsh PROPERTIES OUTPUT_NAME tlsh${BUILD_POSTFIX})
+add_library(tlsh_static STATIC ${TLSH_SRCS})
+set_target_properties(tlsh_static PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/lib)
+set_target_properties(tlsh_static PROPERTIES OUTPUT_NAME tlsh${BUILD_POSTFIX})
 
 ##########################
 # the tlsh library is small - there is no reason to have a shared library
@@ -74,9 +74,9 @@ if(TLSH_SHARED_LIBRARY)
 endif()
 
 if(TLSH_SHARED_LIBRARY)
-    install(TARGETS tlsh tlsh_shared DESTINATION lib)
+    install(TARGETS tlsh_static tlsh_shared DESTINATION lib)
 else()
-    install(TARGETS tlsh             DESTINATION lib)
+    install(TARGETS tlsh_static             DESTINATION lib)
 endif()
 
 install(FILES ../include/tlsh.h DESTINATION include/tlsh)
