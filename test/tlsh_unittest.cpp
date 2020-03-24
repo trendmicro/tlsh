@@ -111,7 +111,12 @@ int err;
 			;
 		} else if (err == ERROR_READING_FILE) {
 			// compare_fname is not a file.  Assume it is a TLSH digest
- 			if (comp_th->fromTlshStr(compare_fname)) {
+			int col_length = strlen(compare_fname);
+			if (col_length != TLSH_STRING_LEN) {
+				fprintf(stderr, "error %s: not a valid file or TLSH digest\n", compare_fname);
+				delete comp_th;
+				comp_th = NULL;
+ 			} else if (comp_th->fromTlshStr(compare_fname)) {
 				fprintf(stderr, "error %s: not a valid file or TLSH digest\n", compare_fname);
 				delete comp_th;
 				comp_th = NULL;

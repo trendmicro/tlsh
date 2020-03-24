@@ -614,3 +614,12 @@ change the force_option parameter to be a bit field
 	force_option	==	1	Force behaviour (50 char limit)
 	force_option	==	2	conservative behaviour (256 char limit)
 </PRE>
+
+**3.17.3**
+<PRE>
+24/March/2020
+add checking to confirm that TLSH digests are the correct length in
+	-c option
+	-d option
+	the appropriate column of -l listfile options
+</PRE>

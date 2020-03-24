@@ -241,7 +241,8 @@ int set_input_desc(char *dirname, char *listname, int listname_col, int listname
 			freeFileName(inputd->fnames, inputd->max_files+1);
 			exit(1);
 		}
-		int count = 0;
+		int count  = 0;
+		int lineno = 1;
 		x = fgets(buf, 1000, f);
 		while (x != NULL) {
 		    // Make sure that buf is null terminated
@@ -271,20 +272,40 @@ int set_input_desc(char *dirname, char *listname, int listname_col, int listname
 				col_tlsh	= buf;
 				col_fname	= x;
 			} else if (listname_col == 2) {
+				/////////////////////////////
+				// make sure the 2nd col is ended with a \0
+				/////////////////////////////
+				char *sep;
+				if (listname_csv) {
+					sep = strchr(x, ',');
+				} else {
+					// TAB seperated
+					sep = strchr(x, '\t');
+				}
+				if (sep != NULL) {
+					*sep = '\0';
+				}
+				/////////////////////////////
 				col_tlsh	= x;
 				col_fname	= buf;
 			} else {
 				fprintf(stderr, "error: bad listname_col=%d\n", listname_col);
 				return(1);
 			}
-			inputd->fnames[count].tlsh = strdup(col_tlsh);
-			inputd->fnames[count].full_fname = strdup(col_fname);
-			inputd->fnames[count].only_fname = strdup(col_fname);
-			inputd->fnames[count].dirname    = strdup(col_fname);
+			int col_length = strlen(col_tlsh);
+			if (col_length == TLSH_STRING_LEN) {
+				inputd->fnames[count].tlsh = strdup(col_tlsh);
+				inputd->fnames[count].full_fname = strdup(col_fname);
+				inputd->fnames[count].only_fname = strdup(col_fname);
+				inputd->fnames[count].dirname    = strdup(col_fname);
+			} else {
+				fprintf(stderr, "warning: line %d file %s invalid TLSH '%s'\n", lineno, listname, col_tlsh);
+			}
 
 			count ++;
 
 			x = fgets(buf, 1000, f);
+			lineno ++;
 		}
 		inputd->n_file = count;
 		fclose(f);
