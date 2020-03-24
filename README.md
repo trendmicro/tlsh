@@ -623,3 +623,9 @@ add checking to confirm that TLSH digests are the correct length in
 	-d option
 	the appropriate column of -l listfile options
 </PRE>
+
+**3.18.0**
+<PRE>
+24/March/2020
+resolve issue #72 - remove tlsh_version
+</PRE>

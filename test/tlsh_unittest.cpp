@@ -316,6 +316,19 @@ static void usage(const char *fullPathName, int fullUsage)
 	exit(0);
 }
 
+#include "tlsh_impl.h"
+
+void long_version()
+{
+	printf("%d\tbuckets hash (128 compact, 256 full)\n", EFF_BUCKETS);
+#ifdef CHECKSUM_0B
+	printf("0\tbyte checksum\n");
+#else
+	printf("%d\tbyte checksum\n", TLSH_CHECKSUM_LEN);
+#endif
+	printf("%d\tsliding window\n", SLIDING_WND_SIZE);
+}
+
 int main(int argc, char *argv[])
 {
 	char *digestname		= NULL;
@@ -410,6 +423,9 @@ int main(int argc, char *argv[])
 			return 0;
                 } else if (strcmp(argv[argIdx], "-version") == 0) {
 		        printf("%s\n", Tlsh::version());
+			return 0;
+                } else if (strcmp(argv[argIdx], "-longversion") == 0) {
+		        long_version();
 			return 0;
                 } else if (strcmp(argv[argIdx], "-help") == 0) {
 			usage(argv[0], 1);
