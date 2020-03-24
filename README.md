@@ -629,3 +629,10 @@ add checking to confirm that TLSH digests are the correct length in
 24/March/2020
 resolve issue #72 - remove tlsh_version
 </PRE>
+
+**3.19.0**
+<PRE>
+24/March/2020
+preperation for Windows build
+- remove ../Testing/ from test.sh script and from regression test results
+</PRE>

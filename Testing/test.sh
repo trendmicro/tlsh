@@ -72,8 +72,8 @@ runit() {
 	echo "test 1"
 	echo
 
-	echo "../bin/${TLSH_PROG} -r ../Testing/example_data > $TMP/example_data.out 2> $TMP/example_data.err"
-	      ../bin/${TLSH_PROG} -r ../Testing/example_data > $TMP/example_data.out 2> $TMP/example_data.err
+	echo "../bin/${TLSH_PROG} -r example_data > $TMP/example_data.out 2> $TMP/example_data.err"
+	      ../bin/${TLSH_PROG} -r example_data > $TMP/example_data.out 2> $TMP/example_data.err
 
 	EXPECTED_OUT=exp/example_data.$HASH.$CHKSUM.$XLEN.out_EXP
 	EXPECTED_ERR=exp/example_data.$HASH.$CHKSUM.$XLEN.err_EXP
@@ -131,11 +131,11 @@ runit() {
 
 	if test $XLEN = "xlen"
 	then
-	echo "../bin/${TLSH_PROG} -xlen -r ../Testing/example_data -c ../Testing/example_data/website_course_descriptors06-07.txt > $TMP/example_data.scores 2> $TMP/example_data.err2"
-	      ../bin/${TLSH_PROG} -xlen -r ../Testing/example_data -c ../Testing/example_data/website_course_descriptors06-07.txt > $TMP/example_data.scores 2> $TMP/example_data.err2
+	echo "../bin/${TLSH_PROG} -xlen -r example_data -c example_data/website_course_descriptors06-07.txt > $TMP/example_data.scores 2> $TMP/example_data.err2"
+	      ../bin/${TLSH_PROG} -xlen -r example_data -c example_data/website_course_descriptors06-07.txt > $TMP/example_data.scores 2> $TMP/example_data.err2
 	else
-	echo "../bin/${TLSH_PROG} -r ../Testing/example_data -c ../Testing/example_data/website_course_descriptors06-07.txt > $TMP/example_data.scores 2> $TMP/example_data.err2"
-	      ../bin/${TLSH_PROG} -r ../Testing/example_data -c ../Testing/example_data/website_course_descriptors06-07.txt > $TMP/example_data.scores 2> $TMP/example_data.err2
+	echo "../bin/${TLSH_PROG} -r example_data -c example_data/website_course_descriptors06-07.txt > $TMP/example_data.scores 2> $TMP/example_data.err2"
+	      ../bin/${TLSH_PROG} -r example_data -c example_data/website_course_descriptors06-07.txt > $TMP/example_data.scores 2> $TMP/example_data.err2
 	fi
 
 	EXPECTED_SCO=exp/example_data.$HASH.$CHKSUM.$XLEN.scores_EXP
@@ -193,14 +193,14 @@ runit() {
 	echo
 
 	# note that test 3 will output the following error, so write stderr to /dev/null, so it will not be seen.
-	#   warning: cannot read TLSH code ../Testing/example_data/BookingBrochure.txt
+	#   warning: cannot read TLSH code example_data/BookingBrochure.txt
 	if test $XLEN = "xlen"
 	then
-	echo "../bin/${TLSH_PROG} -xlen -l $TMP/example_data.out -c ../Testing/example_data/website_course_descriptors06-07.txt > $TMP/example_data.scores.2"
-	      ../bin/${TLSH_PROG} -xlen -l $TMP/example_data.out -c ../Testing/example_data/website_course_descriptors06-07.txt > $TMP/example_data.scores.2 2>/dev/null
+	echo "../bin/${TLSH_PROG} -xlen -l $TMP/example_data.out -c example_data/website_course_descriptors06-07.txt > $TMP/example_data.scores.2"
+	      ../bin/${TLSH_PROG} -xlen -l $TMP/example_data.out -c example_data/website_course_descriptors06-07.txt > $TMP/example_data.scores.2 2>/dev/null
 	else
-	echo "../bin/${TLSH_PROG} -l $TMP/example_data.out -c ../Testing/example_data/website_course_descriptors06-07.txt > $TMP/example_data.scores.2"
-	      ../bin/${TLSH_PROG} -l $TMP/example_data.out -c ../Testing/example_data/website_course_descriptors06-07.txt > $TMP/example_data.scores.2 2>/dev/null
+	echo "../bin/${TLSH_PROG} -l $TMP/example_data.out -c example_data/website_course_descriptors06-07.txt > $TMP/example_data.scores.2"
+	      ../bin/${TLSH_PROG} -l $TMP/example_data.out -c example_data/website_course_descriptors06-07.txt > $TMP/example_data.scores.2 2>/dev/null
 	fi
 
 	EXPECTED_SCO=exp/example_data.$HASH.$CHKSUM.$XLEN.scores.2_EXP
@@ -237,11 +237,11 @@ runit() {
 	echo "test $testnum"
 	echo 
 	if [ $XLEN = "xlen" ]; then
-	echo "../bin/${TLSH_PROG} -xref -xlen -r ../Testing/example_data $TMP/example_data.xref.scores"
-	      ../bin/${TLSH_PROG} -xref -xlen -r ../Testing/example_data > $TMP/example_data.xref.scores 2>/dev/null
+	echo "../bin/${TLSH_PROG} -xref -xlen -r example_data $TMP/example_data.xref.scores"
+	      ../bin/${TLSH_PROG} -xref -xlen -r example_data > $TMP/example_data.xref.scores 2>/dev/null
 	else
-	echo "../bin/${TLSH_PROG} -xref -r ../Testing/example_data $TMP/example_data.xref.scores"
-	      ../bin/${TLSH_PROG} -xref -r ../Testing/example_data > $TMP/example_data.xref.scores 2>/dev/null
+	echo "../bin/${TLSH_PROG} -xref -r example_data $TMP/example_data.xref.scores"
+	      ../bin/${TLSH_PROG} -xref -r example_data > $TMP/example_data.xref.scores 2>/dev/null
 	fi
 
 	EXPECTED_SCO=exp/example_data.$HASH.$CHKSUM.$XLEN.xref.scores_EXP
@@ -276,14 +276,14 @@ runit() {
 	echo "test $testnum"
 	echo
 	# note that test 5 will output the following error, so write stderr to /dev/null, so it will not be seen.
-	#   warning: cannot read TLSH code ../Testing/example_data/BookingBrochure.txt
+	#   warning: cannot read TLSH code example_data/BookingBrochure.txt
 
 	if [ $XLEN = "xlen" ]; then
-	echo "../bin/${TLSH_PROG} -T 201 -xlen -l $TMP/example_data.out -c ../Testing/example_data/website_course_descriptors06-07.txt > $TMP/example_data.scores.2.T-201"
-	      ../bin/${TLSH_PROG} -T 201 -xlen -l $TMP/example_data.out -c ../Testing/example_data/website_course_descriptors06-07.txt > $TMP/example_data.scores.2.T-201 2>/dev/null
+	echo "../bin/${TLSH_PROG} -T 201 -xlen -l $TMP/example_data.out -c example_data/website_course_descriptors06-07.txt > $TMP/example_data.scores.2.T-201"
+	      ../bin/${TLSH_PROG} -T 201 -xlen -l $TMP/example_data.out -c example_data/website_course_descriptors06-07.txt > $TMP/example_data.scores.2.T-201 2>/dev/null
 	else
-	echo "../bin/${TLSH_PROG} -T 201 -l $TMP/example_data.out -c ../Testing/example_data/website_course_descriptors06-07.txt > $TMP/example_data.scores.2.T-201"
-	      ../bin/${TLSH_PROG} -T 201 -l $TMP/example_data.out -c ../Testing/example_data/website_course_descriptors06-07.txt > $TMP/example_data.scores.2.T-201 2>/dev/null
+	echo "../bin/${TLSH_PROG} -T 201 -l $TMP/example_data.out -c example_data/website_course_descriptors06-07.txt > $TMP/example_data.scores.2.T-201"
+	      ../bin/${TLSH_PROG} -T 201 -l $TMP/example_data.out -c example_data/website_course_descriptors06-07.txt > $TMP/example_data.scores.2.T-201 2>/dev/null
 	fi
 
 	EXPECTED_SCO=exp/example_data.$HASH.$CHKSUM.$XLEN.scores.2.T-201_EXP
@@ -414,8 +414,8 @@ echo
 #
 # Test 8(a): -l2
 #
-echo "../bin/${TLSH_PROG} -T 201 -l2 -l example_data_col_swap.tlsh -c ../Testing/example_data/website_course_descriptors06-07.txt > $TMP/example_data.scores.l2.T-201"
-      ../bin/${TLSH_PROG} -T 201 -l2 -l example_data_col_swap.tlsh -c ../Testing/example_data/website_course_descriptors06-07.txt > $TMP/example_data.scores.l2.T-201 2>/dev/null
+echo "../bin/${TLSH_PROG} -T 201 -l2 -l example_data_col_swap.tlsh -c example_data/website_course_descriptors06-07.txt > $TMP/example_data.scores.l2.T-201"
+      ../bin/${TLSH_PROG} -T 201 -l2 -l example_data_col_swap.tlsh -c example_data/website_course_descriptors06-07.txt > $TMP/example_data.scores.l2.T-201 2>/dev/null
 
 # same expected output as Test 5
 
@@ -437,8 +437,8 @@ fi
 #
 # Test 8(a): -l2 -lcsv
 #
-echo "../bin/${TLSH_PROG} -T 201 -l2 -lcsv -l example_data_col_swap.csv -c ../Testing/example_data/website_course_descriptors06-07.txt > $TMP/example_data.scores.l2csv.T-201"
-      ../bin/${TLSH_PROG} -T 201 -l2 -lcsv -l example_data_col_swap.csv -c ../Testing/example_data/website_course_descriptors06-07.txt > $TMP/example_data.scores.l2csv.T-201 2>/dev/null
+echo "../bin/${TLSH_PROG} -T 201 -l2 -lcsv -l example_data_col_swap.csv -c example_data/website_course_descriptors06-07.txt > $TMP/example_data.scores.l2csv.T-201"
+      ../bin/${TLSH_PROG} -T 201 -l2 -lcsv -l example_data_col_swap.csv -c example_data/website_course_descriptors06-07.txt > $TMP/example_data.scores.l2csv.T-201 2>/dev/null
 
 # same expected output as Test 8(a) above
 
@@ -464,8 +464,8 @@ echo
 echo "test $testnum"
 echo
 
-echo "../bin/${TLSH_PROG} -split 50,100,200 -f ../Testing/example_data/Week3.txt > $TMP/example_data.Week3.split.tlsh"
-      ../bin/${TLSH_PROG} -split 50,100,200 -f ../Testing/example_data/Week3.txt > $TMP/example_data.Week3.split.tlsh   2>/dev/null
+echo "../bin/${TLSH_PROG} -split 50,100,200 -f example_data/Week3.txt > $TMP/example_data.Week3.split.tlsh"
+      ../bin/${TLSH_PROG} -split 50,100,200 -f example_data/Week3.txt > $TMP/example_data.Week3.split.tlsh   2>/dev/null
 
 EXPECTED_RES=exp/example_data.Week3.split.tlsh
 if test ! -f $EXPECTED_RES
