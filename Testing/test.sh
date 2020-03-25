@@ -10,24 +10,35 @@ echoerr() { echo "$@" 1>&2; }
 BASEDIR=$(dirname $0)
 pushd $BASEDIR > /dev/null
 
-if test ! -f ../bin/tlsh
+if test ! -z "$1"
 then
-	echoerr "error: (127), you must compile tlsh"
+	TLSH_PROG="tlsh$1"
+	SIMP_PROG="simple_unittest$1"
+	echo "Scenario: $1	(c++ version)..."
+else
+	TLSH_PROG=tlsh
+	SIMP_PROG="simple_unittest"
+	echo "Scenario: tlsh	(c++ standard version)..."
+fi
+
+if test ! -f ../bin/$TLSH_PROG
+then
+	echoerr "error: (127), you must compile $TLSH_PROG"
         popd > /dev/null
 	exit 127
 fi
 
-if test ! -f ../bin/simple_unittest
+if test ! -f ../bin/$SIMP_PROG
 then
-	echoerr "error: (127), you must compile ../bin/simple_unittest"
+	echoerr "error: (127), you must compile ../bin/$SIMP_PROG"
         popd > /dev/null
 	exit 127
 fi
 
 TMP="tmp"
-HASH=`  ../bin/tlsh -longversion | head -1           | cut -f1`
-CHKSUM=`../bin/tlsh -longversion | head -2 | tail -1 | cut -f1`
-SLDWIN=`../bin/tlsh -longversion |           tail -1 | cut -f1`
+HASH=`  ../bin/$TLSH_PROG -longversion | head -1           | cut -f1`
+CHKSUM=`../bin/$TLSH_PROG -longversion | head -2 | tail -1 | cut -f1`
+SLDWIN=`../bin/$TLSH_PROG -longversion |           tail -1 | cut -f1`
 echo "HASH is $HASH"
 echo "CHKSUM is $CHKSUM"
 echo "SLDWIN is $SLDWIN"
@@ -333,8 +344,8 @@ echo
 # I use the papameter value of 22 for the Fibanacci sequence for generating content
 # this generates files up to 6.7 Meg (good enough for automated testing)
 
-echo "./testlen.sh 22 > $TMP/testlen.out"
-      ./testlen.sh 22 > $TMP/testlen.out
+echo "./testlen.sh $TLSH_PROG 22 > $TMP/testlen.out"
+      ./testlen.sh $TLSH_PROG 22 > $TMP/testlen.out
 
 EXPECTED_TESTLEN=exp/testlen.$HASH.$CHKSUM.out_EXP
 if test ! -f $EXPECTED_TESTLEN
@@ -494,8 +505,8 @@ echo "passed"
 testnum=10
 
 echo
-echo "Running simple_unittest"
-../bin/simple_unittest > $TMP/simple_unittest.out
+echo "Running $SIMP_PROG"
+../bin/$SIMP_PROG > $TMP/simple_unittest.out
 
 EXPECTED_STEST=exp/simple_unittest.$HASH.$CHKSUM.EXP
 if test ! -f $EXPECTED_STEST

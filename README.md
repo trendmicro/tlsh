@@ -173,11 +173,10 @@ ATIS 2014, November, 2014, pages 199-210
 
 # Current Version
 
-**3.19.0**
+**3.19.1**
 <PRE>
-24/March/2020
-preperation for Windows build
-- remove ../Testing/ from test.sh script and from regression test results
+25/March/2020
+in test.sh and testlen.sh - make TLSH_PROG a variable
 </PRE>
 
 # Change History

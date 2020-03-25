@@ -467,3 +467,9 @@ resolve issue #72 - remove tlsh_version
 preperation for Windows build
 - remove ../Testing/ from test.sh script and from regression test results
 </PRE>
+
+**3.19.1**
+<PRE>
+25/March/2020
+in test.sh and testlen.sh - make TLSH_PROG a variable
+</PRE>
