@@ -146,18 +146,18 @@ void Tlsh::final(const unsigned char* data, unsigned int len, int fc_cons_option
     }
 }
 
-const char* Tlsh::getHash() const
+const char* Tlsh::getHash(int showvers) const
 {
     if ( NULL != impl )
-        return impl->hash();
+        return impl->hash(showvers);
     else
         return "";
 }
 
-const char* Tlsh::getHash (char *buffer, unsigned int bufSize) const
+const char* Tlsh::getHash (char *buffer, unsigned int bufSize, int showvers) const
 {
     if ( NULL != impl )
-        return impl->hash(buffer, bufSize);
+        return impl->hash(buffer, bufSize, showvers);
     else {
         buffer[0] = '\0';
         return buffer;

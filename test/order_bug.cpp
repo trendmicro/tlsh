@@ -78,6 +78,7 @@
 int main(int argc, char *argv[])
 {
 	int argIdx		= 1;
+	int showvers		= 1;
 	while (argc > argIdx) {
                 if (strcmp(argv[argIdx], "-version") == 0) {
 		        printf("%s\n", Tlsh::version());
@@ -101,6 +102,6 @@ int main(int argc, char *argv[])
 		for (int tries=0; tries<max_iter; tries++) {
 			t1.final( (const unsigned char*) buffer, MILLION);
 		}
-		printf("TLSH(buffer) = %s\n\n", t1.getHash() );
+		printf("TLSH(buffer) = %s\n\n", t1.getHash(showvers) );
 	}
 }

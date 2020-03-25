@@ -473,3 +473,11 @@ preperation for Windows build
 25/March/2020
 in test.sh and testlen.sh - make TLSH_PROG a variable
 </PRE>
+
+**4.0.0**
+<PRE>
+26/March/2020
+version 4: adding version identifier to each digest: 'T1'
+	adding command line option -old to generate old style digests
+	In this version - the showvers is defaulted to off - so this will pass the old regression tests
+</PRE>

@@ -89,7 +89,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 static void trendLSH_ut(char *compare_fname, char *dirname, char *listname, int listname_col, int listname_csv, char *fname, char *digestname,
-	int xref, bool xlen, int show_details, int threshold, int fc_cons_option, int path_option, char *splitlines)
+	int xref, bool xlen, int show_details, int threshold, int fc_cons_option, int path_option, char *splitlines, int showvers)
 {
 int err;
 
@@ -98,7 +98,7 @@ int err;
 	inputd.tptr		= NULL;
 	inputd.max_files	= 0;
 	inputd.n_file		= 0;
-	err = set_input_desc(dirname, listname, listname_col, listname_csv, fname, digestname, show_details, fc_cons_option, splitlines, &inputd);
+	err = set_input_desc(dirname, listname, listname_col, listname_csv, fname, digestname, show_details, fc_cons_option, splitlines, &inputd, showvers);
 	if (err) {
 		return;
 	}
@@ -106,13 +106,15 @@ int err;
 	Tlsh *comp_th = NULL;
 	if (compare_fname) {
 		comp_th = new Tlsh();
-		err = read_file_eval_tlsh(compare_fname, comp_th, show_details, fc_cons_option);
+		err = read_file_eval_tlsh(compare_fname, comp_th, show_details, fc_cons_option, showvers);
 		if (err == 0) {
 			;
 		} else if (err == ERROR_READING_FILE) {
 			// compare_fname is not a file.  Assume it is a TLSH digest
 			int col_length = strlen(compare_fname);
-			if (col_length != TLSH_STRING_LEN) {
+			// col_length == TLSH_STRING_LEN_REQ	TLSH with version number T1
+			// col_length == TLSH_STRING_LEN_REQ-2	original TLSH
+			if ((col_length != TLSH_STRING_LEN_REQ) && (col_length != TLSH_STRING_LEN_REQ-2)) {
 				fprintf(stderr, "error %s: not a valid file or TLSH digest\n", compare_fname);
 				delete comp_th;
 				comp_th = NULL;
@@ -166,7 +168,7 @@ int err;
 						int tdiff = th->totalDiff(xh, xlen);
 						if (tdiff <= threshold) {
 							if (show_details) {
-								printf("%s	[%s]	%s	[%s]	%d\n", ti_fname, th->getHash(), xi_fname, xh->getHash(), tdiff);
+								printf("%s	[%s]	%s	[%s]	%d\n", ti_fname, th->getHash(showvers), xi_fname, xh->getHash(showvers), tdiff);
 							} else {
 								const char *con_buf1 = convert_special_chars(ti_fname, buf1, sizeof(buf1));
 								const char *con_buf2 = convert_special_chars(xi_fname, buf2, sizeof(buf2));
@@ -203,13 +205,13 @@ int err;
 					}
 				} else {
 					if (path_option == PATH_OPTION_DIRNAME) {
-						printf("%s	%s	%s\n", th->getHash(),
+						printf("%s	%s	%s\n", th->getHash(showvers),
 							convert_special_chars(ti_dirname, buf1, sizeof(buf1)),
 							convert_special_chars(ti_fname, buf2, sizeof(buf2))
 							);
 					} else {
 
-						const char *tlsh_str = th->getHash();
+						const char *tlsh_str = th->getHash(showvers);
 						if (splitlines && (strlen(tlsh_str) == 0)) {
 							;
 						} else {
@@ -243,11 +245,11 @@ static void usage(const char *fullPathName, int fullUsage)
 	if (pgmName != NULL) pgmName++;
 	else pgmName = fullPathName;
 
-	printf("usage: tlsh [-c <file|digest>]         -f <file>                     [-T <threshold_value>] [-xlen] [-force] [-details]\n" );
-	printf("     : tlsh  -c <file|digest>          -d <digest>                   [-T <threshold_value>] [-xlen] [-force] [-details]\n" );
-	printf("     : tlsh [-c <file|digest> | -xref] -r <dir>                      [-T <threshold_value>] [-xlen] [-force] [-details] [-out_fname|-out_dirname]\n" );
-	printf("     : tlsh [-c <file|digest> | -xref] -l <listfile> [-l1|-l2|-lcsv] [-T <threshold_value>] [-xlen] [-force] [-details]\n" );
-	printf("     : tlsh -split linenumbers         -f <file>                                            [-xlen] [-force] [-details]\n" );
+	printf("usage: tlsh [-c <file|digest>]         -f <file>                     [-T <threshold_value>] [-xlen] [-force] [-old] [-details]\n" );
+	printf("     : tlsh  -c <file|digest>          -d <digest>                   [-T <threshold_value>] [-xlen] [-force] [-old] [-details]\n" );
+	printf("     : tlsh [-c <file|digest> | -xref] -r <dir>                      [-T <threshold_value>] [-xlen] [-force] [-old] [-details] [-out_fname|-out_dirname]\n" );
+	printf("     : tlsh [-c <file|digest> | -xref] -l <listfile> [-l1|-l2|-lcsv] [-T <threshold_value>] [-xlen] [-force] [-old] [-details]\n" );
+	printf("     : tlsh -split linenumbers         -f <file>                                            [-xlen] [-force] [-old] [-details]\n" );
 	printf("     : tlsh -version: prints version of tlsh library\n");
 	printf("     : tlsh -notice:  prints NOTICE.txt of tlsh library\n");
 	printf("     : tlsh -help: prints full usage information\n");
@@ -283,6 +285,8 @@ static void usage(const char *fullPathName, int fullUsage)
 
 	printf("  -xlen:              Passed as the len_diff parameter to Tlsh::totalDiff().  If not specified, len_diff will be true, else false.  Determines if the lengths\n");
 	printf("                      of the compared files is to be included in determining the distance.  See tlsh.h for details.\n");
+	printf("  -old:               Generate digests without version number. Changed in version 4.0.0 to put 'T1' at the start of TLSH digests\n");
+	printf("                      done so that we can change/adapt algorithm and maintain backwards compatibility\n");
 	printf("  -force:             Old option. Changed in version 3.17.0 to be default behaviour\n");
 	printf("  -conservative:      Original behaviour. Changed in version 3.17.0. Only create a TLSH digest if the input string is >= %d characters.\n", MIN_CONSERVATIVE_DATA_LENGTH);
 	printf("  -details:           Results in extra detailed output.\n");
@@ -345,6 +349,7 @@ int main(int argc, char *argv[])
 	int threshold			= DEFAULT_THRESHOLD;
 	char *splitlines		= NULL;
 	int fc_cons_option		= 0;
+	int showvers			= 0;
 	int path_option			= PATH_OPTION_FULL;
 
 #ifdef TLSH_DISTANCE_PARAMETERS
@@ -400,6 +405,9 @@ int main(int argc, char *argv[])
 			argIdx = argIdx+2;
 		} else if (strcmp(argv[argIdx], "-xref") == 0) {
 			xref = 1;
+			argIdx = argIdx+1;
+		} else if (strcmp(argv[argIdx], "-old") == 0) {
+			showvers = 0;
 			argIdx = argIdx+1;
 		} else if (strcmp(argv[argIdx], "-force") == 0) {
 			argIdx = argIdx+1;
@@ -515,5 +523,5 @@ int main(int argc, char *argv[])
 	set_tlsh_distance_parameters(length_mult_value, qratio_mult_value, hist_diff1_add_value, hist_diff2_add_value, hist_diff3_add_value);
 #endif
 	trendLSH_ut(compare_fname, dirname, listname, listname_col, listname_csv, fname, digestname, xref,
-		xlen, show_details, threshold, fc_cons_option, path_option, splitlines);
+		xlen, show_details, threshold, fc_cons_option, path_option, splitlines, showvers);
 }

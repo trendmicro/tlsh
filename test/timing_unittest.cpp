@@ -80,6 +80,7 @@ int main(int argc, char *argv[])
 {
 	int argIdx		= 1;
 	int buffer_size		= MILLION;
+	int showvers		= 1;
 	while (argc > argIdx) {
                 if (strcmp(argv[argIdx], "-version") == 0) {
 		        printf("%s\n", Tlsh::version());
@@ -127,7 +128,7 @@ int main(int argc, char *argv[])
 	}
 
 	gettimeofday(&tp, NULL);
-	printf("TLSH(buffer) = %s\n", t1.getHash() );
+	printf("TLSH(buffer) = %s\n", t1.getHash(showvers) );
 
 	after_ms = tp.tv_sec * 1000 + tp.tv_usec / 1000; //get current timestamp in milliseconds
 	long diff	= (after_ms - before_ms);

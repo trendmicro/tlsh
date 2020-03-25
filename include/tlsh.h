@@ -74,14 +74,10 @@
 
 class TlshImpl;
 
-// Define TLSH_STRING_LEN, which is the string lenght of the hex value of the Tlsh hash.  
+// Define TLSH_STRING_LEN_REQ, which is the string length of "T1" + the hex value of the Tlsh hash.  
 // BUCKETS_256 & CHECKSUM_3B are compiler switches defined in CMakeLists.txt
 #if defined BUCKETS_256
-  #if defined CHECKSUM_3B
-    #define TLSH_STRING_LEN 138
-  #else
-    #define TLSH_STRING_LEN 134
-  #endif
+  #define TLSH_STRING_LEN_REQ 136
   // changed the minimum data length to 256 for version 3.3
   #define MIN_DATA_LENGTH		50
   // added the -force option for version 3.5
@@ -90,11 +86,7 @@ class TlshImpl;
 #endif
 
 #if defined BUCKETS_128
-  #if defined CHECKSUM_3B
-    #define TLSH_STRING_LEN 74
-  #else
-    #define TLSH_STRING_LEN 70
-  #endif
+  #define TLSH_STRING_LEN_REQ 72
   // changed the minimum data length to 256 for version 3.3
   #define MIN_DATA_LENGTH		50
   // added the -force option for version 3.5
@@ -111,7 +103,7 @@ class TlshImpl;
   #define MIN_CONSERVATIVE_DATA_LENGTH	10
 #endif
 
-#define TLSH_STRING_BUFFER_LEN (TLSH_STRING_LEN+1)
+#define TLSH_STRING_BUFFER_LEN (TLSH_STRING_LEN_REQ+1)
 
 #ifdef WINDOWS
 #include <WinFunctions.h>
@@ -136,10 +128,10 @@ public:
     void final(const unsigned char* data = NULL, unsigned int len = 0, int fc_cons_option = 0);
 
     /* to get the hex-encoded hash code */
-    const char* getHash() const ;
+    const char* getHash(int showvers=0) const ;
 
     /* to get the hex-encoded hash code without allocating buffer in TlshImpl - bufSize should be TLSH_STRING_BUFFER_LEN */
-    const char* getHash(char *buffer, unsigned int bufSize) const;  
+    const char* getHash(char *buffer, unsigned int bufSize, int showvers=0) const;  
 
     /* to bring to object back to the initial state */
     void reset();

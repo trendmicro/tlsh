@@ -64,7 +64,7 @@
 #include "input_desc.h"
 #include "shared_file_functions.h"
 
-static int read_file_eval_tlsh_splitline(char *fname, struct InputDescr *inputd, int show_details, int fc_cons_option)
+static int read_file_eval_tlsh_splitline(char *fname, struct InputDescr *inputd, int show_details, int fc_cons_option, int showvers)
 {
 	///////////////////////////////////////
 	// 1. How big is the file?
@@ -116,7 +116,8 @@ static int read_file_eval_tlsh_splitline(char *fname, struct InputDescr *inputd,
 				}
 				inputd->tptr[ti] = th;
 				if (show_details >= 1) {
-					printf("eval	ti=%d	%s	%s\n", ti, fname, th->getHash() );
+					int showvers = 1;
+					printf("eval	ti=%d	%s	%s\n", ti, fname, th->getHash(showvers) );
 				}
 				ti ++;
 				th = new Tlsh();
@@ -131,7 +132,8 @@ static int read_file_eval_tlsh_splitline(char *fname, struct InputDescr *inputd,
 	th->final(NULL, 0, fc_cons_option);
 	inputd->tptr[ti] = th;
 	if (show_details >= 1) {
-		printf("eval	ti=%d	%s	%s\n", ti, fname, th->getHash() );
+		int showvers = 1;
+		printf("eval	ti=%d	%s	%s\n", ti, fname, th->getHash(showvers) );
 	}
 	fclose(fd);
 
@@ -152,7 +154,7 @@ struct FileName *r2;
 }
 
 int set_input_desc(char *dirname, char *listname, int listname_col, int listname_csv,
-	char *fname, char *digestname, int show_details, int fc_cons_option, char *splitlines, struct InputDescr *inputd)
+	char *fname, char *digestname, int show_details, int fc_cons_option, char *splitlines, struct InputDescr *inputd, int showvers)
 {
 	////////////////////////////
 	// Step 1. set inputd->max_files
@@ -293,7 +295,9 @@ int set_input_desc(char *dirname, char *listname, int listname_col, int listname
 				return(1);
 			}
 			int col_length = strlen(col_tlsh);
-			if (col_length == TLSH_STRING_LEN) {
+			// col_length == TLSH_STRING_LEN_REQ	TLSH with version number T1
+			// col_length == TLSH_STRING_LEN_REQ-2	original TLSH
+			if ((col_length == TLSH_STRING_LEN_REQ) || (col_length == TLSH_STRING_LEN_REQ-2)) {
 				inputd->fnames[count].tlsh = strdup(col_tlsh);
 				inputd->fnames[count].full_fname = strdup(col_fname);
 				inputd->fnames[count].only_fname = strdup(col_fname);
@@ -422,7 +426,7 @@ int set_input_desc(char *dirname, char *listname, int listname_col, int listname
 				inputd->tptr[ti] = th;
 			}
 		} else if (splitlines) {
-			err = read_file_eval_tlsh_splitline(fname, inputd, show_details, fc_cons_option);
+			err = read_file_eval_tlsh_splitline(fname, inputd, show_details, fc_cons_option, showvers);
 			ti = inputd->n_file;
 			if (err) {
 				fprintf(stderr, "error processing file %s\n", fname);
@@ -430,7 +434,7 @@ int set_input_desc(char *dirname, char *listname, int listname_col, int listname
 		} else {
 			char *curr_fname = inputd->fnames[ti].full_fname;
 			Tlsh *th = new Tlsh();
-			err = read_file_eval_tlsh(curr_fname, th, show_details, fc_cons_option);
+			err = read_file_eval_tlsh(curr_fname, th, show_details, fc_cons_option, showvers);
 			if (err == 0) {
 				inputd->tptr[ti] = th;
 			} else if (err == ERROR_READING_FILE) {

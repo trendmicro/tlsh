@@ -463,38 +463,55 @@ void TlshImpl::final(int fc_cons_option)
 
 int TlshImpl::fromTlshStr(const char* str)
 {
-    // Validate input string
-    for( int i=0; i < TLSH_STRING_LEN; i++ )
-        if (!( 
-            (str[i] >= '0' && str[i] <= '9') || 
-            (str[i] >= 'A' && str[i] <= 'F') ||
-            (str[i] >= 'a' && str[i] <= 'f') ))
+	// Assume that we have 128 Buckets
+	int start = 0;
+        if (strncmp(str, "T1", 2) == 0) {
+		start = 2;
+	} else {
+		start = 0;
+	}
+	// Validate input string
+	for( int ii=0; ii < INTERNAL_TLSH_STRING_LEN; ii++ ) {
+		int i = ii + start;
+		if (!(	(str[i] >= '0' && str[i] <= '9') || 
+			(str[i] >= 'A' && str[i] <= 'F') ||
+			(str[i] >= 'a' && str[i] <= 'f') ))
+        	{
+			// printf("warning ii=%d str[%d]='%c'\n", ii, i, str[i]);
+			return 1;
+		}
+	}
+	int xi = INTERNAL_TLSH_STRING_LEN + start;
+	if ((	(str[xi] >= '0' && str[xi] <= '9') || 
+		(str[xi] >= 'A' && str[xi] <= 'F') ||
+		(str[xi] >= 'a' && str[xi] <= 'f') ))
         {
-            return 1;
-        }
+		// printf("warning xi=%d\n", xi);
+		return 1;
+	}
 
-    this->reset();
-    
-    lsh_bin_struct tmp;
-    from_hex( str, TLSH_STRING_LEN, (unsigned char*)&tmp );
-    
-    // Reconstruct checksum, Qrations & lvalue
-    for (int k = 0; k < TLSH_CHECKSUM_LEN; k++) {    
-        this->lsh_bin.checksum[k] = swap_byte(tmp.checksum[k]);
-    }
-    this->lsh_bin.Lvalue = swap_byte( tmp.Lvalue );
-    this->lsh_bin.Q.QB = swap_byte(tmp.Q.QB);
-    for( int i=0; i < CODE_SIZE; i++ ){
-        this->lsh_bin.tmp_code[i] = (tmp.tmp_code[CODE_SIZE-1-i]);
-    }
-    this->lsh_code_valid = true;   
+	this->reset();
 
-    return 0;
+	lsh_bin_struct tmp;
+	from_hex( &str[start], INTERNAL_TLSH_STRING_LEN, (unsigned char*)&tmp );
+
+	// Reconstruct checksum, Qrations & lvalue
+	for (int k = 0; k < TLSH_CHECKSUM_LEN; k++) {    
+		this->lsh_bin.checksum[k] = swap_byte(tmp.checksum[k]);
+	}
+	this->lsh_bin.Lvalue = swap_byte( tmp.Lvalue );
+	this->lsh_bin.Q.QB = swap_byte(tmp.Q.QB);
+	for( int i=0; i < CODE_SIZE; i++ ){
+		this->lsh_bin.tmp_code[i] = (tmp.tmp_code[CODE_SIZE-1-i]);
+	}
+	this->lsh_code_valid = true;   
+
+	return 0;
 }
 
-const char* TlshImpl::hash(char *buffer, unsigned int bufSize) const
+const char* TlshImpl::hash(char *buffer, unsigned int bufSize, int showvers) const
 {
-    if (bufSize < TLSH_STRING_LEN + 1) {
+    if (bufSize < TLSH_STRING_LEN_REQ + 1) {
         strncpy(buffer, "", bufSize);
         return buffer;
     }
@@ -513,22 +530,28 @@ const char* TlshImpl::hash(char *buffer, unsigned int bufSize) const
         tmp.tmp_code[i] = (this->lsh_bin.tmp_code[CODE_SIZE-1-i]);
     }
 
-    to_hex( (unsigned char*)&tmp, sizeof(tmp), buffer);
-    return buffer;
+	if (showvers) {
+		buffer[0] = 'T';
+		buffer[1] = '0' + showvers;
+		to_hex( (unsigned char*)&tmp, sizeof(tmp), &buffer[2]);
+	} else {
+		to_hex( (unsigned char*)&tmp, sizeof(tmp), buffer);
+	}
+	return buffer;
 }
 
 /* to get the hex-encoded hash code */
-const char* TlshImpl::hash() const
+const char* TlshImpl::hash(int showvers) const
 {
     if (this->lsh_code != NULL) {
         // lsh_code has been previously calculated, so just return it
         return this->lsh_code;
     }
 
-    this->lsh_code = new char [TLSH_STRING_LEN+1];
-    memset(this->lsh_code, 0, TLSH_STRING_LEN+1);
+    this->lsh_code = new char [TLSH_STRING_LEN_REQ+1];
+    memset(this->lsh_code, 0, TLSH_STRING_LEN_REQ+1);
 	
-    return hash(this->lsh_code, TLSH_STRING_LEN+1);
+    return hash(this->lsh_code, TLSH_STRING_LEN_REQ+1, showvers);
 }
 
 

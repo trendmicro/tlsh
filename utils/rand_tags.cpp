@@ -207,6 +207,7 @@ static void html(unsigned int seed, bool show_lsh, char *dir)
 std::string htmls;
 Tlsh n;
 bool verbose = false;
+	int showvers = 0;
 	srandom(seed);
 	// if (seed == 4628)
 	// verbose = true;
@@ -215,7 +216,7 @@ bool verbose = false;
 	if (htmls.length() <= MIN_TLSH_LEN)
 		return;
 	n.final((unsigned char *)htmls.c_str(), htmls.length());
-	const char *tlsh_str = n.getHash();
+	const char *tlsh_str = n.getHash(showvers);
 	if (tlsh_str == NULL)
 		return;
 	if (show_lsh) {

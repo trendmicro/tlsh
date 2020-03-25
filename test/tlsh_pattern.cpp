@@ -306,7 +306,8 @@ int nlines;
 	return(0);
 }
 
-static void tlsh_pattern(char *dirname, char *listname, int listname_col, int listname_csv, char *fname, char *digestname, bool xlen, int fc_cons_option, char *pattern_fname, int showmiss)
+static void tlsh_pattern(char *dirname, char *listname, int listname_col, int listname_csv, char *fname, char *digestname,
+	bool xlen, int fc_cons_option, char *pattern_fname, int showmiss, int showvers)
 {
 int show_details = 0;
 	
@@ -323,7 +324,7 @@ int show_details = 0;
 	inputd.max_files	= 0;
 	inputd.n_file		= 0;
 	char *splitlines	= NULL;
-	err = set_input_desc(dirname, listname, listname_col, listname_csv, fname, digestname, show_details, fc_cons_option, splitlines, &inputd);
+	err = set_input_desc(dirname, listname, listname_col, listname_csv, fname, digestname, show_details, fc_cons_option, splitlines, &inputd, showvers);
 	if (err) {
 		return;
 	}
@@ -355,11 +356,10 @@ int show_details = 0;
 #define DEFAULT_THRESHOLD 9999
 static void usage()
 {
-	printf("usage: tlsh_pattern -f <file>                     [-showmiss T] -pat <pattern_file> [-xlen] [-conservative]\n" );
-	printf("     : tlsh_pattern -d <digest>                   [-showmiss T] -pat <pattern_file> [-xlen] [-conservative]\n" );
-	printf("     : tlsh_pattern -r <dir>                      [-showmiss T] -pat <pattern_file> [-xlen] [-conservative]\n" );
-	printf("     : tlsh_pattern -l <listfile> [-l1|-l2|-lcsv] [-showmiss T] -pat <pattern_file> [-xlen] [-conservative]\n" );
-	printf("     : tlsh_pattern -version: prints version of tlsh library\n");
+	printf("usage: tlsh_pattern -f <file>                     [-showmiss T] -pat <pattern_file> [-xlen] [-old] [-conservative]\n" );
+	printf("     : tlsh_pattern -d <digest>                   [-showmiss T] -pat <pattern_file> [-xlen] [-old] [-conservative]\n" );
+	printf("     : tlsh_pattern -r <dir>                      [-showmiss T] -pat <pattern_file> [-xlen] [-old] [-conservative]\n" );
+	printf("     : tlsh_pattern -l <listfile> [-l1|-l2|-lcsv] [-showmiss T] -pat <pattern_file> [-xlen] [-old] [-conservative]\n" );
 	printf("\n");
 	printf("where the pattern file consists of 5 columns\n");
 	printf("col 1: pattern number\n");
@@ -382,6 +382,8 @@ static void usage()
 	printf("  -r dir:             Specifies a recursive directory search for files whose TLSH values are to be compared to the pattern file\n");
 	printf("  -xlen:              Determines if the lengths of the compared files is to be included in determining the distance\n");
 	printf("                      of the compared files is to be included in determining the distance.  See tlsh.h for details.\n");
+	printf("  -old:               Generate digests without version number. Changed in version 4.0.0 to put 'T1' at the start of TLSH digests\n");
+	printf("                      done so that we can change/adapt algorithm and maintain backwards compatibility\n");
 	printf("  -force:             Old option. Changed in version 3.17.0 to be default behaviour\n");
 	printf("  -conservative:      Original behaviour. Changed in version 3.17.0. Only create a TLSH digest if the input string is >= %d characters.\n", MIN_CONSERVATIVE_DATA_LENGTH);
 	printf("  -l listfile:        Used for comparison purposes only (-c file|digset or -xref).  Each line in listfile can contain either:\n");
@@ -409,6 +411,7 @@ int main(int argc, char *argv[])
 	int   listname_col		= 1;		// default is col 1
 	int   listname_csv		= 0;		// default is TAB seperated
 	int showmiss			= 0;
+	int showvers			= 0;
 
 	bool xlen                       = true;
 	int fc_cons_option		= 0;
@@ -449,6 +452,9 @@ int main(int argc, char *argv[])
 				usage();
 			}
 			argIdx = argIdx+2;
+		} else if (strcmp(argv[argIdx], "-old") == 0) {
+			showvers = 0;
+			argIdx = argIdx+1;
 		} else if (strcmp(argv[argIdx], "-force") == 0) {
 			argIdx = argIdx+1;
 		} else if (strcmp(argv[argIdx], "-conservative") == 0) {
@@ -485,5 +491,5 @@ int main(int argc, char *argv[])
 		usage();
 	}
 
-	tlsh_pattern(dirname, listname, listname_col, listname_csv, fname, digestname, xlen, fc_cons_option, pattern_fname, showmiss);
+	tlsh_pattern(dirname, listname, listname_col, listname_csv, fname, digestname, xlen, fc_cons_option, pattern_fname, showmiss, showvers);
 }

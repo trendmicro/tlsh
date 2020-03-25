@@ -72,6 +72,7 @@
 
 int main(int argc, char *argv[])
 {
+	int showvers = 0;
 	Tlsh t1;
 	Tlsh t2;
 
@@ -99,8 +100,8 @@ int main(int argc, char *argv[])
 	printf("str1 = '%s'\n", minSizeBuffer1 );
 	printf("str2 = '%s'\n", minSizeBuffer2 );
 
-	printf("hash1 = %s\n", t1.getHash() );
-	printf("hash2 = %s\n", t2.getHash() );
+	printf("hash1 = %s\n", t1.getHash(showvers) );
+	printf("hash2 = %s\n", t2.getHash(showvers) );
 
 	printf("difference (same strings) = %d\n", t1.totalDiff(&t1) );
 	printf("difference (with len) = %d\n", t1.totalDiff(&t2) );
@@ -116,7 +117,7 @@ int main(int argc, char *argv[])
 	minSizeBuffer1[511] = 0;
 	t3.update( (const unsigned char*) minSizeBuffer1+len1, 512-len1);
 	t3.final();
-	assert(strcmp(t1.getHash(), t3.getHash()) == 0);
+	assert(strcmp(t1.getHash(showvers), t3.getHash(showvers)) == 0);
 
     snprintf(minSizeBuffer2, sizeof(minSizeBuffer2), "%s", str2);
 	t4.update( (const unsigned char*) minSizeBuffer2, len2);
@@ -125,22 +126,22 @@ int main(int argc, char *argv[])
 	}
 	minSizeBuffer2[1023] = 0;
 	t4.final( (const unsigned char*) minSizeBuffer2+len2, 1024-len2);
-	assert(strcmp(t2.getHash(), t4.getHash()) == 0);
+	assert(strcmp(t2.getHash(showvers), t4.getHash(showvers)) == 0);
 
-	printf("hash3 = %s\n", t3.getHash() );
-	printf("hash4 = %s\n", t4.getHash() );
+	printf("hash3 = %s\n", t3.getHash(showvers) );
+	printf("hash4 = %s\n", t4.getHash(showvers) );
 
 	printf("Testing Tlsh.fromTlshStr()\n");
-	printf("Recreating tlsh3 from %s\n", t1.getHash(minSizeBuffer1, sizeof(minSizeBuffer1)));
+	printf("Recreating tlsh3 from %s\n", t1.getHash(minSizeBuffer1, sizeof(minSizeBuffer1), showvers));
 	t3.reset();
 	t3.fromTlshStr(minSizeBuffer1);
-	printf("hash3 = %s\n", t3.getHash(minSizeBuffer2, sizeof(minSizeBuffer2)));
+	printf("hash3 = %s\n", t3.getHash(minSizeBuffer2, sizeof(minSizeBuffer2), showvers));
 	assert(strcmp(minSizeBuffer1, minSizeBuffer2) == 0);
 	
-	printf("Recreating tlsh4 from %s\n", t2.getHash(minSizeBuffer1, sizeof(minSizeBuffer1)));
+	printf("Recreating tlsh4 from %s\n", t2.getHash(minSizeBuffer1, sizeof(minSizeBuffer1), showvers));
 	t4.reset();
 	t4.fromTlshStr(minSizeBuffer1);
-	printf("hash4 = %s\n", t4.getHash(minSizeBuffer2, sizeof(minSizeBuffer2)));
+	printf("hash4 = %s\n", t4.getHash(minSizeBuffer2, sizeof(minSizeBuffer2), showvers));
 	assert(strcmp(minSizeBuffer1, minSizeBuffer2) == 0);
 	printf("difference (same strings) = %d\n", t3.totalDiff(&t3) );
 	printf("difference (with len) = %d\n", t3.totalDiff(&t4) );

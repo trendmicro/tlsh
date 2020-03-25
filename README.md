@@ -10,6 +10,21 @@ the detection of similar objects by comparing their hash values.  Note that
 the byte stream should have a sufficient amount of complexity.  For example,
 a byte stream of identical bytes will not generate a hash value.
 
+## TLSH 4.0.0	- adding version identifier to the digest
+26/March/2020
+TLSH has gained some traction. It has been included in STIX 2.1 and been ported to a number of langauges.
+
+We are adding a version identifier ("T1") to the start of the digest so that we can
+cleary distinguish between different variants of the digest (such as non-standard choices of 3 byte checksum).
+This means that we do not rely on the length of the hex string to determine if a hex string is a TLSH digest
+(this is a brittle method for identifying TLSH digests).
+We are doing this to enable compatibility, especially backwards compatibility of the TLSH approach.
+
+This release will add "T1" to the start of TLSH digests.
+The code is backwards compatible, it can still read and interpret 70 hex character strings as TLSH digests.
+And data sets can include mixes of the old and new digests.
+If you need old style TLSH digests to be outputted, then use the command line option '-old'
+
 ## Minimum byte stream length
 
 The program in default mode requires an input byte stream with a minimum length of 50 bytes
@@ -173,10 +188,12 @@ ATIS 2014, November, 2014, pages 199-210
 
 # Current Version
 
-**3.19.1**
+**4.0.0**
 <PRE>
-25/March/2020
-in test.sh and testlen.sh - make TLSH_PROG a variable
+26/March/2020
+version 4: adding version identifier to each digest: 'T1'
+	adding command line option -old to generate old style digests
+	In this version - the showvers is defaulted to off - so this will pass the old regression tests
 </PRE>
 
 # Change History

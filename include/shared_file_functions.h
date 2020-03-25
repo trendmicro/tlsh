@@ -5,7 +5,7 @@
 
 bool is_dir(char *dirname);
 int count_files_in_dir(char *dirname);
-int read_file_eval_tlsh(char *fname, Tlsh *th, int show_details, int fc_cons_option);
+int read_file_eval_tlsh(char *fname, Tlsh *th, int show_details, int fc_cons_option, int showvers);
 const char *convert_special_chars(char *filename, char *buf, size_t bufSize);
 
 //

@@ -140,7 +140,7 @@ size_t buf_offset = 0;
 
 ////////////////////////////////////////////////////////////////////////////////
 
-int read_file_eval_tlsh(char *fname, Tlsh *th, int show_details, int fc_cons_option)
+int read_file_eval_tlsh(char *fname, Tlsh *th, int show_details, int fc_cons_option, int showvers)
 {
 	///////////////////////////////////////
 	// 1. How big is the file?
@@ -208,11 +208,11 @@ int read_file_eval_tlsh(char *fname, Tlsh *th, int show_details, int fc_cons_opt
 	// 5. clean up and return
 	///////////////////////////////////////
 	free(data);
-	if (th->getHash() == NULL || th->getHash()[0] == '\0') {
+	if (th->getHash(showvers) == NULL || th->getHash(showvers)[0] == '\0') {
 		return(WARNING_CANNOT_HASH);
 	}
 	if (show_details >= 1) {
-		printf("eval	%s	%s\n", fname, th->getHash() );
+		printf("eval	%s	%s\n", fname, th->getHash(showvers) );
 	}
 	return(0);
 }
