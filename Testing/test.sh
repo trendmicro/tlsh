@@ -83,8 +83,8 @@ runit() {
 	echo "test 1"
 	echo
 
-	echo "../bin/${TLSH_PROG} -r example_data > $TMP/example_data.out 2> $TMP/example_data.err"
-	      ../bin/${TLSH_PROG} -r example_data > $TMP/example_data.out 2> $TMP/example_data.err
+	echo "../bin/${TLSH_PROG} -r example_data -o $TMP/example_data.out 2> $TMP/example_data.err"
+	      ../bin/${TLSH_PROG} -r example_data -o $TMP/example_data.out 2> $TMP/example_data.err
 
 	EXPECTED_OUT=exp/example_data.$HASH.$CHKSUM.$XLEN.out_EXP
 	EXPECTED_ERR=exp/example_data.$HASH.$CHKSUM.$XLEN.err_EXP
@@ -112,7 +112,6 @@ runit() {
 			      cp $TMP/example_data.err $EXPECTED_ERR
 		fi
 	fi
-
 	diffc=`diff --ignore-all-space $TMP/example_data.out $EXPECTED_OUT | wc -l`
 	if test ! $diffc = 0
 	then
@@ -131,6 +130,18 @@ runit() {
 
 	echo "passed"
 
+	echo "../bin/${TLSH_PROG} -r example_data -o $TMP/example_data.json_out -ojson 2> $TMP/example_data.err"
+	      ../bin/${TLSH_PROG} -r example_data -o $TMP/example_data.json_out -ojson 2> $TMP/example_data.err
+	EXPECTED_OUT=exp/example_data.$HASH.$CHKSUM.$SLDWIN.$XLEN.json_out_EXP
+	diffc=`diff --ignore-all-space $TMP/example_data.json_out $EXPECTED_OUT | wc -l`
+	if test ! $diffc = 0
+	then
+		echoerr "error: (1), diff $TMP/example_data.json_out $EXPECTED_OUT"
+		popd > /dev/null
+		exit 1
+	fi
+	echo "passed"
+
 	########################################################
 	# Test 2
 	#	calculate scores of a file (website_course_descriptors06-07.txt) compared to the directory of files
@@ -142,11 +153,11 @@ runit() {
 
 	if test $XLEN = "xlen"
 	then
-	echo "../bin/${TLSH_PROG} -xlen -r example_data -c example_data/website_course_descriptors06-07.txt > $TMP/example_data.scores 2> $TMP/example_data.err2"
-	      ../bin/${TLSH_PROG} -xlen -r example_data -c example_data/website_course_descriptors06-07.txt > $TMP/example_data.scores 2> $TMP/example_data.err2
+	echo "../bin/${TLSH_PROG} -xlen -r example_data -c example_data/website_course_descriptors06-07.txt -o $TMP/example_data.scores 2> $TMP/example_data.err2"
+	      ../bin/${TLSH_PROG} -xlen -r example_data -c example_data/website_course_descriptors06-07.txt -o $TMP/example_data.scores 2> $TMP/example_data.err2
 	else
-	echo "../bin/${TLSH_PROG} -r example_data -c example_data/website_course_descriptors06-07.txt > $TMP/example_data.scores 2> $TMP/example_data.err2"
-	      ../bin/${TLSH_PROG} -r example_data -c example_data/website_course_descriptors06-07.txt > $TMP/example_data.scores 2> $TMP/example_data.err2
+	echo "../bin/${TLSH_PROG} -r example_data -c example_data/website_course_descriptors06-07.txt -o $TMP/example_data.scores 2> $TMP/example_data.err2"
+	      ../bin/${TLSH_PROG} -r example_data -c example_data/website_course_descriptors06-07.txt -o $TMP/example_data.scores 2> $TMP/example_data.err2
 	fi
 
 	EXPECTED_SCO=exp/example_data.$HASH.$CHKSUM.$XLEN.scores_EXP
@@ -207,11 +218,11 @@ runit() {
 	#   warning: cannot read TLSH code example_data/BookingBrochure.txt
 	if test $XLEN = "xlen"
 	then
-	echo "../bin/${TLSH_PROG} -xlen -l $TMP/example_data.out -c example_data/website_course_descriptors06-07.txt > $TMP/example_data.scores.2"
-	      ../bin/${TLSH_PROG} -xlen -l $TMP/example_data.out -c example_data/website_course_descriptors06-07.txt > $TMP/example_data.scores.2 2>/dev/null
+	echo "../bin/${TLSH_PROG} -xlen -l $TMP/example_data.out -c example_data/website_course_descriptors06-07.txt -o $TMP/example_data.scores.2"
+	      ../bin/${TLSH_PROG} -xlen -l $TMP/example_data.out -c example_data/website_course_descriptors06-07.txt -o $TMP/example_data.scores.2 2>/dev/null
 	else
-	echo "../bin/${TLSH_PROG} -l $TMP/example_data.out -c example_data/website_course_descriptors06-07.txt > $TMP/example_data.scores.2"
-	      ../bin/${TLSH_PROG} -l $TMP/example_data.out -c example_data/website_course_descriptors06-07.txt > $TMP/example_data.scores.2 2>/dev/null
+	echo "../bin/${TLSH_PROG} -l $TMP/example_data.out -c example_data/website_course_descriptors06-07.txt -o $TMP/example_data.scores.2"
+	      ../bin/${TLSH_PROG} -l $TMP/example_data.out -c example_data/website_course_descriptors06-07.txt -o $TMP/example_data.scores.2 2>/dev/null
 	fi
 
 	EXPECTED_SCO=exp/example_data.$HASH.$CHKSUM.$XLEN.scores.2_EXP
@@ -248,11 +259,11 @@ runit() {
 	echo "test $testnum"
 	echo 
 	if [ $XLEN = "xlen" ]; then
-	echo "../bin/${TLSH_PROG} -xref -xlen -r example_data $TMP/example_data.xref.scores"
-	      ../bin/${TLSH_PROG} -xref -xlen -r example_data > $TMP/example_data.xref.scores 2>/dev/null
+	echo "../bin/${TLSH_PROG} -xref -xlen -r example_data -o $TMP/example_data.xref.scores"
+	      ../bin/${TLSH_PROG} -xref -xlen -r example_data -o $TMP/example_data.xref.scores 2>/dev/null
 	else
-	echo "../bin/${TLSH_PROG} -xref -r example_data $TMP/example_data.xref.scores"
-	      ../bin/${TLSH_PROG} -xref -r example_data > $TMP/example_data.xref.scores 2>/dev/null
+	echo "../bin/${TLSH_PROG} -xref -r example_data -o $TMP/example_data.xref.scores"
+	      ../bin/${TLSH_PROG} -xref -r example_data -o $TMP/example_data.xref.scores 2>/dev/null
 	fi
 
 	EXPECTED_SCO=exp/example_data.$HASH.$CHKSUM.$XLEN.xref.scores_EXP
@@ -278,6 +289,22 @@ runit() {
 
 	echo "passed"
 
+	if [ $XLEN = "xlen" ]; then
+	echo "../bin/${TLSH_PROG} -xref -xlen -r example_data -o $TMP/example_data.xref.json_scores -ojson"
+	      ../bin/${TLSH_PROG} -xref -xlen -r example_data -o $TMP/example_data.xref.json_scores -ojson 2>/dev/null
+	else
+	echo "../bin/${TLSH_PROG} -xref -r example_data -o $TMP/example_data.xref.json_scores -ojson"
+	      ../bin/${TLSH_PROG} -xref -r example_data -o $TMP/example_data.xref.json_scores -ojson 2>/dev/null
+	fi
+	EXPECTED_SCO=exp/example_data.$HASH.$CHKSUM.$SLDWIN.$XLEN.xref.json_scores_EXP
+	diff --ignore-all-space $TMP/example_data.xref.json_scores $EXPECTED_SCO > /dev/null 2>/dev/null
+	if [ $? -ne 0 ]; then
+		echoerr "error: ($testnum), diff $TMP/example_data.xref.json_scores $EXPECTED_SCO"
+		popd > /dev/null
+		exit $testnum
+	fi
+	echo "passed"
+
 	########################################################
 	# Test 5
 	#	Test out the -T (threshold parameter)
@@ -290,11 +317,11 @@ runit() {
 	#   warning: cannot read TLSH code example_data/BookingBrochure.txt
 
 	if [ $XLEN = "xlen" ]; then
-	echo "../bin/${TLSH_PROG} -T 201 -xlen -l $TMP/example_data.out -c example_data/website_course_descriptors06-07.txt > $TMP/example_data.scores.2.T-201"
-	      ../bin/${TLSH_PROG} -T 201 -xlen -l $TMP/example_data.out -c example_data/website_course_descriptors06-07.txt > $TMP/example_data.scores.2.T-201 2>/dev/null
+	echo "../bin/${TLSH_PROG} -T 201 -xlen -l $TMP/example_data.out -c example_data/website_course_descriptors06-07.txt -o $TMP/example_data.scores.2.T-201"
+	      ../bin/${TLSH_PROG} -T 201 -xlen -l $TMP/example_data.out -c example_data/website_course_descriptors06-07.txt -o $TMP/example_data.scores.2.T-201 2>/dev/null
 	else
-	echo "../bin/${TLSH_PROG} -T 201 -l $TMP/example_data.out -c example_data/website_course_descriptors06-07.txt > $TMP/example_data.scores.2.T-201"
-	      ../bin/${TLSH_PROG} -T 201 -l $TMP/example_data.out -c example_data/website_course_descriptors06-07.txt > $TMP/example_data.scores.2.T-201 2>/dev/null
+	echo "../bin/${TLSH_PROG} -T 201 -l $TMP/example_data.out -c example_data/website_course_descriptors06-07.txt -o $TMP/example_data.scores.2.T-201"
+	      ../bin/${TLSH_PROG} -T 201 -l $TMP/example_data.out -c example_data/website_course_descriptors06-07.txt -o $TMP/example_data.scores.2.T-201 2>/dev/null
 	fi
 
 	EXPECTED_SCO=exp/example_data.$HASH.$CHKSUM.$XLEN.scores.2.T-201_EXP
@@ -383,8 +410,8 @@ echo "test $testnum"
 echo
 
 for file in small small2 ; do
-	echo "../bin/${TLSH_PROG} -force -f example_data/$file.txt > $TMP/$file.tlsh"
-	      ../bin/${TLSH_PROG} -force -f example_data/$file.txt > $TMP/$file.tlsh
+	echo "../bin/${TLSH_PROG} -force -f example_data/$file.txt -o $TMP/$file.tlsh"
+	      ../bin/${TLSH_PROG} -force -f example_data/$file.txt -o $TMP/$file.tlsh
 
 	EXPECTED_TLSH=exp/$file.$HASH.$CHKSUM.tlsh_EXP
 	if test ! -f $EXPECTED_TLSH
@@ -422,46 +449,50 @@ echo
 echo "test $testnum"
 echo
 
-#
-# Test 8(a): -l2
-#
-echo "../bin/${TLSH_PROG} -T 201 -l2 -l example_data_col_swap.tlsh -c example_data/website_course_descriptors06-07.txt > $TMP/example_data.scores.l2.T-201"
-      ../bin/${TLSH_PROG} -T 201 -l2 -l example_data_col_swap.tlsh -c example_data/website_course_descriptors06-07.txt > $TMP/example_data.scores.l2.T-201 2>/dev/null
-
-# same expected output as Test 5
-
-EXPECTED_SCO=exp/example_data.$HASH.$CHKSUM.len.scores.2.T-201_EXP
-if test ! -f $EXPECTED_SCO
+if test $SLDWIN = 5
 then
-	echoerr "error: ($testnum), Expected Result file $EXPECTED_SCO does not exist"
-	popd > /dev/null
-	exit 1
+	#
+	# Test 8(a): -l2
+	#
+	echo "../bin/${TLSH_PROG} -T 201 -l2 -l example_data_col_swap.tlsh -c example_data/website_course_descriptors06-07.txt -o $TMP/example_data.scores.l2.T-201"
+	      ../bin/${TLSH_PROG} -T 201 -l2 -l example_data_col_swap.tlsh -c example_data/website_course_descriptors06-07.txt -o $TMP/example_data.scores.l2.T-201 2>/dev/null
+
+	# same expected output as Test 5
+
+	EXPECTED_SCO=exp/example_data.$HASH.$CHKSUM.len.scores.2.T-201_EXP
+	if test ! -f $EXPECTED_SCO
+	then
+		echoerr "error: ($testnum), Expected Result file $EXPECTED_SCO does not exist"
+		popd > /dev/null
+		exit 1
+	fi
+
+	diff --ignore-all-space $TMP/example_data.scores.l2.T-201 $EXPECTED_SCO > /dev/null 2>/dev/null
+	if [ $? -ne 0 ]; then
+		echoerr "error: ($testnum) diff $TMP/example_data.scores.l2.T-201 $EXPECTED_SCO"
+		popd > /dev/null
+		exit $testnum
+	fi
+
+	#
+	# Test 8(a): -l2 -lcsv
+	#
+	echo "../bin/${TLSH_PROG} -T 201 -l2 -lcsv -l example_data_col_swap.csv -c example_data/website_course_descriptors06-07.txt -o $TMP/example_data.scores.l2csv.T-201"
+	      ../bin/${TLSH_PROG} -T 201 -l2 -lcsv -l example_data_col_swap.csv -c example_data/website_course_descriptors06-07.txt -o $TMP/example_data.scores.l2csv.T-201 2>/dev/null
+
+	# same expected output as Test 8(a) above
+
+	diff --ignore-all-space $TMP/example_data.scores.l2csv.T-201 $EXPECTED_SCO > /dev/null 2>/dev/null
+	if [ $? -ne 0 ]; then
+		echoerr "error: ($testnum) diff $TMP/example_data.scores.l2csv.T-201 $EXPECTED_SCO"
+		popd > /dev/null
+		exit $testnum
+	fi
+
+	echo "passed"
+else
+	echo "test 8 not relevant to SLDWIN=$SLDWIN"
 fi
-
-diff --ignore-all-space $TMP/example_data.scores.l2.T-201 $EXPECTED_SCO > /dev/null 2>/dev/null
-if [ $? -ne 0 ]; then
-	echoerr "error: ($testnum) diff $TMP/example_data.scores.l2.T-201 $EXPECTED_SCO"
-	popd > /dev/null
-	exit $testnum
-fi
-
-#
-# Test 8(a): -l2 -lcsv
-#
-echo "../bin/${TLSH_PROG} -T 201 -l2 -lcsv -l example_data_col_swap.csv -c example_data/website_course_descriptors06-07.txt > $TMP/example_data.scores.l2csv.T-201"
-      ../bin/${TLSH_PROG} -T 201 -l2 -lcsv -l example_data_col_swap.csv -c example_data/website_course_descriptors06-07.txt > $TMP/example_data.scores.l2csv.T-201 2>/dev/null
-
-# same expected output as Test 8(a) above
-
-diff --ignore-all-space $TMP/example_data.scores.l2csv.T-201 $EXPECTED_SCO > /dev/null 2>/dev/null
-if [ $? -ne 0 ]; then
-	echoerr "error: ($testnum) diff $TMP/example_data.scores.l2csv.T-201 $EXPECTED_SCO"
-	popd > /dev/null
-	exit $testnum
-fi
-
-echo "passed"
-
 ############################
 # END OF test 8
 ############################
@@ -475,25 +506,30 @@ echo
 echo "test $testnum"
 echo
 
-echo "../bin/${TLSH_PROG} -split 50,100,200 -f example_data/Week3.txt > $TMP/example_data.Week3.split.tlsh"
-      ../bin/${TLSH_PROG} -split 50,100,200 -f example_data/Week3.txt > $TMP/example_data.Week3.split.tlsh   2>/dev/null
-
-EXPECTED_RES=exp/example_data.Week3.split.tlsh
-if test ! -f $EXPECTED_RES
+if test $SLDWIN = 5
 then
-	echoerr "error: ($testnum), Expected Result file $EXPECTED_RES does not exist"
-	popd > /dev/null
-	exit 1
-fi
+	echo "../bin/${TLSH_PROG} -split 50,100,200 -f example_data/Week3.txt -o $TMP/example_data.Week3.split.tlsh"
+	      ../bin/${TLSH_PROG} -split 50,100,200 -f example_data/Week3.txt -o $TMP/example_data.Week3.split.tlsh   2>/dev/null
 
-diff --ignore-all-space $TMP/example_data.Week3.split.tlsh $EXPECTED_RES > /dev/null 2>/dev/null
-if [ $? -ne 0 ]; then
-	echoerr "error: ($testnum) diff $TMP/example_data.Week3.split.tlsh $EXPECTED_RES"
-	popd > /dev/null
-	exit $testnum
-fi
+	EXPECTED_RES=exp/example_data.Week3.split.tlsh
+	if test ! -f $EXPECTED_RES
+	then
+		echoerr "error: ($testnum), Expected Result file $EXPECTED_RES does not exist"
+		popd > /dev/null
+		exit 1
+	fi
 
-echo "passed"
+	diff --ignore-all-space $TMP/example_data.Week3.split.tlsh $EXPECTED_RES > /dev/null 2>/dev/null
+	if [ $? -ne 0 ]; then
+		echoerr "error: ($testnum) diff $TMP/example_data.Week3.split.tlsh $EXPECTED_RES"
+		popd > /dev/null
+		exit $testnum
+	fi
+
+	echo "passed"
+else
+	echo "test 9 not relevant to SLDWIN=$SLDWIN"
+fi
 
 ############################
 # END OF test 9

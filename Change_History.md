@@ -489,3 +489,13 @@ version 4: adding version identifier to each digest: 'T1'
 	turing on T1 functionality by setting showvers=1 in main
 	updating regression tests to have T1 at the start of digests
 </PRE>
+
+**4.1.0**
+<PRE>
+26/March/2020
+        adding -o option for output filename (output will go to stdout if no output file given)
+		changed test scripts to use -o option
+        adding -ojson option for json output
+		added regression test for -ojson option
+        adding -onull option to output empty files / files too small as TNULL
+</PRE>

@@ -88,8 +88,8 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 
-static void trendLSH_ut(char *compare_fname, char *dirname, char *listname, int listname_col, int listname_csv, char *fname, char *digestname,
-	int xref, bool xlen, int show_details, int threshold, int fc_cons_option, int path_option, char *splitlines, int showvers)
+static void trendLSH_ut(char *compare_fname, char *dirname, char *outfname, char *listname, int listname_col, int listname_csv, char *fname, char *digestname,
+	int xref, bool xlen, int show_details, int threshold, int fc_cons_option, int path_option, int output_json, int output_null, char *splitlines, int showvers)
 {
 int err;
 
@@ -140,9 +140,25 @@ int err;
 		}
 	}
 
+	FILE *outf = stdout;
+	if (outfname != NULL) {
+		outf = fopen(outfname, "w");
+		if (outf == NULL) {
+			fprintf(stderr, "cannot write to file %s\n", outfname);
+			exit(1);
+		}
+	}
+	int	output_flag = 0;
+
 	char buf1[2000];
 	char buf2[2000];
+	char nullstr[6];
+	sprintf(nullstr, "TNULL");
+
 	if (xref) {
+		if (output_json) {
+			fprintf(outf, "{ \"distances\":[\n");
+		}
 		for (int ti=0; ti<inputd.n_file; ti++) {
 			Tlsh *th = inputd.tptr[ti];
 			char *ti_fname;
@@ -168,18 +184,31 @@ int err;
 						int tdiff = th->totalDiff(xh, xlen);
 						if (tdiff <= threshold) {
 							if (show_details) {
-								printf("%s	[%s]	%s	[%s]	%d\n", ti_fname, th->getHash(showvers), xi_fname, xh->getHash(showvers), tdiff);
+								fprintf(outf, "%s	[%s]	%s	[%s]	%d\n", ti_fname, th->getHash(showvers), xi_fname, xh->getHash(showvers), tdiff);
 							} else {
 								const char *con_buf1 = convert_special_chars(ti_fname, buf1, sizeof(buf1));
 								const char *con_buf2 = convert_special_chars(xi_fname, buf2, sizeof(buf2));
-								printf("%s	%s	%d\n", con_buf1, con_buf2, tdiff);
+								if (output_json) {
+									if (output_flag) fprintf(outf, ",\n");
+									fprintf(outf, "{ \"tlsh1\":\"%s\", \"tlsh2\":\"%s\", \"dist\":\"%d\" }", con_buf1, con_buf2, tdiff);
+								} else {
+									fprintf(outf, "%s	%s	%d\n", con_buf1, con_buf2, tdiff);
+								}
 							}
+							output_flag ++;
 						}
 					}
 				}
 			}
 		}
 	} else {
+		if (output_json) {
+			if (comp_th != NULL) {
+				fprintf(outf, "{ \"distances\":[\n");
+			} else {
+				fprintf(outf, "{ \"digests\":[\n");
+			}
+		}
 		for (int ti=0; ti<inputd.n_file; ti++) {
 			Tlsh *th = inputd.tptr[ti];
 			char *ti_fname		= NULL;
@@ -192,38 +221,72 @@ int err;
 				ti_fname	= inputd.fnames[ti].only_fname;
 				ti_dirname	= inputd.fnames[ti].dirname;
 			}
-			if (th != NULL) {
+			if ((th != NULL) || (output_null)) {
 				if (comp_th != NULL) {
-					int tdiff = comp_th->totalDiff(th, xlen);
-					if (tdiff <= threshold) {
-						if (dirname || listname) {
-							printf("%s	%s	%d\n", convert_special_chars(compare_fname, buf1, sizeof(buf1)),
-							                       convert_special_chars(ti_fname, buf2, sizeof(buf2)), tdiff);
-						} else {
-							printf("%4d	%s\n", tdiff, convert_special_chars(ti_fname, buf1, sizeof(buf1)));
+					if (th != NULL) {
+						const char *tlsh_str = th->getHash(showvers);
+						int tdiff = comp_th->totalDiff(th, xlen);
+						if (tdiff <= threshold) {
+							const char *con_buf2 = convert_special_chars(ti_fname,      buf2, sizeof(buf2));
+							if (dirname || listname) {
+								const char *con_buf1 = convert_special_chars(compare_fname, buf1, sizeof(buf1));
+								if (output_json) {
+									if (output_flag) fprintf(outf, ",\n");
+									fprintf(outf, "{ \"tlsh1\":\"%s\", \"tlsh2\":\"%s\", \"dist\":\"%d\" }", con_buf1, con_buf2, tdiff);
+								} else {
+									fprintf(outf, "%s	%s	%d\n", con_buf1, con_buf2, tdiff);
+								}
+							} else {
+								if (output_json) {
+									if (output_flag) fprintf(outf, ",\n");
+									fprintf(outf, "{ \"tlsh1\":\"%s\", \"dist\":\"%d\" }", con_buf2, tdiff);
+								} else {
+									fprintf(outf, "%4d	%s\n", tdiff, con_buf2);
+								}
+							}
+							output_flag ++;
 						}
 					}
 				} else {
-					if (path_option == PATH_OPTION_DIRNAME) {
-						printf("%s	%s	%s\n", th->getHash(showvers),
-							convert_special_chars(ti_dirname, buf1, sizeof(buf1)),
-							convert_special_chars(ti_fname, buf2, sizeof(buf2))
-							);
+					const char *tlsh_str;
+					if (th == NULL) {
+						tlsh_str = nullstr;
 					} else {
-
-						const char *tlsh_str = th->getHash(showvers);
+						tlsh_str = th->getHash(showvers);
+					}
+					if (path_option == PATH_OPTION_DIRNAME) {
+						const char *con_buf1 = convert_special_chars(ti_dirname, buf1, sizeof(buf1));
+						const char *con_buf2 = convert_special_chars(ti_fname,   buf2, sizeof(buf2));
+						if (output_json) {
+							if (output_flag) fprintf(outf, ",\n");
+							fprintf(outf, "{ \"tlsh\":\"%s\", \"dir\":\"%s\", \"filename\":\"%s\" }", tlsh_str, con_buf1, con_buf2);
+						} else {
+							fprintf(outf, "%s	%s	%s\n", tlsh_str, con_buf1, con_buf2);
+						}
+						output_flag ++;
+					} else {
 						if (splitlines && (strlen(tlsh_str) == 0)) {
 							;
 						} else {
-							printf("%s	%s\n", tlsh_str, convert_special_chars(ti_fname, buf1, sizeof(buf1)));
+							const char *con_buf1 = convert_special_chars(ti_fname, buf1, sizeof(buf1));
+							if (output_json) {
+								if (output_flag) fprintf(outf, ",\n");
+								fprintf(outf, "{ \"tlsh\":\"%s\", \"file\":\"%s\" }", tlsh_str, con_buf1);
+							} else {
+								fprintf(outf, "%s	%s\n", tlsh_str, con_buf1);
+							}
+							output_flag ++;
 						}
 					}
 				}
 			}
 		}
 	}
-
-    // free allocated memory
+	if (output_json) fprintf(outf, "]\n}\n");
+	if (outfname != NULL) {
+		fclose(outf);
+	}
+	// free allocated memory
 	for (int ti=0; ti<inputd.n_file; ti++) {
 		if (inputd.tptr[ti] != NULL) {
 			delete inputd.tptr[ti];
@@ -245,11 +308,12 @@ static void usage(const char *fullPathName, int fullUsage)
 	if (pgmName != NULL) pgmName++;
 	else pgmName = fullPathName;
 
-	printf("usage: tlsh [-c <file|digest>]         -f <file>                     [-T <threshold_value>] [-xlen] [-force] [-old] [-details]\n" );
-	printf("     : tlsh  -c <file|digest>          -d <digest>                   [-T <threshold_value>] [-xlen] [-force] [-old] [-details]\n" );
-	printf("     : tlsh [-c <file|digest> | -xref] -r <dir>                      [-T <threshold_value>] [-xlen] [-force] [-old] [-details] [-out_fname|-out_dirname]\n" );
-	printf("     : tlsh [-c <file|digest> | -xref] -l <listfile> [-l1|-l2|-lcsv] [-T <threshold_value>] [-xlen] [-force] [-old] [-details]\n" );
-	printf("     : tlsh -split linenumbers         -f <file>                                            [-xlen] [-force] [-old] [-details]\n" );
+	printf("usage: tlsh [-c <file|digest>]         -f <file>                     [-T <threshold_value>] OPTIONS\n" );
+	printf("     : tlsh  -c <file|digest>          -d <digest>                   [-T <threshold_value>] OPTIONS\n" );
+	printf("     : tlsh [-c <file|digest> | -xref] -r <dir>                      [-T <threshold_value>] OPTIONS [-out_fname|-out_dirname]\n" );
+	printf("     : tlsh [-c <file|digest> | -xref] -l <listfile> [-l1|-l2|-lcsv] [-T <threshold_value>] OPTIONS\n" );
+	printf("     : tlsh -split linenumbers         -f <file>                                            OPTIONS\n" );
+	printf("     : OPTIONS is [-xlen] [-conservative] [-old] [-details] [-o outfile] [-ojson] [-onull]\n" );
 	printf("     : tlsh -version: prints version of tlsh library\n");
 	printf("     : tlsh -notice:  prints NOTICE.txt of tlsh library\n");
 	printf("     : tlsh -help: prints full usage information\n");
@@ -273,6 +337,9 @@ static void usage(const char *fullPathName, int fullUsage)
 	printf("  -f file:            Specifies a file whose TLSH values are to be computed, or used for comparison (-c file|digest)\n");
 	printf("  -d digest:          Specifies a TLSH digest value that is to be compared to the specified comparison file or digest (-c file|digset)\n");
 	printf("  -r dir:             Specifies a recursive directory search for files whose TLSH values are to be computed, or used for comparison (-c file|digset or -xref)\n");
+	printf("  -o file:            Specifies the output file\n");
+	printf("  -ojson:             output json format instead of TAB separated columns\n");
+	printf("  -onull:             output TNULL when we cannot generate a digest (for empty files, files < 50 characters, ...)\n");
 	printf("  -out_fname:         Specifies that only the filename is outputted when using the -r option (no path included in output)\n");
 	printf("  -out_dirname        Specifies that the dirname and filename are outputted when using the -r option (no path included in output)\n");
 	printf("  -l listfile:        Used for comparison purposes only (-c file|digset or -xref).  Each line in listfile can contain either:\n");
@@ -281,7 +348,7 @@ static void usage(const char *fullPathName, int fullUsage)
 	printf("                      The tab separated listfile can be generated by running %s with either the -f or -r flag\n", pgmName);
 	printf("  -l1                 (default) listfile contains TLSH value in column 1\n");
 	printf("  -l2                           listfile contains TLSH value in column 2\n");
-	printf("  -lcsv               listfile is csv (comma seperated) file (default is TAB seperated file)\n");
+	printf("  -lcsv               listfile is csv (comma separated) file (default is TAB separated file)\n");
 
 	printf("  -xlen:              Passed as the len_diff parameter to Tlsh::totalDiff().  If not specified, len_diff will be true, else false.  Determines if the lengths\n");
 	printf("                      of the compared files is to be included in determining the distance.  See tlsh.h for details.\n");
@@ -292,7 +359,7 @@ static void usage(const char *fullPathName, int fullUsage)
 	printf("  -details:           Results in extra detailed output.\n");
 	printf("  -T threshold_value: Used only during comparisons (-c file|digset or -xref).  Specifies the maximum distance that a comparison must\n"); 
 	printf("                      generate before it is reported. (defaults to %d)\n", DEFAULT_THRESHOLD);
-	printf("  -split linenumbers: linenumbers is a comma seperated list of line numbers (example 50,100,200 )\n");
+	printf("  -split linenumbers: linenumbers is a comma separated list of line numbers (example 50,100,200 )\n");
 	printf("                      split the file into components and eval the TLSH for each component\n"); 
 	printf("                      example. -split 50,100,200 evals 4 TLSH digests. lines 1-49, 50-99, 100-199, 200-end\n");
 	printf("                      for the purpose of splitting the file, each line has a max length of 2048 bytes\n"); 
@@ -339,9 +406,12 @@ int main(int argc, char *argv[])
 	char *dirname			= NULL;
 	char *compare_fname		= NULL;
 	char *fname			= NULL;
+	char *outfname			= NULL;
+	int   output_json		= 0;		// default is TAB separated
+	int   output_null		= 0;
 	char *listname			= NULL;
 	int   listname_col		= 1;		// default is col 1
-	int   listname_csv		= 0;		// default is TAB seperated
+	int   listname_csv		= 0;		// default is TAB separated
 
 	int xref			= 0;
 	bool xlen                       = true;
@@ -373,6 +443,15 @@ int main(int argc, char *argv[])
 		} else if (strcmp(argv[argIdx], "-d") == 0) {
 			digestname = argv[argIdx+1];
 			argIdx = argIdx+2;
+		} else if (strcmp(argv[argIdx], "-o") == 0) {
+			outfname = argv[argIdx+1];
+			argIdx = argIdx+2;
+		} else if (strcmp(argv[argIdx], "-ojson") == 0) {
+			output_json = 1;
+			argIdx = argIdx+1;
+		} else if (strcmp(argv[argIdx], "-onull") == 0) {
+			output_null = 1;
+			argIdx = argIdx+1;
 
 		} else if (strcmp(argv[argIdx], "-l") == 0) {
 			listname = argv[argIdx+1];
@@ -399,7 +478,7 @@ int main(int argc, char *argv[])
 		} else if (strcmp(argv[argIdx], "-split") == 0) {
 			splitlines = argv[argIdx+1];
 			if (! ((splitlines[0] >= '0') && (splitlines[0] <= '9')) ) {
-				printf("\nBad split argument '%s' - must be a list of numeric values (comma seperated, no spaces)\n", argv[argIdx+1]);
+				printf("\nBad split argument '%s' - must be a list of numeric values (comma separated, no spaces)\n", argv[argIdx+1]);
 				usage(argv[0], 0);
 			}
 			argIdx = argIdx+2;
@@ -522,6 +601,6 @@ int main(int argc, char *argv[])
 #ifdef TLSH_DISTANCE_PARAMETERS
 	set_tlsh_distance_parameters(length_mult_value, qratio_mult_value, hist_diff1_add_value, hist_diff2_add_value, hist_diff3_add_value);
 #endif
-	trendLSH_ut(compare_fname, dirname, listname, listname_col, listname_csv, fname, digestname, xref,
-		xlen, show_details, threshold, fc_cons_option, path_option, splitlines, showvers);
+	trendLSH_ut(compare_fname, dirname, outfname, listname, listname_col, listname_csv, fname, digestname, xref,
+		xlen, show_details, threshold, fc_cons_option, path_option, output_json, output_null, splitlines, showvers);
 }
