@@ -360,6 +360,7 @@ static void usage()
 	printf("     : tlsh_pattern -d <digest>                   [-showmiss T] -pat <pattern_file> [-xlen] [-old] [-conservative]\n" );
 	printf("     : tlsh_pattern -r <dir>                      [-showmiss T] -pat <pattern_file> [-xlen] [-old] [-conservative]\n" );
 	printf("     : tlsh_pattern -l <listfile> [-l1|-l2|-lcsv] [-showmiss T] -pat <pattern_file> [-xlen] [-old] [-conservative]\n" );
+	printf("     : tlsh_pattern -version: prints version of tlsh library\n");
 	printf("\n");
 	printf("where the pattern file consists of 5 columns\n");
 	printf("col 1: pattern number\n");
