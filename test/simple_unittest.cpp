@@ -72,7 +72,7 @@
 
 int main(int argc, char *argv[])
 {
-	int showvers = 0;
+	int showvers = 1;
 	Tlsh t1;
 	Tlsh t2;
 

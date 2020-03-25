@@ -243,7 +243,7 @@ Tlsh_fromTlshStr(tlsh_TlshObject *self, PyObject *args)
         return NULL;
     }
 
-    if (len != TLSH_STRING_LEN) {
+    if ((len != TLSH_STRING_LEN_REQ) && (len != TLSH_STRING_LEN_REQ-2)) {
         PyErr_SetString(PyExc_ValueError, "argument length incorrect: not a TLSH hex string");
         return NULL;
     }
@@ -298,13 +298,13 @@ Tlsh_final(tlsh_TlshObject *self)
 static PyObject *
 Tlsh_hexdigest(tlsh_TlshObject *self)
 {
-    char hash[TLSH_STRING_LEN + 1];
+    char hash[TLSH_STRING_LEN_REQ + 1];
 
     if (!self->finalized) {
         PyErr_SetString(PyExc_ValueError, "final() has not been called");
         return NULL;
     }
-    self->tlsh.getHash(hash, TLSH_STRING_LEN + 1);
+    self->tlsh.getHash(hash, TLSH_STRING_LEN_REQ + 1);
     if (hash[0] == '\0') {
         PyErr_SetString(PyExc_ValueError, "error while getting hash (not enough variation in input?)");
         return NULL;
@@ -338,7 +338,7 @@ Tlsh_diff(tlsh_TlshObject *self, PyObject *args)
         PyErr_SetString(PyExc_ValueError, "argument is not a TLSH hex string");
         return NULL;
       }
-      if (len != TLSH_STRING_LEN) {
+      if ((len != TLSH_STRING_LEN_REQ) && (len != TLSH_STRING_LEN_REQ-2)) {
         PyErr_SetString(PyExc_ValueError, "argument is not a TLSH hex string");
         return NULL;
       }

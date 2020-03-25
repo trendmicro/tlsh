@@ -481,3 +481,11 @@ version 4: adding version identifier to each digest: 'T1'
 	adding command line option -old to generate old style digests
 	In this version - the showvers is defaulted to off - so this will pass the old regression tests
 </PRE>
+
+**4.0.1**
+<PRE>
+26/March/2020
+version 4: adding version identifier to each digest: 'T1'
+	turing on T1 functionality by setting showvers=1 in main
+	updating regression tests to have T1 at the start of digests
+</PRE>

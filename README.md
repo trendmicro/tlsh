@@ -35,8 +35,12 @@ See notes for version 3.17.0 of TLSH
 
 ## Computed hash
 
-The computed hash is 35 bytes long (output as 70 hexidecimal charactes). The
-first 3 bytes are used to capture the information about the file as a whole
+The computed hash is 35 bytes of data (output as 'T1' followed 70 hexidecimal characters. Total length 72 characters).
+The 'T1' has been added as a version number for the hash - so that we can adapt the algorithm and still maintain
+backwards compatibility.
+To get the old style 70 hex hashes, use the -old command line option.
+
+Bytes 3,4,5 are used to capture the information about the file as a whole
 (length, ...), while the last 32 bytes are used to capture information about
 incremental parts of the file.  (Note that the length of the hash can be
 increased by changing build parameters described below in [CMakeLists.txt](CMakeLists.txt),
@@ -176,7 +180,7 @@ py_ext/tlshmodule.cpp and the py_ext/test.py script to see the full API set.
 TLSH similarity is expressed as a difference score:
 
 - A score of 0 means the objects are almost identical.
-- For the 70 characters hash, there is a detailed table of experimental Detection rates and False Positive rates
+- For the 72 characters hash, there is a detailed table of experimental Detection rates and False Positive rates
   based on the threshhold. see [Table II on page 5](https://github.com/trendmicro/tlsh/blob/master/TLSH_CTC_final.pdf)
 
 # Publications
@@ -188,12 +192,12 @@ ATIS 2014, November, 2014, pages 199-210
 
 # Current Version
 
-**4.0.0**
+**4.0.1**
 <PRE>
 26/March/2020
 version 4: adding version identifier to each digest: 'T1'
-	adding command line option -old to generate old style digests
-	In this version - the showvers is defaulted to off - so this will pass the old regression tests
+	turing on T1 functionality by setting showvers=1 in main
+	updating regression tests to have T1 at the start of digests
 </PRE>
 
 # Change History

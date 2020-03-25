@@ -349,7 +349,7 @@ int main(int argc, char *argv[])
 	int threshold			= DEFAULT_THRESHOLD;
 	char *splitlines		= NULL;
 	int fc_cons_option		= 0;
-	int showvers			= 0;
+	int showvers			= 1;
 	int path_option			= PATH_OPTION_FULL;
 
 #ifdef TLSH_DISTANCE_PARAMETERS

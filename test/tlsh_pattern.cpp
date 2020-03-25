@@ -411,7 +411,7 @@ int main(int argc, char *argv[])
 	int   listname_col		= 1;		// default is col 1
 	int   listname_csv		= 0;		// default is TAB seperated
 	int showmiss			= 0;
-	int showvers			= 0;
+	int showvers			= 1;
 
 	bool xlen                       = true;
 	int fc_cons_option		= 0;
