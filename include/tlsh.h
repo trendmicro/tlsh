@@ -60,7 +60,7 @@
 #ifndef HEADER_TLSH_H
 #define HEADER_TLSH_H
 
-#ifdef WINDOWS
+#if defined WINDOWS || defined MINGW
 #include "win_version.h"
 #else
 #include "version.h"

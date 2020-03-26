@@ -499,3 +499,9 @@ version 4: adding version identifier to each digest: 'T1'
 		added regression test for -ojson option
         adding -onull option to output empty files / files too small as TNULL
 </PRE>
+
+**4.2.0**
+<PRE>
+26/March/2020
+	Windows version using minGW
+</PRE>

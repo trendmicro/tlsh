@@ -69,7 +69,7 @@ static int read_file_eval_tlsh_splitline(char *fname, struct InputDescr *inputd,
 	///////////////////////////////////////
 	// 1. How big is the file?
 	///////////////////////////////////////
-	FILE *fd = fopen(fname, "r");
+	FILE *fd = fopen(fname, "rb");
 	if(fd==NULL)
 		return(ERROR_READING_FILE);
 	int ret = 1;

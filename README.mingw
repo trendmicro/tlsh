@@ -1,0 +1,21 @@
+17/March/2020
+
+==============================================================
+To make a Windows tlsh.exe using MinGW
+
+(1) Install mingw from http://www.mingw.org/
+	Install the G++ compiler and the make tool
+(2) run make_mingw.bat
+	> make_mingw
+(3) confirm that the compilation and regression tests worked
+	It should complete with a message
+	"passed all example data tests"
+(4) You will find the program tlsh.exe in the bin directory
+	> dir bin
+	 Volume in drive Z is Shared Folders
+
+	 Directory of Z:\Documents\TrendMicro\2016_docs\2016_TLSH\Library-tlsh.fix\bin
+
+	17/03/20  02:35 pm           187,705 tlsh.exe
+	17/03/20  02:35 pm           178,167 simple_unittest.exe
+		       2 File(s)        365,872 bytes

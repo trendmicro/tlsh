@@ -55,7 +55,7 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifdef WINDOWS
+#if defined WINDOWS || defined MINGW
 #include "win_version.h"
 #else
 #include "version.h"

@@ -145,7 +145,7 @@ int read_file_eval_tlsh(char *fname, Tlsh *th, int show_details, int fc_cons_opt
 	///////////////////////////////////////
 	// 1. How big is the file?
 	///////////////////////////////////////
-	FILE *fd = fopen(fname, "r");
+	FILE *fd = fopen(fname, "rb");
 	if(fd==NULL)
 		return(ERROR_READING_FILE);
 	int ret = 1;
@@ -184,7 +184,7 @@ int read_file_eval_tlsh(char *fname, Tlsh *th, int show_details, int fc_cons_opt
 		return(ERROR_READING_FILE);
 	}
 #else
-	fd = fopen(fname, "r");
+	fd = fopen(fname, "rb");
 	if (fd==NULL) {
 		free(data);
 		return(ERROR_READING_FILE);
