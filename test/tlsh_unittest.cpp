@@ -186,8 +186,8 @@ int err;
 							if (show_details) {
 								fprintf(outf, "%s	[%s]	%s	[%s]	%d\n", ti_fname, th->getHash(showvers), xi_fname, xh->getHash(showvers), tdiff);
 							} else {
-								const char *con_buf1 = convert_special_chars(ti_fname, buf1, sizeof(buf1));
-								const char *con_buf2 = convert_special_chars(xi_fname, buf2, sizeof(buf2));
+								const char *con_buf1 = convert_special_chars(ti_fname, buf1, sizeof(buf1), output_json);
+								const char *con_buf2 = convert_special_chars(xi_fname, buf2, sizeof(buf2), output_json);
 								if (output_json) {
 									if (output_flag) fprintf(outf, ",\n");
 									fprintf(outf, "{ \"tlsh1\":\"%s\", \"tlsh2\":\"%s\", \"dist\":\"%d\" }", con_buf1, con_buf2, tdiff);
@@ -227,9 +227,9 @@ int err;
 						const char *tlsh_str = th->getHash(showvers);
 						int tdiff = comp_th->totalDiff(th, xlen);
 						if (tdiff <= threshold) {
-							const char *con_buf2 = convert_special_chars(ti_fname,      buf2, sizeof(buf2));
+							const char *con_buf2 = convert_special_chars(ti_fname,      buf2, sizeof(buf2), output_json);
 							if (dirname || listname) {
-								const char *con_buf1 = convert_special_chars(compare_fname, buf1, sizeof(buf1));
+								const char *con_buf1 = convert_special_chars(compare_fname, buf1, sizeof(buf1), output_json);
 								if (output_json) {
 									if (output_flag) fprintf(outf, ",\n");
 									fprintf(outf, "{ \"tlsh1\":\"%s\", \"tlsh2\":\"%s\", \"dist\":\"%d\" }", con_buf1, con_buf2, tdiff);
@@ -255,8 +255,8 @@ int err;
 						tlsh_str = th->getHash(showvers);
 					}
 					if (path_option == PATH_OPTION_DIRNAME) {
-						const char *con_buf1 = convert_special_chars(ti_dirname, buf1, sizeof(buf1));
-						const char *con_buf2 = convert_special_chars(ti_fname,   buf2, sizeof(buf2));
+						const char *con_buf1 = convert_special_chars(ti_dirname, buf1, sizeof(buf1), output_json);
+						const char *con_buf2 = convert_special_chars(ti_fname,   buf2, sizeof(buf2), output_json);
 						if (output_json) {
 							if (output_flag) fprintf(outf, ",\n");
 							fprintf(outf, "{ \"tlsh\":\"%s\", \"dir\":\"%s\", \"filename\":\"%s\" }", tlsh_str, con_buf1, con_buf2);
@@ -268,7 +268,7 @@ int err;
 						if (splitlines && (strlen(tlsh_str) == 0)) {
 							;
 						} else {
-							const char *con_buf1 = convert_special_chars(ti_fname, buf1, sizeof(buf1));
+							const char *con_buf1 = convert_special_chars(ti_fname, buf1, sizeof(buf1), output_json);
 							if (output_json) {
 								if (output_flag) fprintf(outf, ",\n");
 								fprintf(outf, "{ \"tlsh\":\"%s\", \"file\":\"%s\" }", tlsh_str, con_buf1);

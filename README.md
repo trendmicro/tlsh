@@ -10,8 +10,13 @@ the detection of similar objects by comparing their hash values.  Note that
 the byte stream should have a sufficient amount of complexity.  For example,
 a byte stream of identical bytes will not generate a hash value.
 
-## TLSH 4.x.x	- adding version identifier to the digest
+## What's New in TLSH 4.x.x
 26/March/2020
+- adding version identifier to the digest
+- added output options (-o)
+- added json object output (-ojson)
+- added null digest (TNULL)
+
 TLSH has gained some traction. It has been included in STIX 2.1 and been ported to a number of langauges.
 
 We are adding a version identifier ("T1") to the start of the digest so that we can
@@ -192,10 +197,10 @@ ATIS 2014, November, 2014, pages 199-210
 
 # Current Version
 
-**4.2.0**
+**4.2.1**
 <PRE>
-26/March/2020
-	Windows version using minGW
+27/March/2020
+	resolve issue #78 json objects do not validate on windows
 </PRE>
 
 # Change History

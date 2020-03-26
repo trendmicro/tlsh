@@ -89,7 +89,7 @@ SpecialChar getSpecialChar(const char *tab, const char *newline, const char *lin
 	return TAB;      // To remove compiler warning about reaching end of non-void function
 }
 
-const char *convert_special_chars(char *filename, char *buf, size_t bufSize)
+const char *original_convert_special_chars(char *filename, char *buf, size_t bufSize)
 {
 const char *curTab		= CONVERT_TAB;
 const char *replaceTab		= "\t";
@@ -135,6 +135,48 @@ size_t buf_offset = 0;
 			fname_offset = linefeed - filename + strlen(curLinefeed);
 			*linefeed = save;  // replace linefeed
 		}
+	}
+}
+
+const char *convert_special_chars(char *filename, char *buf, size_t bufSize, int output_json)
+{
+	int len = strlen(filename);
+	if (output_json) {
+		int bi = 0;
+		for (int xi=0; xi<len; xi++) {
+			if (bi == bufSize-2) {
+				buf[bi] = '\0';
+				return(buf);
+			}
+			unsigned char x = (unsigned char) filename[xi];
+			switch (x) {
+				case '"':	buf[bi]='\\'; bi++; buf[bi] = '\"'; break;
+				case '\\':	buf[bi]='\\'; bi++; buf[bi] = '\\'; break;
+				case '\b':	buf[bi]='\\'; bi++; buf[bi] = 'b'; break;
+				case '\f':	buf[bi]='\\'; bi++; buf[bi] = 'f'; break;
+				case '\n':	buf[bi]='\\'; bi++; buf[bi] = 'n'; break;
+				case '\r':	buf[bi]='\\'; bi++; buf[bi] = 'r'; break;
+				case '\t':	buf[bi]='\\'; bi++; buf[bi] = 't'; break;
+#if defined WINDOWS || defined MINGW
+				case '/':	buf[bi]='\\'; bi++; buf[bi] = '\\'; break;
+#endif
+				default:
+						buf[bi] = x; break;
+			}
+			bi ++;
+		}
+		if (bi < bufSize) {
+			buf[bi] = '\0';
+		} else {
+			buf[bufSize-1] = '\0';
+		}
+		return(buf);
+	} else {
+		strncpy(buf, filename, bufSize);
+		if (len >= bufSize) {
+			buf[bufSize-1] = '\0';
+		}
+		return(buf);
 	}
 }
 

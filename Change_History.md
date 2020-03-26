@@ -505,3 +505,9 @@ version 4: adding version identifier to each digest: 'T1'
 26/March/2020
 	Windows version using minGW
 </PRE>
+
+**4.2.1**
+<PRE>
+27/March/2020
+	resolve issue #78 json objects do not validate on windows
+</PRE>
