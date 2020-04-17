@@ -511,3 +511,10 @@ version 4: adding version identifier to each digest: 'T1'
 27/March/2020
 	resolve issue #78 json objects do not validate on windows
 </PRE>
+
+**4.2.2**
+<PRE>
+17/April/2020
+	resolve issue #81
+	Pass regression tests
+</PRE>

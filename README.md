@@ -197,10 +197,11 @@ ATIS 2014, November, 2014, pages 199-210
 
 # Current Version
 
-**4.2.1**
+**4.2.2**
 <PRE>
-27/March/2020
-	resolve issue #78 json objects do not validate on windows
+17/April/2020
+	resolve issue #81
+	Pass regression tests
 </PRE>
 
 # Change History
