@@ -10,43 +10,61 @@ echoerr() { echo "$@" 1>&2; }
 BASEDIR=$(dirname $0)
 pushd $BASEDIR > /dev/null
 
-if test ! -z "$1"
+LISTOPTION=1
+JSONOPTION=1
+if test "$1" = "_go"
 then
-	TLSH_PROG="tlsh$1"
-	SIMP_PROG="simple_unittest$1"
+	TLSH_PROG="./tlsh_go"
+	SIMP_PROG="./tlsh_go"
+	LISTOPTION=0
+	JSONOPTION=0
+	echo "Scenario: $1	(go version)..."
+elif test ! -z "$1"
+then
+	TLSH_PROG="../bin/tlsh$1"
+	SIMP_PROG="../bin/simple_unittest$1"
 	echo "Scenario: $1	(c++ version)..."
 else
-	TLSH_PROG=tlsh
-	SIMP_PROG="simple_unittest"
+	TLSH_PROG=../bin/tlsh
+	SIMP_PROG="../bin/simple_unittest"
 	echo "Scenario: tlsh	(c++ standard version)..."
 fi
+echo "TLSH_PROG=$TLSH_PROG"
 
-if test ! -f ../bin/$TLSH_PROG
+if test ! -f $TLSH_PROG
 then
 	echoerr "error: (127), you must compile $TLSH_PROG"
         popd > /dev/null
 	exit 127
 fi
 
-if test ! -f ../bin/$SIMP_PROG
+if test ! -f $SIMP_PROG
 then
-	echoerr "error: (127), you must compile ../bin/$SIMP_PROG"
+	echoerr "error: (127), you must compile $SIMP_PROG"
         popd > /dev/null
 	exit 127
 fi
 
 TMP="tmp"
-HASH=`  ../bin/$TLSH_PROG -longversion | head -1           | cut -f1`
-CHKSUM=`../bin/$TLSH_PROG -longversion | head -2 | tail -1 | cut -f1`
-SLDWIN=`../bin/$TLSH_PROG -longversion |           tail -1 | cut -f1`
+if test "$1" = "_go"
+then
+	HASH=128
+	CHKSUM=1
+	SLDWIN=5
+else
+	HASH=`  $TLSH_PROG -longversion | head -1           | cut -f1`
+	CHKSUM=`$TLSH_PROG -longversion | head -2 | tail -1 | cut -f1`
+	SLDWIN=`$TLSH_PROG -longversion |           tail -1 | cut -f1`
+fi
 echo "HASH is $HASH"
 echo "CHKSUM is $CHKSUM"
 echo "SLDWIN is $SLDWIN"
 
-if test ! -d tmp
+if test -d tmp
 then
-    mkdir tmp
+	rm -rf tmp
 fi
+mkdir tmp
 
 ############################
 # THE runit FUNCTION
@@ -69,9 +87,6 @@ runit() {
 	then
 	    TLSH_PROG="tlsh_c"
 	    echo "Scenario: tlsh_c (c standalone version)..."
-	else
-	    TLSH_PROG="tlsh"
-	    echo "Scenario: tlsh   (c++ standard version)..."
 	fi
 
 	########################################################
@@ -83,9 +98,15 @@ runit() {
 	echo "test 1"
 	echo
 
-	echo "../bin/${TLSH_PROG} -r example_data -o $TMP/example_data.out 2> $TMP/example_data.err"
-	      ../bin/${TLSH_PROG} -r example_data -o $TMP/example_data.out 2> $TMP/example_data.err
+	echo "${TLSH_PROG} -r example_data -o $TMP/example_data.out 2> $TMP/example_data.err"
+	      ${TLSH_PROG} -r example_data -o $TMP/example_data.out 2> $TMP/example_data.err
 
+	if test ! -f $TMP/example_data.out
+	then
+		echoerr "error: (1), $TMP/example_data.out does not exist"
+		popd > /dev/null
+		exit 1
+	fi
 	EXPECTED_OUT=exp/example_data.$HASH.$CHKSUM.$XLEN.out_EXP
 	EXPECTED_ERR=exp/example_data.$HASH.$CHKSUM.$XLEN.err_EXP
 	if test ! -f $EXPECTED_OUT
@@ -112,10 +133,10 @@ runit() {
 			      cp $TMP/example_data.err $EXPECTED_ERR
 		fi
 	fi
-	diffc=`diff --ignore-all-space $TMP/example_data.out $EXPECTED_OUT | wc -l`
+	diffc=`diff --ignore-case --ignore-all-space $TMP/example_data.out $EXPECTED_OUT | wc -l`
 	if test ! $diffc = 0
 	then
-		echoerr "error: (1), diff $TMP/example_data.out $EXPECTED_OUT"
+		echoerr "error: (1), diff --ignore-case $TMP/example_data.out $EXPECTED_OUT"
 		popd > /dev/null
 		exit 1
 	fi
@@ -130,17 +151,23 @@ runit() {
 
 	echo "passed"
 
-	echo "../bin/${TLSH_PROG} -r example_data -o $TMP/example_data.json_out -ojson 2> $TMP/example_data.err"
-	      ../bin/${TLSH_PROG} -r example_data -o $TMP/example_data.json_out -ojson 2> $TMP/example_data.err
-	EXPECTED_OUT=exp/example_data.$HASH.$CHKSUM.$SLDWIN.$XLEN.json_out_EXP
-	diffc=`diff --ignore-all-space $TMP/example_data.json_out $EXPECTED_OUT | wc -l`
-	if test ! $diffc = 0
+	if test $JSONOPTION = 1
 	then
-		echoerr "error: (1), diff $TMP/example_data.json_out $EXPECTED_OUT"
-		popd > /dev/null
-		exit 1
+		echo "${TLSH_PROG} -r example_data -o $TMP/example_data.json_out -ojson 2> $TMP/example_data.err"
+		      ${TLSH_PROG} -r example_data -o $TMP/example_data.json_out -ojson 2> $TMP/example_data.err
+		EXPECTED_OUT=exp/example_data.$HASH.$CHKSUM.$SLDWIN.$XLEN.json_out_EXP
+		diffc=`diff --ignore-all-space $TMP/example_data.json_out $EXPECTED_OUT | wc -l`
+		if test ! $diffc = 0
+		then
+			echoerr "error: (1), diff $TMP/example_data.json_out $EXPECTED_OUT"
+			popd > /dev/null
+			exit 1
+		fi
+		echo "passed"
+	else
+		echo
+		echo "Test1(B): we need to implement json functionality in Go version"
 	fi
-	echo "passed"
 
 	########################################################
 	# Test 2
@@ -153,11 +180,11 @@ runit() {
 
 	if test $XLEN = "xlen"
 	then
-	echo "../bin/${TLSH_PROG} -xlen -r example_data -c example_data/website_course_descriptors06-07.txt -o $TMP/example_data.scores 2> $TMP/example_data.err2"
-	      ../bin/${TLSH_PROG} -xlen -r example_data -c example_data/website_course_descriptors06-07.txt -o $TMP/example_data.scores 2> $TMP/example_data.err2
+	echo "${TLSH_PROG} -xlen -r example_data -c example_data/website_course_descriptors06-07.txt -o $TMP/example_data.scores 2> $TMP/example_data.err2"
+	      ${TLSH_PROG} -xlen -r example_data -c example_data/website_course_descriptors06-07.txt -o $TMP/example_data.scores 2> $TMP/example_data.err2
 	else
-	echo "../bin/${TLSH_PROG} -r example_data -c example_data/website_course_descriptors06-07.txt -o $TMP/example_data.scores 2> $TMP/example_data.err2"
-	      ../bin/${TLSH_PROG} -r example_data -c example_data/website_course_descriptors06-07.txt -o $TMP/example_data.scores 2> $TMP/example_data.err2
+	echo "${TLSH_PROG} -r example_data -c example_data/website_course_descriptors06-07.txt -o $TMP/example_data.scores 2> $TMP/example_data.err2"
+	      ${TLSH_PROG} -r example_data -c example_data/website_course_descriptors06-07.txt -o $TMP/example_data.scores 2> $TMP/example_data.err2
 	fi
 
 	EXPECTED_SCO=exp/example_data.$HASH.$CHKSUM.$XLEN.scores_EXP
@@ -210,44 +237,49 @@ runit() {
 	#	far more efficient
 	########################################################
 
-	echo
-	echo "test 3"
-	echo
-
-	# note that test 3 will output the following error, so write stderr to /dev/null, so it will not be seen.
-	#   warning: cannot read TLSH code example_data/BookingBrochure.txt
-	if test $XLEN = "xlen"
+	if test $LISTOPTION = 1
 	then
-	echo "../bin/${TLSH_PROG} -xlen -l $TMP/example_data.out -c example_data/website_course_descriptors06-07.txt -o $TMP/example_data.scores.2"
-	      ../bin/${TLSH_PROG} -xlen -l $TMP/example_data.out -c example_data/website_course_descriptors06-07.txt -o $TMP/example_data.scores.2 2>/dev/null
-	else
-	echo "../bin/${TLSH_PROG} -l $TMP/example_data.out -c example_data/website_course_descriptors06-07.txt -o $TMP/example_data.scores.2"
-	      ../bin/${TLSH_PROG} -l $TMP/example_data.out -c example_data/website_course_descriptors06-07.txt -o $TMP/example_data.scores.2 2>/dev/null
-	fi
+		echo
+		echo "test 3"
+		echo
 
-	EXPECTED_SCO=exp/example_data.$HASH.$CHKSUM.$XLEN.scores.2_EXP
-	if test ! -f $EXPECTED_SCO
-	then
-		if test $CREATE_EXP_FILE = 0
+		# note that test 3 will output the following error, so write stderr to /dev/null, so it will not be seen.
+		#   warning: cannot read TLSH code example_data/BookingBrochure.txt
+		if test $XLEN = "xlen"
 		then
-			echoerr "error: (3), Expected Result file $EXPECTED_SCO does not exist"
-			popd > /dev/null
-			exit 1
+		echo "${TLSH_PROG} -xlen -l $TMP/example_data.out -c example_data/website_course_descriptors06-07.txt -o $TMP/example_data.scores.2"
+		      ${TLSH_PROG} -xlen -l $TMP/example_data.out -c example_data/website_course_descriptors06-07.txt -o $TMP/example_data.scores.2 2>/dev/null
 		else
-			echo "cp $TMP/example_data.scores.2 $EXPECTED_SCO"
-			      cp $TMP/example_data.scores.2 $EXPECTED_SCO
+		echo "${TLSH_PROG} -l $TMP/example_data.out -c example_data/website_course_descriptors06-07.txt -o $TMP/example_data.scores.2"
+		      ${TLSH_PROG} -l $TMP/example_data.out -c example_data/website_course_descriptors06-07.txt -o $TMP/example_data.scores.2 2>/dev/null
 		fi
-	fi
 
-	diffc=`diff --ignore-all-space $TMP/example_data.scores.2 $EXPECTED_SCO | wc -l`
-	if test ! $diffc = 0
-	then
-		echoerr "error: (3) diff $TMP/example_data.scores.2 $EXPECTED_SCO"
-		popd > /dev/null
-		exit 3
-	fi
+		EXPECTED_SCO=exp/example_data.$HASH.$CHKSUM.$XLEN.scores.2_EXP
+		if test ! -f $EXPECTED_SCO
+		then
+			if test $CREATE_EXP_FILE = 0
+			then
+				echoerr "error: (3), Expected Result file $EXPECTED_SCO does not exist"
+				popd > /dev/null
+				exit 1
+			else
+				echo "cp $TMP/example_data.scores.2 $EXPECTED_SCO"
+				      cp $TMP/example_data.scores.2 $EXPECTED_SCO
+			fi
+		fi
 
-	echo "passed"
+		diffc=`diff --ignore-all-space $TMP/example_data.scores.2 $EXPECTED_SCO | wc -l`
+		if test ! $diffc = 0
+		then
+			echoerr "error: (3) diff $TMP/example_data.scores.2 $EXPECTED_SCO"
+			popd > /dev/null
+			exit 3
+		fi
+
+		echo "passed"
+	else
+		echo "Test3: we need to implement list functionality (-l/-d) in Go version"
+	fi
 
 	########################################################
 	# Test 4
@@ -259,11 +291,11 @@ runit() {
 	echo "test $testnum"
 	echo 
 	if [ $XLEN = "xlen" ]; then
-	echo "../bin/${TLSH_PROG} -xref -xlen -r example_data -o $TMP/example_data.xref.scores"
-	      ../bin/${TLSH_PROG} -xref -xlen -r example_data -o $TMP/example_data.xref.scores 2>/dev/null
+	echo "${TLSH_PROG} -xref -xlen -r example_data -o $TMP/example_data.xref.scores"
+	      ${TLSH_PROG} -xref -xlen -r example_data -o $TMP/example_data.xref.scores 2>/dev/null
 	else
-	echo "../bin/${TLSH_PROG} -xref -r example_data -o $TMP/example_data.xref.scores"
-	      ../bin/${TLSH_PROG} -xref -r example_data -o $TMP/example_data.xref.scores 2>/dev/null
+	echo "${TLSH_PROG} -xref -r example_data -o $TMP/example_data.xref.scores"
+	      ${TLSH_PROG} -xref -r example_data -o $TMP/example_data.xref.scores 2>/dev/null
 	fi
 
 	EXPECTED_SCO=exp/example_data.$HASH.$CHKSUM.$XLEN.xref.scores_EXP
@@ -289,72 +321,88 @@ runit() {
 
 	echo "passed"
 
-	if [ $XLEN = "xlen" ]; then
-	echo "../bin/${TLSH_PROG} -xref -xlen -r example_data -o $TMP/example_data.xref.json_scores -ojson"
-	      ../bin/${TLSH_PROG} -xref -xlen -r example_data -o $TMP/example_data.xref.json_scores -ojson 2>/dev/null
+	if test $JSONOPTION = 1
+	then
+		if [ $XLEN = "xlen" ]; then
+		echo "${TLSH_PROG} -xref -xlen -r example_data -o $TMP/example_data.xref.json_scores -ojson"
+		      ${TLSH_PROG} -xref -xlen -r example_data -o $TMP/example_data.xref.json_scores -ojson 2>/dev/null
+		else
+		echo "${TLSH_PROG} -xref -r example_data -o $TMP/example_data.xref.json_scores -ojson"
+		      ${TLSH_PROG} -xref -r example_data -o $TMP/example_data.xref.json_scores -ojson 2>/dev/null
+		fi
+		EXPECTED_SCO=exp/example_data.$HASH.$CHKSUM.$SLDWIN.$XLEN.xref.json_scores_EXP
+		diff --ignore-all-space $TMP/example_data.xref.json_scores $EXPECTED_SCO > /dev/null 2>/dev/null
+		if [ $? -ne 0 ]; then
+			echoerr "error: ($testnum), diff $TMP/example_data.xref.json_scores $EXPECTED_SCO"
+			popd > /dev/null
+			exit $testnum
+		fi
+		echo "passed"
 	else
-	echo "../bin/${TLSH_PROG} -xref -r example_data -o $TMP/example_data.xref.json_scores -ojson"
-	      ../bin/${TLSH_PROG} -xref -r example_data -o $TMP/example_data.xref.json_scores -ojson 2>/dev/null
+		echo
+		echo "Test4(B): we need to implement json functionality in Go version"
 	fi
-	EXPECTED_SCO=exp/example_data.$HASH.$CHKSUM.$SLDWIN.$XLEN.xref.json_scores_EXP
-	diff --ignore-all-space $TMP/example_data.xref.json_scores $EXPECTED_SCO > /dev/null 2>/dev/null
-	if [ $? -ne 0 ]; then
-		echoerr "error: ($testnum), diff $TMP/example_data.xref.json_scores $EXPECTED_SCO"
-		popd > /dev/null
-		exit $testnum
-	fi
-	echo "passed"
 
 	########################################################
 	# Test 5
 	#	Test out the -T (threshold parameter)
 	########################################################
-	testnum=$(($testnum + 1))
-	echo
-	echo "test $testnum"
-	echo
-	# note that test 5 will output the following error, so write stderr to /dev/null, so it will not be seen.
-	#   warning: cannot read TLSH code example_data/BookingBrochure.txt
-
-	if [ $XLEN = "xlen" ]; then
-	echo "../bin/${TLSH_PROG} -T 201 -xlen -l $TMP/example_data.out -c example_data/website_course_descriptors06-07.txt -o $TMP/example_data.scores.2.T-201"
-	      ../bin/${TLSH_PROG} -T 201 -xlen -l $TMP/example_data.out -c example_data/website_course_descriptors06-07.txt -o $TMP/example_data.scores.2.T-201 2>/dev/null
-	else
-	echo "../bin/${TLSH_PROG} -T 201 -l $TMP/example_data.out -c example_data/website_course_descriptors06-07.txt -o $TMP/example_data.scores.2.T-201"
-	      ../bin/${TLSH_PROG} -T 201 -l $TMP/example_data.out -c example_data/website_course_descriptors06-07.txt -o $TMP/example_data.scores.2.T-201 2>/dev/null
-	fi
-
-	EXPECTED_SCO=exp/example_data.$HASH.$CHKSUM.$XLEN.scores.2.T-201_EXP
-	if test ! -f $EXPECTED_SCO
+	if test $LISTOPTION = 1
 	then
-		if test $CREATE_EXP_FILE = 0
-		then
-			echoerr "error: ($testnum), Expected Result file $EXPECTED_SCO does not exist"
-			popd > /dev/null
-			exit 1
+		testnum=5
+		echo
+		echo "test $testnum"
+		echo
+		# note that test 5 will output the following error, so write stderr to /dev/null, so it will not be seen.
+		#   warning: cannot read TLSH code example_data/BookingBrochure.txt
+
+		if [ $XLEN = "xlen" ]; then
+		echo "${TLSH_PROG} -T 201 -xlen -l $TMP/example_data.out -c example_data/website_course_descriptors06-07.txt -o $TMP/example_data.scores.2.T-201"
+		      ${TLSH_PROG} -T 201 -xlen -l $TMP/example_data.out -c example_data/website_course_descriptors06-07.txt -o $TMP/example_data.scores.2.T-201 2>/dev/null
 		else
-			echo "cp $TMP/example_data.scores.2.T-201 $EXPECTED_SCO"
-			      cp $TMP/example_data.scores.2.T-201 $EXPECTED_SCO
+		echo "${TLSH_PROG} -T 201 -l $TMP/example_data.out -c example_data/website_course_descriptors06-07.txt -o $TMP/example_data.scores.2.T-201"
+		      ${TLSH_PROG} -T 201 -l $TMP/example_data.out -c example_data/website_course_descriptors06-07.txt -o $TMP/example_data.scores.2.T-201 2>/dev/null
 		fi
-	fi
 
-	diff --ignore-all-space $TMP/example_data.scores.2.T-201 $EXPECTED_SCO > /dev/null 2>/dev/null
-	if [ $? -ne 0 ]; then
-		echoerr "error: ($testnum) diff $TMP/example_data.scores.2.T-201 $EXPECTED_SCO"
-		popd > /dev/null
-		exit $testnum
-	fi
+		EXPECTED_SCO=exp/example_data.$HASH.$CHKSUM.$XLEN.scores.2.T-201_EXP
+		if test ! -f $EXPECTED_SCO
+		then
+			if test $CREATE_EXP_FILE = 0
+			then
+				echoerr "error: ($testnum), Expected Result file $EXPECTED_SCO does not exist"
+				popd > /dev/null
+				exit 1
+			else
+				echo "cp $TMP/example_data.scores.2.T-201 $EXPECTED_SCO"
+				      cp $TMP/example_data.scores.2.T-201 $EXPECTED_SCO
+			fi
+		fi
 
-	echo "passed"
+		diff --ignore-all-space $TMP/example_data.scores.2.T-201 $EXPECTED_SCO > /dev/null 2>/dev/null
+		if [ $? -ne 0 ]; then
+			echoerr "error: ($testnum) diff $TMP/example_data.scores.2.T-201 $EXPECTED_SCO"
+			popd > /dev/null
+			exit $testnum
+		fi
+		echo "passed"
+	else
+		echo "Test5: we need to implement list functionality (-l/-d) in Go version"
+	fi
 
 }
 ############################
 # END OF THE runit FUNCTION
 ############################
 
-runit 
+runit
+if test "$1" = "_go"
+then
+	echo "passed all example data tests (for go implementation)"
+	popd > /dev/null
+	exit 0
+fi
 runit "-xlen"
-if test -f ../bin/tlsh_c
+if test -f tlsh_c
 then
 	runit "-tlsh_c"
 fi
@@ -410,8 +458,8 @@ echo "test $testnum"
 echo
 
 for file in small small2 ; do
-	echo "../bin/${TLSH_PROG} -force -f example_data/$file.txt -o $TMP/$file.tlsh"
-	      ../bin/${TLSH_PROG} -force -f example_data/$file.txt -o $TMP/$file.tlsh
+	echo "${TLSH_PROG} -force -f example_data/$file.txt -o $TMP/$file.tlsh"
+	      ${TLSH_PROG} -force -f example_data/$file.txt -o $TMP/$file.tlsh
 
 	EXPECTED_TLSH=exp/$file.$HASH.$CHKSUM.tlsh_EXP
 	if test ! -f $EXPECTED_TLSH
@@ -454,8 +502,8 @@ then
 	#
 	# Test 8(a): -l2
 	#
-	echo "../bin/${TLSH_PROG} -T 201 -l2 -l example_data_col_swap.tlsh -c example_data/website_course_descriptors06-07.txt -o $TMP/example_data.scores.l2.T-201"
-	      ../bin/${TLSH_PROG} -T 201 -l2 -l example_data_col_swap.tlsh -c example_data/website_course_descriptors06-07.txt -o $TMP/example_data.scores.l2.T-201 2>/dev/null
+	echo "${TLSH_PROG} -T 201 -l2 -l example_data_col_swap.tlsh -c example_data/website_course_descriptors06-07.txt -o $TMP/example_data.scores.l2.T-201"
+	      ${TLSH_PROG} -T 201 -l2 -l example_data_col_swap.tlsh -c example_data/website_course_descriptors06-07.txt -o $TMP/example_data.scores.l2.T-201 2>/dev/null
 
 	# same expected output as Test 5
 
@@ -477,8 +525,8 @@ then
 	#
 	# Test 8(a): -l2 -lcsv
 	#
-	echo "../bin/${TLSH_PROG} -T 201 -l2 -lcsv -l example_data_col_swap.csv -c example_data/website_course_descriptors06-07.txt -o $TMP/example_data.scores.l2csv.T-201"
-	      ../bin/${TLSH_PROG} -T 201 -l2 -lcsv -l example_data_col_swap.csv -c example_data/website_course_descriptors06-07.txt -o $TMP/example_data.scores.l2csv.T-201 2>/dev/null
+	echo "${TLSH_PROG} -T 201 -l2 -lcsv -l example_data_col_swap.csv -c example_data/website_course_descriptors06-07.txt -o $TMP/example_data.scores.l2csv.T-201"
+	      ${TLSH_PROG} -T 201 -l2 -lcsv -l example_data_col_swap.csv -c example_data/website_course_descriptors06-07.txt -o $TMP/example_data.scores.l2csv.T-201 2>/dev/null
 
 	# same expected output as Test 8(a) above
 
@@ -508,8 +556,8 @@ echo
 
 if test $SLDWIN = 5
 then
-	echo "../bin/${TLSH_PROG} -split 50,100,200 -f example_data/Week3.txt -o $TMP/example_data.Week3.split.tlsh"
-	      ../bin/${TLSH_PROG} -split 50,100,200 -f example_data/Week3.txt -o $TMP/example_data.Week3.split.tlsh   2>/dev/null
+	echo "${TLSH_PROG} -split 50,100,200 -f example_data/Week3.txt -o $TMP/example_data.Week3.split.tlsh"
+	      ${TLSH_PROG} -split 50,100,200 -f example_data/Week3.txt -o $TMP/example_data.Week3.split.tlsh   2>/dev/null
 
 	EXPECTED_RES=exp/example_data.Week3.split.tlsh
 	if test ! -f $EXPECTED_RES
@@ -542,7 +590,7 @@ testnum=10
 
 echo
 echo "Running $SIMP_PROG"
-../bin/$SIMP_PROG > $TMP/simple_unittest.out
+$SIMP_PROG > $TMP/simple_unittest.out
 
 EXPECTED_STEST=exp/simple_unittest.$HASH.$CHKSUM.EXP
 if test ! -f $EXPECTED_STEST

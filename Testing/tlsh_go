@@ -1,0 +1,196 @@
+#!/bin/sh
+
+prog=/home/jono/go/src/github.com/glaslos/tlsh/app/app
+
+argv[0]="$0"
+argv[1]="$1"
+argv[2]="$2"
+argv[3]="$3"
+argv[4]="$4"
+argv[5]="$5"
+argv[6]="$6"
+argv[7]="$7"
+argv[8]="$8"
+argv[9]="$9"
+
+verbose=0
+
+ojson=0
+xref=0
+
+dir=""
+output=""
+compare=""
+lfile=""
+file1=""
+threshold=2000
+
+let i=1
+while [ $i -le 9 ]
+do
+	if test "${argv[$i]}" = "-r"
+	then
+		let i=$i+1
+		dir="${argv[$i]}"
+	elif test "${argv[$i]}" = "-l"
+	then
+		let i=$i+1
+		lfile="${argv[$i]}"
+	elif test "${argv[$i]}" = "-c"
+	then
+		let i=$i+1
+		compare="${argv[$i]}"
+	elif test "${argv[$i]}" = "-f"
+	then
+		let i=$i+1
+		file1="${argv[$i]}"
+	elif test "${argv[$i]}" = "-o"
+	then
+		let i=$i+1
+		output="${argv[$i]}"
+	elif test "${argv[$i]}" = "-T"
+	then
+		let i=$i+1
+		threshold="${argv[$i]}"
+	elif test "${argv[$i]}" = "-ojson"
+	then
+		ojson=1
+	elif test "${argv[$i]}" = "-xref"
+	then
+		xref=1
+	elif test ! "${argv[$i]}" = ""
+	then
+		echo "error: unknown option ${argv[$i]}"
+		exit
+	fi
+	let i=$i+1
+done
+
+if test $verbose = 1
+then
+	echo "ojson=$ojson"
+	echo "xref=$xref"
+
+	echo "dir=$dir"
+	echo "output=$output"
+	echo "compare=$compare"
+	echo "lfile=$lfile"
+	echo "file1=$file1"
+	echo "threshold=$threshold"
+fi
+
+f=0
+if test ! $file1 = ""
+then
+	if test ! -f $file1
+	then
+		echo "error: cannot open file $file1"
+		exit
+	else
+		files[$f]=$file1
+		let f=$f+1
+	fi
+elif test ! $dir = ""
+then
+	if test ! -d $dir
+	then
+		echo "error: cannot open dir $dir"
+		exit
+	else
+		list=`ls $dir | LC_COLLATE=C sort`
+		for fname in $list ; do
+			files[$f]=$dir/$fname
+			let f=$f+1
+		done
+	fi
+elif test ! $lfile = ""
+then
+	if test ! -f $lfile
+	then
+		echo "error: cannot open file $lfile"
+		exit
+	else
+		list=`cut -f 1 $lfile | sed -e 's/^T1//'`
+		for fname in $list ; do
+			files[$f]=$fname
+			let f=$f+1
+		done
+	fi
+fi
+
+if test $verbose = 1
+then
+	let x=0
+	while [ $x -lt $f ]
+	do
+		echo "$x ${files[$x]}"
+		let x=$x+1
+	done
+	exit
+fi
+
+###################################
+# run the go program
+###################################
+OUTF=/tmp/tmp.tlsh_go
+rm -f $OUTF
+
+if test ! $compare = ""
+then
+	if test ! -f $compare
+	then
+		echo "error: cannot open file $compare"
+		exit
+	fi
+	let x=0
+	while [ $x -lt $f ]
+	do
+		### echo "$x ${files[$x]}"
+		$prog -c $compare -f ${files[$x]} | sed -e 's/  / /g' | sed -e 's/ - / /' > /tmp/tmp.tlsh_go.1
+		score=`cat /tmp/tmp.tlsh_go.1 | cut -f 1 -d' '`
+		if test $score -le $threshold
+		then
+			f1=`cat /tmp/tmp.tlsh_go.1 | cut -f 3 -d' '`
+			f2=`cat /tmp/tmp.tlsh_go.1 | cut -f 5 -d' '`
+			echo "$f2	$f1	$score" >> $OUTF
+		fi
+		let x=$x+1
+	done
+elif test $xref = 1
+then
+	let x=0
+	while [ $x -lt $f ]
+	do
+		### echo "$x ${files[$x]}"
+		compare=${files[$x]}
+		let y=$x+1
+		while [ $y -lt $f ]
+		do
+			$prog -c $compare -f ${files[$y]} | sed -e 's/  / /g' | sed -e 's/ - / /' > /tmp/tmp.tlsh_go.xref
+			score=`cat /tmp/tmp.tlsh_go.xref | cut -f 1 -d' '`
+			if test $score -le $threshold
+			then
+				f1=`cat /tmp/tmp.tlsh_go.xref | cut -f 3 -d' '`
+				f2=`cat /tmp/tmp.tlsh_go.xref | cut -f 5 -d' '`
+				echo "$f2	$f1	$score" >> $OUTF
+			fi
+			let y=$y+1
+		done
+		let x=$x+1
+	done
+else
+	let x=0
+	while [ $x -lt $f ]
+	do
+		echo -n "T1" >> $OUTF
+		$prog -f ${files[$x]} | sed -e 's/  /	/' >> $OUTF
+		let x=$x+1
+	done
+fi
+if test ! $output = ""
+then
+	mv $OUTF $output
+else
+	cat $OUTF
+fi
+
