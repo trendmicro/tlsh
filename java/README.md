@@ -39,7 +39,6 @@ Pre-built versions of TLSH can be used in a Maven pom.xml file as follows:
     <groupId>com.trendmicro</groupId>
     <artifactId>tlsh</artifactId>
     <version>3.7.1</version>
-    <type>pom</type>
   </dependency>
   <!-- ... other dependencies -->
 </dependencies>
