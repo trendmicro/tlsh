@@ -133,10 +133,10 @@ runit() {
 			      cp $TMP/example_data.err $EXPECTED_ERR
 		fi
 	fi
-	diffc=`diff --ignore-case --ignore-all-space $TMP/example_data.out $EXPECTED_OUT | wc -l`
+	diffc=`diff --ignore-all-space $TMP/example_data.out $EXPECTED_OUT | wc -l`
 	if test ! $diffc = 0
 	then
-		echoerr "error: (1), diff --ignore-case $TMP/example_data.out $EXPECTED_OUT"
+		echoerr "error: (1), diff $TMP/example_data.out $EXPECTED_OUT"
 		popd > /dev/null
 		exit 1
 	fi
