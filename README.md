@@ -197,15 +197,11 @@ ATIS 2014, November, 2014, pages 199-210
 
 # Current Version
 
-**4.2.3**
+**4.3.0**
 <PRE>
-22/April/2020
-	add regression tests that are compatible with
-		https://github.com/glaslos/tlsh
-	To use
-		$ cd Testing
-		edit tlsh_go script to set prog= your Go TLSH application
-		$ ./test.sh _go
+26/June/2020
+	issue #79 - divide by 0 if q3 == 0
+		solution. if (q3 == 0) return invalid hash
 </PRE>
 
 # Change History

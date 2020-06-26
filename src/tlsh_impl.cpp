@@ -415,6 +415,12 @@ void TlshImpl::final(int fc_cons_option)
     unsigned int q1, q2, q3;
     find_quartile(&q1, &q2, &q3, this->a_bucket);
 
+    // issue #79 - divide by 0 if q3 == 0
+    if (q3 == 0) {
+      delete [] this->a_bucket; this->a_bucket = NULL;
+      return;
+    }
+
     // buckets must be more than 50% non-zero
     int nonzero = 0;
     for(unsigned int i=0; i<CODE_SIZE; i++) {

@@ -529,3 +529,10 @@ version 4: adding version identifier to each digest: 'T1'
 		edit tlsh_go script to set prog= your Go TLSH application
 		$ ./test.sh _go
 </PRE>
+
+**4.3.0**
+<PRE>
+26/June/2020
+	issue #79 - divide by 0 if q3 == 0
+		solution. if (q3 == 0) return invalid hash
+</PRE>
