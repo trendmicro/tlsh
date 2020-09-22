@@ -535,7 +535,7 @@ Tlsh.prototype.hash = function ()
 
     this.lsh_code = to_hex(tmp.checksum, TLSH_CHECKSUM_LEN);
 
-    tmpArray = new Uint8Array(1);
+    let tmpArray = new Uint8Array(1);
     tmpArray[0] = tmp.Lvalue;
     this.lsh_code = this.lsh_code.concat(to_hex(tmpArray, 1));
 
