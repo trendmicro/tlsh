@@ -26,7 +26,6 @@ li a:hover:not(.active) {
   background-color: #4CAF50;
 }
 
-<style>
 .footer {
   position: fixed;
   left: 0;
@@ -36,4 +35,3 @@ li a:hover:not(.active) {
   color: white;
   text-align: center;
 }
-</style>
