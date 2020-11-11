@@ -30,7 +30,20 @@
 <DIV class="content">
 <H2>Papers</H2>
 <P>
-Papers go here...
+<UL>
+	<LI> The <A HREF="https://documents.trendmicro.com/assets/wp/wp-locality-sensitive-hash.pdf">CTC 2013</A>
+		paper gives the algorithms for (i) calculating a TLSH hash, and (ii) calculating the distance between two TLSH hashes.
+	<LI> The <A HREF="https://documents.trendmicro.com/assets/wp/wp-using-randomization-to-attack-similarity-digests.pdf">ATIS 2014</A>
+		paper looks at evading TLSH, SSDEEP and SDHASH.
+		This paper looks at the effectiveness of these similarity digests at identifying files when the content of the file is deliberately changed.
+		The paper looks at multiple files types including binary executables, image files, source code and HTML files.
+		For the SSDEEP and SDHASH digest schemes, we were able to evade the scheme in a fairly straight forward way.
+		In particular, we were able to construct very short SED scripts which would break these schemes for source code (1 line SED script) and HTML files (4 line SED script),
+		while maintaining the orginal functionality of the file.
+		TLSH proved a lot harder to break.
+		<P>
+		We sent a responsible disclosure to the authors of these schemes before the paper was published.
+</UL>
 
 <DIV class="footer">
 Copyright &copy; 2013-2020 TrendMicro	<BR>
