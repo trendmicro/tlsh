@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<HTML lang="en" xml:lang="en">
+<HEAD>
+<META charset="UTF-8" />
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<TITLE>TLSH - Using TLSH</TITLE>
+<!-- see https://www.w3schools.com/html/html_css.asp -->
+<link rel="stylesheet" href="style.css">
+</HEAD>
+
+<BODY>
+<HEADER>
+<H1 id="title">TLSH - Using TLSH</H1>
+<NAV>
+<DIV class="navbar">
+<UL class="navbar">
+<LI class="navbar"><A			href="index.html">Home</A></LI>
+<LI class="navbar"><A class="active"	href="usage.html">Usage</A></LI>
+<LI class="navbar"><A			href="papers.html">Technical Papers</A></LI>
+<LI class="navbar"><A			href="https://github.com/trendmicro/tlsh">Source Code</A></LI>
+<LI class="navbar"><A			href="https://github.com/trendmicro/tlsh/releases">Download</A></LI>
+</UL>
+</DIV>
+</NAV>
+</HEADER>
+<!-- ------------------------------------- END HEADER ------------------------------------- -->
+
+<DIV class="content">
+<H2>Introduction</H2>
+
+TLSH does 2 things for you:
+<UL>
+	<LI> Calculates the fuzzy hash of files
+	<LI> Calculates the distance between files
+</UL>
+
+<H2>Use in Windows</H2>
+Download the program tlsh.exe and modify your path so that tlsh.exe is in your command path. <BR>
+You can do the commands below in a command prompt window.
+
+<H2>Use in Linux / Unix / Mac</H2>
+Compile up the program tlsh - and put the program tlsh in your path.	<BR>
+You can do the commands below in a terminal window.
+
+<H2>Basic Operation</H2>
+
+We will do all of these examples in the "Testing" directory of the source code download directory.
+To get there:
+		<PRE>
+		$ cd Testing
+		</PRE>
+<UL>
+	<LI> Calculating the hash of a single file	<BR>
+		<B> -f option </B> <BR>
+		<PRE>
+		$ tlsh -f README
+		T1C6F0DD7F531F123550434096E855B783BA32DB5D3604F0849ECCAAA0C25FB26D6F51ED	README
+		</PRE>
+	<LI> Calculating the hash for a directory	<BR>
+		<B> -r option </B> <BR>
+		<PRE>
+		$ tlsh -r example_data
+		T11FA1B357F78913B236924271569EA6D1FB2C451C33668484552C812D33138B8C73FFCE	example_data/021106_yossivassa.txt
+		T145D18407A78523B35A030267671FA2C2F725402973629B25545EB43C3356679477F7FC	example_data/0Alice.txt
+		T1C8E1E8277B98A6255FA70063B70FBAE1F6618229332C9438084FB331178ADEE53B41D5	example_data/11-17-06_Academy.txt
+		...
+		T198A2C77FA280037117E30126755D9BCAF72A906C337548B9F85E507C331BA28677BBA6	example_data/syllabus.txt
+		T15C32E96FF70463252A410264660E22DFE3A54038F3AD8B605C3E901403D6F9B5ABB7FE	example_data/victim.txt
+		T15702A65FF780237092AA01D5670E21E2E36A942CB3265960945D922C3366FFD837B7FD	example_data/website_course_descriptors06-07.txt
+		</PRE>
+	<LI> Calculating the distance between 2 files	<BR>
+		<B> -c option </B> <BR>
+		<PRE>
+		$ tlsh -c test.bat -f test.sh 
+		 160	test.sh
+		</PRE>
+	<LI> Calculating the distance between a file and every file in a directory	<BR>
+		<B> -c and -r options </B> <BR>
+		<PRE>
+		$ tlsh -c example_data/Week3.txt -r example_data
+		example_data/Week3.txt	example_data/021106_yossivassa.txt	297
+		example_data/Week3.txt	example_data/0Alice.txt	259
+		example_data/Week3.txt	example_data/11-17-06_Academy.txt	223
+		...
+		example_data/Week3.txt	example_data/syllabus.txt	192
+		example_data/Week3.txt	example_data/victim.txt	131
+		example_data/Week3.txt	example_data/website_course_descriptors06-07.txt	168
+		</PRE>
+	<LI> Calculating the distance between a file and every file in a directory.	<BR>
+		<B> -T option </B> <BR>
+		Only show those pairs with a distance smaller than to equal to 100
+		<PRE>
+		$ tlsh -c example_data/Week3.txt -r example_data -T 100
+		example_data/Week3.txt	example_data/Week3.txt	0
+		example_data/Week3.txt	example_data/greenhouse.txt	87
+		</PRE>
+	<LI> Calculating the distance between every pair of files in a directory.	<BR>
+		<B> -xref option </B> <BR>
+		Warning. This can produce a very long output.	<BR>
+		So we would typically restict it to show matches within some distance range.
+		<PRE>
+		$ tlsh -xref -r example_data -T 100
+		example_data/22-ppa-3rd_e2snewsletter_jun06.txt	example_data/aReportOfTheSurgeonGeneral.txt	96
+		example_data/Call-for-abstracts.txt	example_data/Memo_Ehrlich_1103.txt	87
+		example_data/CommandGde.txt	example_data/aReportOfTheSurgeonGeneral.txt	97
+		example_data/CommandGde.txt	example_data/sports_massage_and_recovery.txt	90
+		example_data/Fitness_Myths.txt	example_data/Midwestern_Rock_Garden.txt	98
+		example_data/GovernorsTaskForceReport.txt	example_data/srilanka.txt	84
+		example_data/Midwestern_Rock_Garden.txt	example_data/WPTC2006Season.txt	97
+		example_data/Newsletter_20-1-3.txt	example_data/billboard-021205.txt	91
+		example_data/TeachingMathCameroon.txt	example_data/website_course_descriptors06-07.txt	92
+		example_data/WPTC2006Season.txt	example_data/ledger091505.txt	93
+		example_data/Week3.txt	example_data/greenhouse.txt	87
+		example_data/aReportOfTheSurgeonGeneral.txt	example_data/fitnessTerms.txt	77
+		example_data/gogirls.2003-10.txt	example_data/website_course_descriptors06-07.txt	89
+		example_data/greenhouse.txt	example_data/sports_massage_and_recovery.txt	90
+		</PRE>
+</UL>
+<PRE>
+
+
+
+
+</PRE>
+
+
+<!-- ------------------------------------- START FOOTER ------------------------------------- -->
+<DIV class="footer">
+Copyright &copy; 2013-2020 TrendMicro	<BR>
+Last updated on 25/11/2020.
+</DIV>
+</BODY>
+</HTML>
