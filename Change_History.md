@@ -536,3 +536,13 @@ version 4: adding version identifier to each digest: 'T1'
 	issue #79 - divide by 0 if q3 == 0
 		solution. if (q3 == 0) return invalid hash
 </PRE>
+
+**4.4.0**
+<PRE>
+08/Nov/2020
+	Fixing Python Extension
+	- updated python extension to T1 hashes (4.0.0)
+	- fixed python_test.sh (which attempted to access old expected results files)
+		now passes test
+	- added license information to py_ext/tlshmodule.cpp
+</PRE>

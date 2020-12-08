@@ -197,11 +197,14 @@ ATIS 2014, November, 2014, pages 199-210
 
 # Current Version
 
-**4.3.0**
+**4.4.0**
 <PRE>
-26/June/2020
-	issue #79 - divide by 0 if q3 == 0
-		solution. if (q3 == 0) return invalid hash
+08/Dec/2020
+	Fixing Python Extension
+	- updated python extension to T1 hashes (4.0.0)
+	- fixed python_test.sh (which attempted to access old expected results files)
+		now passes test
+	- added license information to py_ext/tlshmodule.cpp
 </PRE>
 
 # Change History

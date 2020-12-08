@@ -48,10 +48,10 @@ echo
 for file in small small2 ; do
 	echo                    "${PYTHON} ../py_ext/tlsh_digest.py -force example_data/$file.txt > $TMP/py_$file.tlsh"
 				 ${PYTHON} ../py_ext/tlsh_digest.py -force example_data/$file.txt > $TMP/py_$file.tlsh
-	echo "diff $TMP/py_$file.tlsh exp/$file.tlsh_EXP"
-	      diff $TMP/py_$file.tlsh exp/$file.tlsh_EXP
+	echo "diff $TMP/py_$file.tlsh exp/$file.128.1.tlsh_EXP"
+	      diff $TMP/py_$file.tlsh exp/$file.128.1.tlsh_EXP
 	if [ $? -ne 0 ]; then
-		echoerr "error: diff $TMP/py_$file.tlsh exp/$file.tlsh_EXP"
+		echoerr "error: diff $TMP/py_$file.tlsh exp/$file.127=8.1.tlsh_EXP"
 		popd > /dev/null
 		exit -1
 	fi
@@ -60,6 +60,6 @@ done
 echo
 echo "passed"
 echo 
-echo "Note that if py_ext/tlshmodule.cpp has changed, then 'python setup.py build; sudo python setup.py install' must be run"
+### echo "Note that if py_ext/tlshmodule.cpp has changed, then 'python setup.py build; sudo python setup.py install' must be run"
 
 popd > /dev/null
