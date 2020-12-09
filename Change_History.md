@@ -546,3 +546,15 @@ version 4: adding version identifier to each digest: 'T1'
 		now passes test
 	- added license information to py_ext/tlshmodule.cpp
 </PRE>
+
+**4.4.1**
+<PRE>
+09/Dec/2020
+	Command line options to tlsh_digest.py
+		-conservative	enforce 256 byte limit
+		-old		generate old style hash (without "T1")
+	added python functions to tlsh package (for backwards compatibility)
+		tlsh.oldhash(data)
+		tlsh.conservativhash(data)
+		tlsh.oldconservativhash(data)
+</PRE>

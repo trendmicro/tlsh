@@ -41,17 +41,37 @@ if [ $? -ne 0 ]; then
         popd > /dev/null
 	exit -1
 fi
-
+echo "pass"
 echo
-echo "testing the -force option for short strings..."
+echo "testing the -old and -conservative options for short strings..."
 echo
 for file in small small2 ; do
-	echo                    "${PYTHON} ../py_ext/tlsh_digest.py -force example_data/$file.txt > $TMP/py_$file.tlsh"
-				 ${PYTHON} ../py_ext/tlsh_digest.py -force example_data/$file.txt > $TMP/py_$file.tlsh
+	echo                    "${PYTHON} ../py_ext/tlsh_digest.py example_data/$file.txt > $TMP/py_$file.tlsh"
+				 ${PYTHON} ../py_ext/tlsh_digest.py example_data/$file.txt > $TMP/py_$file.tlsh
 	echo "diff $TMP/py_$file.tlsh exp/$file.128.1.tlsh_EXP"
 	      diff $TMP/py_$file.tlsh exp/$file.128.1.tlsh_EXP
 	if [ $? -ne 0 ]; then
-		echoerr "error: diff $TMP/py_$file.tlsh exp/$file.127=8.1.tlsh_EXP"
+		echoerr "error: diff $TMP/py_$file.tlsh exp/$file.128.1.tlsh_EXP"
+		popd > /dev/null
+		exit -1
+	fi
+
+	echo                    "${PYTHON} ../py_ext/tlsh_digest.py -old example_data/$file.txt > $TMP/py_$file.old.tlsh"
+				 ${PYTHON} ../py_ext/tlsh_digest.py -old example_data/$file.txt > $TMP/py_$file.old.tlsh
+	echo "diff $TMP/py_$file.old.tlsh exp/$file.128.1.old.tlsh_EXP"
+	      diff $TMP/py_$file.old.tlsh exp/$file.128.1.old.tlsh_EXP
+	if [ $? -ne 0 ]; then
+		echoerr "error: diff $TMP/py_$file.old.tlsh exp/$file.128.1.old.tlsh_EXP"
+		popd > /dev/null
+		exit -1
+	fi
+
+	echo                    "${PYTHON} ../py_ext/tlsh_digest.py -conservative example_data/$file.txt > $TMP/py_$file.cons.tlsh"
+				 ${PYTHON} ../py_ext/tlsh_digest.py -conservative example_data/$file.txt > $TMP/py_$file.cons.tlsh
+	echo "diff $TMP/py_$file.cons.tlsh exp/$file.128.1.cons.tlsh_EXP"
+	      diff $TMP/py_$file.cons.tlsh exp/$file.128.1.cons.tlsh_EXP
+	if [ $? -ne 0 ]; then
+		echoerr "error: diff $TMP/py_$file.cons.tlsh exp/$file.128.1.cons.tlsh_EXP"
 		popd > /dev/null
 		exit -1
 	fi

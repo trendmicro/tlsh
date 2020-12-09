@@ -80,9 +80,18 @@ static char tlsh_doc[] =
 static char tlsh_hash_doc[] =
   "tlsh.hash(data)\n\n\
   returns tlsh hexadecimal representation (string)";
+static char tlsh_oldhash_doc[] =
+  "tlsh.oldhash(data)\n\n\
+  returns old tlsh hexadecimal representation (string) - no 'T1'";
 static char tlsh_forcehash_doc[] =
   "tlsh.forcehash(data)\n\n\
   returns tlsh hexadecimal representation (string) - allows strings down to 50 char";
+static char tlsh_conservativehash_doc[] =
+  "tlsh.conservativhash(data)\n\n\
+  returns tlsh hexadecimal representation (string) - does not allow strings < 256 char";
+static char tlsh_oldconservativehash_doc[] =
+  "tlsh.oldconservativhash(data)\n\n\
+  returns tlsh hexadecimal representation (string) - does not allow strings < 256 char";
 static char tlsh_diff_doc[] =
   "tlsh.diff(hash1, hash2)\n\n\
   returns tlsh score (integer)";
@@ -90,36 +99,76 @@ static char tlsh_diffxlen_doc[] =
   "tlsh.diffxlen(hash1, hash2) - ignore object lengths\n\n\
   returns tlsh score (integer)";
 
-// hash(data) returns byte buffer
-static PyObject* hash_py(PyObject* self, PyObject* args) {
-  unsigned char* pBuffer;
-  Py_ssize_t len;
-  if (!PyArg_ParseTuple(args, BYTES_VALUE_CHAR "#", &pBuffer, &len)) {
-    return NULL;
-  }
-  
-  Tlsh tlsh;
-  tlsh.update(pBuffer, len);
-  tlsh.final();
-  const char *s = tlsh.getHash(SHOWVERSION);
+static PyObject* eval_tlsh(unsigned char* pBuffer, Py_ssize_t len, int showvers)
+{
+Tlsh tlsh;
+	tlsh.update(pBuffer, len);
+	tlsh.final();
+	const char *s = tlsh.getHash(showvers);
+	if (*s == '\0')
+		return Py_BuildValue("s", "TNULL");
+	return Py_BuildValue("s", s);
+}
 
-  return Py_BuildValue("s", s);
+// hash(data) returns byte buffer
+static PyObject* hash_py(PyObject* self, PyObject* args)
+{
+	unsigned char* pBuffer;
+	Py_ssize_t len;
+	if (!PyArg_ParseTuple(args, BYTES_VALUE_CHAR "#", &pBuffer, &len)) {
+		return NULL;
+	}
+	return (eval_tlsh(pBuffer, len, SHOWVERSION));
+}
+
+// oldhash(data) returns byte buffer
+static PyObject* oldhash_py(PyObject* self, PyObject* args) {
+	unsigned char* pBuffer;
+	Py_ssize_t len;
+	if (!PyArg_ParseTuple(args, BYTES_VALUE_CHAR "#", &pBuffer, &len)) {
+		return NULL;
+	}
+	return (eval_tlsh(pBuffer, len, 0));
 }
 
 // forcehash(data) returns byte buffer
-static PyObject* forcehash_py(PyObject* self, PyObject* args) {
-  unsigned char* pBuffer;
-  Py_ssize_t len;
-  if (!PyArg_ParseTuple(args, BYTES_VALUE_CHAR "#", &pBuffer, &len)) {
-    return NULL;
-  }
-  
-  Tlsh tlsh;
-  tlsh.update(pBuffer, len);
-  tlsh.final(NULL,0,1);
-  const char *s = tlsh.getHash(SHOWVERSION);
+static PyObject* forcehash_py(PyObject* self, PyObject* args)
+{
+	return ( hash_py(self, args) );
+}
 
-  return Py_BuildValue("s", s);
+
+static PyObject* eval_cons_tlsh(unsigned char* pBuffer, Py_ssize_t len, int showvers)
+{
+Tlsh tlsh;
+	tlsh.update(pBuffer, len);
+	tlsh.final(NULL, 0, 2);
+	const char *s = tlsh.getHash(showvers);
+	if (*s == '\0')
+		return Py_BuildValue("s", "TNULL");
+	return Py_BuildValue("s", s);
+}
+
+// conservativehash(data) returns byte buffer
+static PyObject* conservativehash_py(PyObject* self, PyObject* args)
+{
+	unsigned char* pBuffer;
+	Py_ssize_t len;
+	if (!PyArg_ParseTuple(args, BYTES_VALUE_CHAR "#", &pBuffer, &len)) {
+		return NULL;
+	}
+	return (eval_cons_tlsh(pBuffer, len, SHOWVERSION));
+}
+
+// oldconservativehash(data) returns byte buffer
+static PyObject* oldconservativehash_py(PyObject* self, PyObject* args)
+{
+	unsigned char* pBuffer;
+	Py_ssize_t len;
+	if (!PyArg_ParseTuple(args, BYTES_VALUE_CHAR "#", &pBuffer, &len)) {
+		return NULL;
+	}
+	return (eval_cons_tlsh(pBuffer, len, 0));
 }
 
 // diff(hash1, hash2) returns integer
@@ -166,7 +215,10 @@ static PyObject* diffxlen_py(PyObject* self, PyObject* args) {
 static PyMethodDef tlsh_methods[] =
 {
   { "hash", hash_py, METH_VARARGS, tlsh_hash_doc },
+  { "oldhash", oldhash_py, METH_VARARGS, tlsh_oldhash_doc },
   { "forcehash", forcehash_py, METH_VARARGS, tlsh_forcehash_doc },
+  { "conservativehash", conservativehash_py, METH_VARARGS, tlsh_conservativehash_doc },
+  { "oldconservativehash", oldconservativehash_py, METH_VARARGS, tlsh_oldconservativehash_doc },
   { "diff", diff_py, METH_VARARGS, tlsh_diff_doc },
   { "diffxlen", diffxlen_py, METH_VARARGS, tlsh_diffxlen_doc },
   { NULL, NULL } /* sentinel */

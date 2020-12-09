@@ -197,14 +197,16 @@ ATIS 2014, November, 2014, pages 199-210
 
 # Current Version
 
-**4.4.0**
+**4.4.1**
 <PRE>
-08/Dec/2020
-	Fixing Python Extension
-	- updated python extension to T1 hashes (4.0.0)
-	- fixed python_test.sh (which attempted to access old expected results files)
-		now passes test
-	- added license information to py_ext/tlshmodule.cpp
+09/Dec/2020
+	Command line options to tlsh_digest.py
+		-conservative	enforce 256 byte limit
+		-old		generate old style hash (without "T1")
+	added python functions to tlsh package (for backwards compatibility)
+		tlsh.oldhash(data)
+		tlsh.conservativhash(data)
+		tlsh.oldconservativhash(data)
 </PRE>
 
 # Change History
