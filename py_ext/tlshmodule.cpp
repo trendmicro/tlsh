@@ -87,10 +87,10 @@ static char tlsh_forcehash_doc[] =
   "tlsh.forcehash(data)\n\n\
   returns tlsh hexadecimal representation (string) - allows strings down to 50 char";
 static char tlsh_conservativehash_doc[] =
-  "tlsh.conservativhash(data)\n\n\
+  "tlsh.conservativehash(data)\n\n\
   returns tlsh hexadecimal representation (string) - does not allow strings < 256 char";
 static char tlsh_oldconservativehash_doc[] =
-  "tlsh.oldconservativhash(data)\n\n\
+  "tlsh.oldconservativehash(data)\n\n\
   returns tlsh hexadecimal representation (string) - does not allow strings < 256 char";
 static char tlsh_diff_doc[] =
   "tlsh.diff(hash1, hash2)\n\n\

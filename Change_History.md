@@ -555,6 +555,6 @@ version 4: adding version identifier to each digest: 'T1'
 		-old		generate old style hash (without "T1")
 	added python functions to tlsh package (for backwards compatibility)
 		tlsh.oldhash(data)
-		tlsh.conservativhash(data)
-		tlsh.oldconservativhash(data)
+		tlsh.conservativehash(data)
+		tlsh.oldconservativehash(data)
 </PRE>
