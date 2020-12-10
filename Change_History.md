@@ -558,3 +558,9 @@ version 4: adding version identifier to each digest: 'T1'
 		tlsh.conservativehash(data)
 		tlsh.oldconservativehash(data)
 </PRE>
+
+**4.5.0**
+<PRE>
+10/Dec/2020
+	Checking in files to create pypi package
+</PRE>

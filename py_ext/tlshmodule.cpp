@@ -65,7 +65,7 @@
 // see 4.0.0 from 26/Mar/2020 at https://github.com/trendmicro/tlsh/blob/master/Change_History.md
 #define SHOWVERSION	1
 
-#define TLSH_VERSION "4.4.0"
+#define TLSH_VERSION "4.5.0"
 #define AUTHOR "Jonathan Oliver, Chun Cheng and Yanggui Chen"
 
 /* We want to update the hash using bytes object in Python 3 */

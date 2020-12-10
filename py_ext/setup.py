@@ -1,11 +1,14 @@
-from distutils.core import setup, Extension
-from os.path import join, realpath
-import re
 import os
+import re
+import sys
+from os.path import join, realpath
+from distutils.core import setup, Extension
 
-tlsh_256 = '-DBUCKETS_256'
-tlsh_128 = '-DBUCKETS_128'
-tlsh_3b = '-DCHECKSUM_3B'
+
+
+tlsh_256 = "-DBUCKETS_256"
+tlsh_128 = "-DBUCKETS_128"
+tlsh_3b = "-DCHECKSUM_3B"
 
 with open(join(realpath('..'), 'CMakeLists.txt'), 'r') as f:
   l = f.readline()
@@ -63,9 +66,20 @@ assert h3.diff(h) == 0
 score = h3.diff(h1)
 """
 
-setup (name = 'tlsh',
-  version = '0.2.0',
-  description = 'TLSH (C++ version)',
+setup (
+    name = 'tlsh',
+    version = '4.5.0',
+    description="TLSH (C++ Python extension)",
     long_description = description,
-    author = "Chun Cheng",
-    ext_modules = [tlsh_module])
+    author="Jonathan Oliver / Chun Cheng / Yanggui Chen",
+    author_email="jon_oliver@trendmicro.com",
+    ext_modules = [tlsh_module],
+    url="https://github.com/trendmicro/tlsh",
+    license = "Apache or BSD",
+    classifiers=[
+        "Intended Audience :: Developers",
+        "Development Status :: 5 - Production/Stable",
+        "Natural Language :: English",
+        "Operating System :: OS Independent",
+    ]
+)

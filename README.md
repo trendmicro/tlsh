@@ -197,16 +197,10 @@ ATIS 2014, November, 2014, pages 199-210
 
 # Current Version
 
-**4.4.1**
+**4.5.0**
 <PRE>
-09/Dec/2020
-	Command line options to tlsh_digest.py
-		-conservative	enforce 256 byte limit
-		-old		generate old style hash (without "T1")
-	added python functions to tlsh package (for backwards compatibility)
-		tlsh.oldhash(data)
-		tlsh.conservativehash(data)
-		tlsh.oldconservativehash(data)
+10/Dec/2020
+	Checking in files to create pypi package
 </PRE>
 
 # Change History
