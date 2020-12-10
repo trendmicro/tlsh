@@ -150,7 +150,7 @@ tlsh.hash(data)
 Note that in default mode the data must contain at least 50 bytes to generate a hash value and that
 it must have a certain amount of randomness.
 If you use the "conservative" option, then the data must contain at least 256 characters.
-For example, `tlsh.hash(str(os.urandom(256)))`, should always generate a hash.  
+For example, `tlsh.hash(os.urandom(256))`, should always generate a hash.  
 To get the hash value of a file, try `tlsh.hash(open(file, 'rb').read())`.
 
 ```python
