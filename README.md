@@ -122,9 +122,20 @@ Use the version-specific tlsh solution files ([tlsh.VC2005.sln](Windows/tlsh.VC2
 See [tlsh.h](include/tlsh.h) for the tlsh library interface and [tlsh_unittest.cpp](test/tlsh_unittest.cpp) and
 [simple_unittest.cpp](test/simple_unittest.cpp) under the `test` directory for example code.
 
-## Python Extension
+## Using TLSH in Python
 
-There is a README.python with notes about the python version
+### Python Package
+
+We have recently created a Python package on PyPi: [https://pypi.org/project/py-tlsh/](https://pypi.org/project/py-tlsh/)
+The py-tlsh replaces the python-tlsh package. For details see [issue 94](issues/94)
+To install this package
+```
+	$  pip install py-tlsh
+```
+
+### Python Extension
+
+If you need to build your own Python package, then there is a README.python with notes about the python version
 
 ```
 (1) compile the C++ code
@@ -139,33 +150,87 @@ There is a README.python with notes about the python version
 	$ ./python_test.sh
 ```
 
-### Python API
+#### Python Usage
 
 ```python
 import tlsh
+
 tlsh.hash(data)
 ```
 
+Note data needs to be bytes - not a string.
+This is because TLSH is for binary data and binary data can contain a NULL (zero) byte.
 
-Note that in default mode the data must contain at least 50 bytes to generate a hash value and that
+In default mode the data must contain at least 50 bytes to generate a hash value and that
 it must have a certain amount of randomness.
-If you use the "conservative" option, then the data must contain at least 256 characters.
-For example, `tlsh.hash(os.urandom(256))`, should always generate a hash.  
-To get the hash value of a file, try `tlsh.hash(open(file, 'rb').read())`.
+To get the hash value of a file, try
 
 ```python
-tlsh.diff(h1, h2)
+tlsh.hash(open(file, 'rb').read())
+```
+
+Note: the open statement has opened the file in binary mode.
+
+#### Python Example
+```python
+import tlsh
+
+h1 = tlsh.hash(data)
+h2 = tlsh.hash(similar_data)
+score = tlsh.diff(h1, h2)
+
+h3 = tlsh.Tlsh()
+with open('file', 'rb') as f:
+    for buf in iter(lambda: f.read(512), b''):
+        h3.update(buf)
+    h3.final()
+# this assertion is stating that the distance between a TLSH and itself must be zero
+assert h3.diff(h3) == 0
+score = h3.diff(h1)
+```
+
+#### Python Extra Options
+
+The `diffxlen` function removes the file length component of the tlsh header from the comparison.
+
+```python
 tlsh.diffxlen(h1, h2)
 ```
 
-The `diffxlen` function removes the file length component of the tlsh header from
-the comparison.  If a file with a repeating pattern is compared to a file
-with only a single instance of the pattern, then the difference will be increased
-if the file lenght is included.  But by using the `diffxlen` function, the file
-length will be removed from consideration.
+If a file with a repeating pattern is compared to a file with only a single instance of the pattern,
+then the difference will be increased if the file lenght is included.
+But by using the `diffxlen` function, the file length will be removed from consideration.
 
-Note that the python API has been extended to miror the C++ API.  See
-py_ext/tlshmodule.cpp and the py_ext/test.py script to see the full API set.
+#### Python Backwards Compatibility Options
+
+If you use the "conservative" option, then the data must contain at least 256 characters.
+For example,
+
+```python
+import os
+tlsh.conservativehash(os.urandom(256))
+```
+
+should generate a hash, but
+
+```python
+tlsh.conservativehash(os.urandom(100))
+```
+
+will generate TNULL as it is less than 256 bytes.
+
+If you need to generate old style hashes (without the "T1" prefix) then use
+
+```python
+tlsh.oldhash(os.urandom(100))
+```
+
+
+The old and conservative options may be combined:
+
+```python
+tlsh.oldconservativehash(os.urandom(500))
+```
 
 # Design Choices
 
