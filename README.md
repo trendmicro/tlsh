@@ -126,8 +126,8 @@ See [tlsh.h](include/tlsh.h) for the tlsh library interface and [tlsh_unittest.c
 
 ### Python Package
 
-We have recently created a Python package on PyPi: [https://pypi.org/project/py-tlsh/](https://pypi.org/project/py-tlsh/)
-The py-tlsh replaces the python-tlsh package. For details see [issue 94](issues/94)
+We have recently created a Python package on PyPi: [https://pypi.org/project/py-tlsh/](https://pypi.org/project/py-tlsh/)  
+The py-tlsh replaces the python-tlsh package. For details see [issue 94](https://github.com/trendmicro/tlsh/issues/94)  
 To install this package
 ```
 	$  pip install py-tlsh
