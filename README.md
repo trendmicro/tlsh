@@ -12,7 +12,7 @@ a byte stream of identical bytes will not generate a hash value.
 
 ## What's New in TLSH 4.x.x
 14/April/2021
-We have written technical material that focuses on 2 topics at [https://tlsh.org]https://tlsh.org/
+We have written technical material that focuses on 2 topics at [https://tlsh.org](https://tlsh.org/)
 - fast nearest neighbour search and scalable clustering
 - robustness to attack
 
