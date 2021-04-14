@@ -16,6 +16,10 @@ We have written technical material that focuses on 2 topics at [https://tlsh.org
 - fast nearest neighbour search and scalable clustering
 - robustness to attack
 
+2020
+- adopted by [Virus Total](https://developers.virustotal.com/v3.0/reference#files-tlsh)
+- adopted by [Malware Bazaar](https://bazaar.abuse.ch/api/#tlsh)
+
 26/March/2020
 - adding version identifier to the digest
 - added output options (-o)
