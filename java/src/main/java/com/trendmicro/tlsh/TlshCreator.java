@@ -87,6 +87,11 @@ public class TlshCreator {
 	public static final int MIN_DATA_LENGTH = 256;
 	/** Minimum data length before a hash can be produced with the force option */
 	public static final int MIN_FORCE_DATA_LENGTH	 = 50;
+	/**
+	 * The maximum amount of data allowed in a TLSH computation.
+	 * Slightly less than 4GiB.
+	 */
+	static final long MAX_DATA_LENGTH = TlshUtil.MAX_DATA_LENGTH;
 
 	/**
 	 * Accumulator buckets. This uses long accumulators and
@@ -95,8 +100,9 @@ public class TlshCreator {
 	 */
 	private final long[] a_bucket;
 	private final int[] slide_window;
-	private int data_len;
+	private long data_len;
 
+	private final VersionOption version;
 	private final int bucketCount;
 	
 	private final int checksumLength;
@@ -106,13 +112,15 @@ public class TlshCreator {
 
 	/**
 	 * Standard constructor for computing TLSH with 128 buckets and 1 byte checksum
+	 * using the latest version.
 	 */
 	public TlshCreator() {
-		this(BucketOption.BUCKETS_128, ChecksumOption.CHECKSUM_1B);
+		this(BucketOption.BUCKETS_128, ChecksumOption.CHECKSUM_1B, VersionOption.VERSION_4);
 	}
 
 	/**
-	 * Constructor that allows specifying bucket count and checksum length
+	 * Constructor that allows specifying bucket count and checksum length.
+	 * Uses the latest available version of TLSH.
 	 * 
 	 * @param bucketOption
 	 *            specify the bucket count; more buckets can give better difference
@@ -122,6 +130,25 @@ public class TlshCreator {
 	 *            but increase hash creation time
 	 */
 	public TlshCreator(BucketOption bucketOption, ChecksumOption checksumOption) {
+		this(bucketOption, checksumOption, VersionOption.VERSION_4);
+	}
+
+	/**
+	 * Constructor that allows specifying bucket count and checksum length.
+	 * 
+	 * @param bucketOption
+	 *            specify the bucket count; more buckets can give better difference
+	 *            calculations but require more space to store the computed hash
+	 * @param checksumOption
+	 *            specify the checksum length; longer checksums are more resilient
+	 *            but increase hash creation time
+	 * @param versionOption
+	 *            what version of TLSH is being generated. It is usually best to
+	 *            use the latest versionOption unless you need an older versionOption for
+	 *            compatibility reasons.
+	 */
+	public TlshCreator(BucketOption bucketOption, ChecksumOption checksumOption, VersionOption versionOption) {
+		version = versionOption;
 		bucketCount = bucketOption.getBucketCount();
 		codeSize = bucketCount >> 2; // Each bucket contributes 2 bits to output code
 		checksumLength = checksumOption.getChecksumLength();
@@ -155,6 +182,10 @@ public class TlshCreator {
 	 *    the offset in the array to start reading from
 	 * @param len
 	 *    how many bytes to read from the array
+	 *    
+	 * @throws IllegalStateException
+	 *    if more than {@link #MAX_DATA_LENGTH} bytes have been hashed.
+	 *    TLSH is not intended for use on huge files.
 	 */
 	public void update(byte[] data, int offset, int len) {
 		final int RNG_SIZE = SLIDING_WND_SIZE;
@@ -168,13 +199,13 @@ public class TlshCreator {
 		// 4 3 2 1 0
 		// 0 4 3 2 1
 		// and so on
-		int j = data_len % RNG_SIZE;
+		int j = (int)(data_len % RNG_SIZE);
 		int j_1 = (j - 1 + RNG_SIZE) % RNG_SIZE;
 		int j_2 = (j - 2 + RNG_SIZE) % RNG_SIZE;
 		int j_3 = (j - 3 + RNG_SIZE) % RNG_SIZE;
 		int j_4 = (j - 4 + RNG_SIZE) % RNG_SIZE;
 		
-		int fed_len = data_len;
+		long fed_len = data_len;
 
 		for (int i = offset; i < offset + len; i++, fed_len++) {
 			slide_window[j] = data[i] & 0xFF;
@@ -215,6 +246,10 @@ public class TlshCreator {
 			j = j_tmp;
 		}
 		data_len += len;
+		
+		if (data_len > MAX_DATA_LENGTH) {
+			throw new IllegalStateException("Too much data has been hashed");
+		}
 	}
 
 	/**
@@ -415,6 +450,12 @@ public class TlshCreator {
 		q1 = quartiles[0];
 		q2 = quartiles[1];
 		q3 = quartiles[2];
+		
+		// issue #79 - divide by 0 if q3 == 0
+		// This should already by caught by isValid but an extra check here just in case
+		if (q3 == 0) {
+			throw new IllegalStateException("TLSH not valid; too little variance in the data");
+		}
 
 		int[] tmp_code = new int[codeSize];
 		for (int i = 0; i < codeSize; i++) {
@@ -437,9 +478,9 @@ public class TlshCreator {
 		int q2ratio = (int) ((float) (q2 * 100.0f) / (float) q3) & 0xF;
 
 		if (checksumLength == 1) {
-			return new Tlsh(new int[] {checksum}, lvalue, q1ratio, q2ratio, tmp_code);
+			return new Tlsh(version, new int[] {checksum}, lvalue, q1ratio, q2ratio, tmp_code);
 		} else {
-			return new Tlsh(checksumArray.clone(), lvalue, q1ratio, q2ratio, tmp_code);
+			return new Tlsh(version, checksumArray.clone(), lvalue, q1ratio, q2ratio, tmp_code);
 		}
 	}
 
@@ -490,6 +531,9 @@ public class TlshCreator {
 			if (a_bucket[i] > 0) nonzero++;
 		}
 		if (nonzero <= (bucketCount >> 1)) {
+			return false;
+		}
+		if (data_len > MAX_DATA_LENGTH) {
 			return false;
 		}
 

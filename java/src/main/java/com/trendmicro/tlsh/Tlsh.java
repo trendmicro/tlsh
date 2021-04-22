@@ -87,21 +87,26 @@ public class Tlsh {
 	 *             If the given string cannot be parsed correctly
 	 */
 	public static Tlsh fromTlshStr(String tlshStr) throws IllegalArgumentException {
+	    VersionOption versionOption = null;
 		int[] checksum = null;
 		int[] tmp_code = null;
 		for (BucketOption bucketOption : BucketOption.values()) {
 			for (ChecksumOption checksumOption : ChecksumOption.values()) {
-				if (tlshStr.length() == hashStringLength(bucketOption, checksumOption)) {
-					checksum = new int[checksumOption.getChecksumLength()];
-					tmp_code = new int[bucketOption.getBucketCount() / 4];
-				}
+	            for (VersionOption tryVersion : VersionOption.values()) {
+    				if (tlshStr.length() == hashStringLength(bucketOption, checksumOption, tryVersion)) {
+    					checksum = new int[checksumOption.getChecksumLength()];
+    					tmp_code = new int[bucketOption.getBucketCount() / 4];
+    					versionOption = tryVersion;
+    					break;
+    				}
+	            }
 			}
 		}
 		if (checksum == null) {
 			throw new IllegalArgumentException("Invalid hash string, length does not match any known encoding");
 		}
 
-		int offset = 0;
+		int offset = versionOption.getVersionString().length();
 		for (int k = 0; k < checksum.length; k++) {
 			checksum[k] = TlshUtil.from_hex_swapped(tlshStr, offset);
 			offset += 2;
@@ -119,32 +124,42 @@ public class Tlsh {
 			offset += 2;
 		}
 
-		return new Tlsh(checksum, Lvalue, qRatios >> 4, qRatios & 0xF, tmp_code);
+		return new Tlsh(versionOption, checksum, Lvalue, qRatios >> 4, qRatios & 0xF, tmp_code);
 	}
 	
 	/**
 	 * Get the length of the encoded output string for different
 	 * hash creation options 
 	 */
-	private static int hashStringLength(BucketOption bucketOption, ChecksumOption checksumOption) {
-		return (bucketOption.getBucketCount() / 2) + (checksumOption.getChecksumLength() * 2) + 4;
+	private static int hashStringLength(BucketOption bucketOption, ChecksumOption checksumOption, VersionOption versionOption) {
+		return versionOption.getVersionString().length() + (bucketOption.getBucketCount() / 2) + (checksumOption.getChecksumLength() * 2) + 4;
 	}
 
 	/////////////////////////////////////////////////////////////
 	// Instance stuff
 	//
+	private final VersionOption version;
 	private final int[] checksum; // 1 or 3 bytes
 	private final int Lvalue; // 1 byte
 	private final int Q1ratio; // 4 bits
 	private final int Q2ratio; // 4 bits
 	private final int[] codes; // 32/64 bytes
 	
-	Tlsh(int[] checksum, int lvalue, int q1ratio, int q2ratio, int[] codes) {
+	Tlsh(VersionOption versionOption, int[] checksum, int lvalue, int q1ratio, int q2ratio, int[] codes) {
+	    this.version = versionOption;
 		this.checksum = checksum;
 		Lvalue = lvalue;
 		Q1ratio = q1ratio;
 		Q2ratio = q2ratio;
 		this.codes = codes;
+	}
+
+	/**
+	 * Return the version this hash was created with
+	 * @return the version this hash was created with
+	 */
+	public VersionOption getVersion() {
+	    return version;
 	}
 
 	/**
@@ -166,6 +181,7 @@ public class Tlsh {
 		// The C++ code reverses the order of some of the fields before
 		// converting to hex, so copy that behaviour.
 		StringBuilder sb = new StringBuilder(hashStringLength());
+		sb.append(version.getVersionString());
 
 		for (int k = 0; k < checksum.length; k++) {
 			TlshUtil.to_hex_swapped(checksum[k], sb);
@@ -185,7 +201,7 @@ public class Tlsh {
 	 */
 	private int hashStringLength() {
 		// extra 4 characters come from length and Q1 and Q2 ratio.
-		return codes.length * 2 + checksum.length * 2 + 4;
+		return version.getVersionString().length() + codes.length * 2 + checksum.length * 2 + 4;
 	}
 
 	/**
