@@ -564,3 +564,12 @@ version 4: adding version identifier to each digest: 'T1'
 10/Dec/2020
 	Checking in files to create pypi package
 </PRE>
+
+**4.6.0**
+<PRE>
+23/04/2021
+	Merging in pull requests
+	issue #99 - new Java version that solves large file problem (Thanks Daniel)
+	Add architecture ppc64le to travis build (Thanks ddeka2910)
+	Fix tmpArray is undefined in JavaScript version (Thanks carbureted)
+</PRE>

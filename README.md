@@ -11,6 +11,11 @@ the byte stream should have a sufficient amount of complexity.  For example,
 a byte stream of identical bytes will not generate a hash value.
 
 ## What's New in TLSH 4.x.x
+23/April/2021  
+Release version 4.6.0
+Issue 99 raised issues about what to do when evaluating the TLSH for files over 4GB
+We decided to define that TLSH is the TLSH of the first 4GB of a file
+
 14/April/2021  
 We have written technical material that focuses on 2 topics at [https://tlsh.org](https://tlsh.org/)
 - fast nearest neighbour search and scalable clustering
@@ -271,10 +276,13 @@ ATIS 2014, November, 2014, pages 199-210
 
 # Current Version
 
-**4.5.0**
+**4.6.0**
 <PRE>
-10/Dec/2020
-	Checking in files to create pypi package
+23/04/2021
+	Merging in pull requests
+	issue #99 - new Java version that solves large file problem (Thanks Daniel)
+	Add architecture ppc64le to travis build (Thanks ddeka2910)
+	Fix tmpArray is undefined in JavaScript version (Thanks carbureted)
 </PRE>
 
 # Change History
