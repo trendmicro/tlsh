@@ -6,21 +6,16 @@
  * user guide available at https://docs.gradle.org/3.5/userguide/java_library_plugin.html
  */
 
-plugins {
-    id "com.jfrog.bintray" version "1.7.3"
-}
-
 // Apply the required plugins
-apply plugin: 'maven'
-apply plugin: 'maven-publish'
-apply plugin: 'java'
-apply plugin: 'java-library'
+plugins {
+    id 'java'
+    id 'java-library'
+    id 'eclipse'
+}
 
 // In this section you declare where to find the dependencies of your project
 repositories {
-    // Use jcenter for resolving your dependencies.
-    // You can declare any Maven/Ivy/file repository here.
-    jcenter()
+    mavenCentral()
 }
 
 dependencies {
@@ -29,7 +24,7 @@ dependencies {
 }
 
 sourceCompatibility = 1.7
-version = '3.7.1'
+version = '4.5.0'
 def globalVersion = version
 group = 'com.trendmicro'
 
@@ -37,41 +32,6 @@ jar {
     manifest {
         attributes 'Implementation-Title': 'TLSH - Trend Micro Locality Sensitive Hash',
                    'Implementation-Version': globalVersion
-    }
-}
-
-// To upload to bintray, run
-//   ./gradlew bintrayUpload
-bintray {
-	user = project.hasProperty('bintrayUser') ? project.property('bintrayUser') : System.getenv('BINTRAY_USER')
-	key = project.hasProperty('bintrayApiKey') ? project.property('bintrayApiKey') : System.getenv('BINTRAY_API_KEY')
-
-    pkg {
-        repo = 'tlsh'
-        name = 'TLSH'
-
-        version {
-            name = globalVersion
-            desc = 'TLSH - Trend Micro Locality Sensitive Hash'
-            released  = new Date()
-        }
-
-    }
-
-    publications = ['tlsh'] 
-}
-
-// Create the publication with the pom configuration:
-publishing {
-    publications {
-        tlsh(MavenPublication) {
-            from components.java
-            artifact javadocJar
-            artifact sourcesJar
-            groupId 'com.trendmicro'
-            artifactId 'tlsh'
-            version globalVersion
-        }
     }
 }
 

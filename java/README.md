@@ -6,44 +6,16 @@ This port has no additional JAR dependencies and only requires the JRE.
 
 ## Use with gradle
 
-Pre-built versions of TLSH are hosted on bintray and can be used in gradle build scripts as follows:
+Pre-built TLSH libraries will be available on Maven Central soon but for now they
+must be built from source.
 
-```
-repositories {
-  jcenter()
-  // ... other repositories
-}
-
-dependencies {
-  compile 'com.trendmicro:tlsh:3.7.1'
-
-  // ... other dependencies
-}
+```bash
+git clone https://github.com/trendmicro/tlsh.git
+cd tlsh/java
+./gradlew clean build
 ```
 
-## Use with Maven
-
-Pre-built versions of TLSH can be used in a Maven pom.xml file as follows:
-
-```xml
-<repositories>
-  <repository>
-    <id>jcenter</id>
-    <url>https://jcenter.bintray.com/</url>
-  </repository>
-  <!-- ... other repositories -->
-</repositories>
-
-<dependencies>
-  <dependency>
-    <groupId>com.trendmicro</groupId>
-    <artifactId>tlsh</artifactId>
-    <version>3.7.1</version>
-    <type>pom</type>
-  </dependency>
-  <!-- ... other dependencies -->
-</dependencies>
-```
+This will produce JAR files in `build/libs` that can be included in other projects.
 
 ## Example
 ```java
