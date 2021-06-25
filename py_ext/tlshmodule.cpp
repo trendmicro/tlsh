@@ -240,6 +240,7 @@ static PyObject * Tlsh_diff(tlsh_TlshObject *, PyObject *);
 static PyObject * Tlsh_lvalue(tlsh_TlshObject *);
 static PyObject * Tlsh_q1ratio(tlsh_TlshObject *);
 static PyObject * Tlsh_q2ratio(tlsh_TlshObject *);
+static PyObject * Tlsh_checksum(tlsh_TlshObject *, PyObject *);
 
 static PyMethodDef Tlsh_methods[] = {
     {"fromTlshStr", (PyCFunction) Tlsh_fromTlshStr, METH_VARARGS,
@@ -256,6 +257,9 @@ static PyMethodDef Tlsh_methods[] = {
     },
     {"diff", (PyCFunction) Tlsh_diff, METH_VARARGS,
      "Returns the TLSH score compared to the given Tlsh object or hexadecimal string."
+    },
+    {"checksum", (PyCFunction) Tlsh_checksum, METH_VARARGS,
+     "TLSH checksum."
     },
     {NULL} /* Sentinel */
 };
@@ -521,6 +525,21 @@ Tlsh_q2ratio(tlsh_TlshObject *self)
     }
     q2ratio = self->tlsh.Q2ratio();
     return Py_BuildValue("i", q2ratio);
+}
+
+static PyObject *
+Tlsh_checksum(tlsh_TlshObject *self, PyObject *args)
+{
+    int checksum;
+    int id;
+    if (!self->finalized) {
+        PyErr_SetString(PyExc_ValueError, "final() has not been called");
+        return NULL;
+    }
+    PyArg_ParseTuple(args, "i", &id);
+
+    checksum = self->tlsh.Checksum(id);
+    return Py_BuildValue("i", checksum);
 }
 
 // Initializes the module
