@@ -237,6 +237,9 @@ static PyObject * Tlsh_update(tlsh_TlshObject *, PyObject *);
 static PyObject * Tlsh_final(tlsh_TlshObject *);
 static PyObject * Tlsh_hexdigest(tlsh_TlshObject *);
 static PyObject * Tlsh_diff(tlsh_TlshObject *, PyObject *);
+static PyObject * Tlsh_lvalue(tlsh_TlshObject *);
+static PyObject * Tlsh_q1ratio(tlsh_TlshObject *);
+static PyObject * Tlsh_q2ratio(tlsh_TlshObject *);
 
 static PyMethodDef Tlsh_methods[] = {
     {"fromTlshStr", (PyCFunction) Tlsh_fromTlshStr, METH_VARARGS,
@@ -253,6 +256,19 @@ static PyMethodDef Tlsh_methods[] = {
     },
     {"diff", (PyCFunction) Tlsh_diff, METH_VARARGS,
      "Returns the TLSH score compared to the given Tlsh object or hexadecimal string."
+    },
+    {NULL} /* Sentinel */
+};
+
+static PyGetSetDef Tlsh_getsetters[] = {
+    {"lvalue", (getter) Tlsh_lvalue, NULL,
+     "TLSH Lvalue.", NULL
+    },
+    {"q1ratio", (getter) Tlsh_q1ratio, NULL,
+     "TLSH Q1ratio.", NULL
+    },
+    {"q2ratio", (getter) Tlsh_q2ratio, NULL,
+     "TLSH Q2ratio.", NULL
     },
     {NULL} /* Sentinel */
 };
@@ -290,7 +306,7 @@ static PyTypeObject tlsh_TlshType = {
     0,                         /* tp_iternext */
     Tlsh_methods,              /* tp_methods */
     0,                         /* tp_members */
-    0,                         /* tp_getset */
+    Tlsh_getsetters,           /* tp_getset */
     0,                         /* tp_base */
     0,                         /* tp_dict */
     0,                         /* tp_descr_get */
@@ -469,6 +485,42 @@ Tlsh_diff(tlsh_TlshObject *self, PyObject *args)
     }
 
     return Py_BuildValue("i", score);
+}
+
+static PyObject *
+Tlsh_lvalue(tlsh_TlshObject *self)
+{
+    int lvalue;
+    if (!self->finalized) {
+        PyErr_SetString(PyExc_ValueError, "final() has not been called");
+        return NULL;
+    }
+    lvalue = self->tlsh.Lvalue();
+    return Py_BuildValue("i", lvalue);
+}
+
+static PyObject *
+Tlsh_q1ratio(tlsh_TlshObject *self)
+{
+    int q1ratio;
+    if (!self->finalized) {
+        PyErr_SetString(PyExc_ValueError, "final() has not been called");
+        return NULL;
+    }
+    q1ratio = self->tlsh.Q1ratio();
+    return Py_BuildValue("i", q1ratio);
+}
+
+static PyObject *
+Tlsh_q2ratio(tlsh_TlshObject *self)
+{
+    int q2ratio;
+    if (!self->finalized) {
+        PyErr_SetString(PyExc_ValueError, "final() has not been called");
+        return NULL;
+    }
+    q2ratio = self->tlsh.Q2ratio();
+    return Py_BuildValue("i", q2ratio);
 }
 
 // Initializes the module
