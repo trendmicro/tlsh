@@ -240,7 +240,9 @@ static PyObject * Tlsh_diff(tlsh_TlshObject *, PyObject *);
 static PyObject * Tlsh_lvalue(tlsh_TlshObject *);
 static PyObject * Tlsh_q1ratio(tlsh_TlshObject *);
 static PyObject * Tlsh_q2ratio(tlsh_TlshObject *);
+static PyObject * Tlsh_is_valid(tlsh_TlshObject *);
 static PyObject * Tlsh_checksum(tlsh_TlshObject *, PyObject *);
+static PyObject * Tlsh_bucket_value(tlsh_TlshObject *, PyObject *);
 
 static PyMethodDef Tlsh_methods[] = {
     {"fromTlshStr", (PyCFunction) Tlsh_fromTlshStr, METH_VARARGS,
@@ -261,6 +263,9 @@ static PyMethodDef Tlsh_methods[] = {
     {"checksum", (PyCFunction) Tlsh_checksum, METH_VARARGS,
      "TLSH checksum."
     },
+    {"bucket_value", (PyCFunction) Tlsh_bucket_value, METH_VARARGS,
+     "TLSH bucket value."
+    },
     {NULL} /* Sentinel */
 };
 
@@ -273,6 +278,9 @@ static PyGetSetDef Tlsh_getsetters[] = {
     },
     {"q2ratio", (getter) Tlsh_q2ratio, NULL,
      "TLSH Q2ratio.", NULL
+    },
+    {"is_valid", (getter) Tlsh_is_valid, NULL,
+     "Is it a valid TLSH.", NULL
     },
     {NULL} /* Sentinel */
 };
@@ -494,43 +502,42 @@ Tlsh_diff(tlsh_TlshObject *self, PyObject *args)
 static PyObject *
 Tlsh_lvalue(tlsh_TlshObject *self)
 {
-    int lvalue;
     if (!self->finalized) {
         PyErr_SetString(PyExc_ValueError, "final() has not been called");
         return NULL;
     }
-    lvalue = self->tlsh.Lvalue();
-    return Py_BuildValue("i", lvalue);
+    return Py_BuildValue("i", self->tlsh.Lvalue());
 }
 
 static PyObject *
 Tlsh_q1ratio(tlsh_TlshObject *self)
 {
-    int q1ratio;
     if (!self->finalized) {
         PyErr_SetString(PyExc_ValueError, "final() has not been called");
         return NULL;
     }
-    q1ratio = self->tlsh.Q1ratio();
-    return Py_BuildValue("i", q1ratio);
+    return Py_BuildValue("i", self->tlsh.Q1ratio());
 }
 
 static PyObject *
 Tlsh_q2ratio(tlsh_TlshObject *self)
 {
-    int q2ratio;
     if (!self->finalized) {
         PyErr_SetString(PyExc_ValueError, "final() has not been called");
         return NULL;
     }
-    q2ratio = self->tlsh.Q2ratio();
-    return Py_BuildValue("i", q2ratio);
+    return Py_BuildValue("i", self->tlsh.Q2ratio());
+}
+
+static PyObject *
+Tlsh_is_valid(tlsh_TlshObject *self)
+{
+    return PyBool_FromLong(self->tlsh.isValid());
 }
 
 static PyObject *
 Tlsh_checksum(tlsh_TlshObject *self, PyObject *args)
 {
-    int checksum;
     int id;
     if (!self->finalized) {
         PyErr_SetString(PyExc_ValueError, "final() has not been called");
@@ -538,8 +545,20 @@ Tlsh_checksum(tlsh_TlshObject *self, PyObject *args)
     }
     PyArg_ParseTuple(args, "i", &id);
 
-    checksum = self->tlsh.Checksum(id);
-    return Py_BuildValue("i", checksum);
+    return Py_BuildValue("i", self->tlsh.Checksum(id));
+}
+
+static PyObject *
+Tlsh_bucket_value(tlsh_TlshObject *self, PyObject *args)
+{
+    int id;
+    if (!self->finalized) {
+        PyErr_SetString(PyExc_ValueError, "final() has not been called");
+        return NULL;
+    }
+    PyArg_ParseTuple(args, "i", &id);
+
+    return Py_BuildValue("i", self->tlsh.BucketValue(id));
 }
 
 // Initializes the module
@@ -555,7 +574,7 @@ Tlsh_checksum(tlsh_TlshObject *self, PyObject *args)
             NULL,                /* m_clear */
             NULL,                /* m_free */
         };
-    
+
     PyMODINIT_FUNC PyInit_tlsh(void)
     {
         PyObject *module;
