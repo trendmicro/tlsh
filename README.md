@@ -11,6 +11,11 @@ the byte stream should have a sufficient amount of complexity.  For example,
 a byte stream of identical bytes will not generate a hash value.
 
 ## What's New in TLSH 4.x.x
+29/June/2021  
+Release version 4.7.0
+Updated Python realease with additional functions:
+	lvalue, q1ratio, q2ratio, checksum, bucket_value and is_valid
+
 23/April/2021  
 Release version 4.6.0
 Issue 99 raised issues about what to do when evaluating the TLSH for files over 4GB
@@ -43,6 +48,10 @@ This release will add "T1" to the start of TLSH digests.
 The code is backwards compatible, it can still read and interpret 70 hex character strings as TLSH digests.
 And data sets can include mixes of the old and new digests.
 If you need old style TLSH digests to be outputted, then use the command line option '-old'
+
+## Dedication
+
+Thanks to Chun Cheng, who was a humble and talented engineer.
 
 ## Minimum byte stream length
 
@@ -276,13 +285,13 @@ ATIS 2014, November, 2014, pages 199-210
 
 # Current Version
 
-**4.6.0**
+**4.7.0**
 <PRE>
-23/04/2021
-	Merging in pull requests
-	issue #99 - new Java version that solves large file problem (Thanks Daniel)
-	Add architecture ppc64le to travis build (Thanks ddeka2910)
-	Fix tmpArray is undefined in JavaScript version (Thanks carbureted)
+29/06/2021
+	Release updated package py-tlsh on Pypi.org
+	Merging in pull request that adds functions to Python package
+		lvalue, q1ratio, q2ratio, checksum, bucket_value and is_valid
+	resolve issue #102 - correct Python version numbers
 </PRE>
 
 # Change History

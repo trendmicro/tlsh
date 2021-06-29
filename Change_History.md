@@ -573,3 +573,12 @@ version 4: adding version identifier to each digest: 'T1'
 	Add architecture ppc64le to travis build (Thanks ddeka2910)
 	Fix tmpArray is undefined in JavaScript version (Thanks carbureted)
 </PRE>
+
+**4.7.0**
+<PRE>
+29/06/2021
+	Release updated package py-tlsh on Pypi.org
+	Merging in pull request that adds functions to Python package
+		lvalue, q1ratio, q2ratio, checksum, bucket_value and is_valid
+	resolve issue #102 - correct Python version numbers
+</PRE>

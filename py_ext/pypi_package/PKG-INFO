@@ -1,6 +1,6 @@
 Metadata-Version: 1.2
 Name: py-tlsh
-Version: 4.5.0
+Version: 4.7.0
 Summary: TLSH (C++ Python extension)
 Home-page: https://github.com/trendmicro/tlsh
 Author: Jonathan Oliver / Chun Cheng / Yanggui Chen
@@ -17,12 +17,11 @@ Description: # TLSH - C++ extension for Python
 	the byte stream should have a sufficient amount of complexity.  For example,
 	a byte stream of identical bytes will not generate a hash value.
 
-	## What's new in py-tlsh 4.5.0
+	## What's new in py-tlsh 4.7.0
 	This Python module supercedes the python-tlsh package on PyPi.
-	We have created this Python package in response to
-	[issue 94](https://github.com/trendmicro/tlsh/issues/94)
-	on Github.
-	The improvements are:
+	The improvements in 4.7.0, are that we added additional functions to Python
+		lvalue, q1ratio, q2ratio, checksum, bucket_value and is_valid
+	The improvements 4.5.0 were:
 	* fixed this package so that it works on Windows
 	* compatibility with VirusTotal adoption of TLSH: updated to the T1 hash format with backwards compatibility for old hashes
 	* fixed the q3=0 divide by zero bug [issue 79](https://github.com/trendmicro/tlsh/issues/79)

@@ -56,7 +56,7 @@ cmake_minimum_required(VERSION 2.6)
 project(TLSH)
 
 set(VERSION_MAJOR 4)
-set(VERSION_MINOR 6)
+set(VERSION_MINOR 7)
 set(VERSION_PATCH 0)
 
 # TLSH uses only half the counting buckets.
