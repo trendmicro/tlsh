@@ -70,7 +70,7 @@ import setuptools
 
 setuptools.setup(
     name="py-tlsh",
-    version="4.7.0",
+    version="4.7.1",
     description="TLSH (C++ Python extension)",
     long_description=readme,
     long_description_content_type="text/markdown",

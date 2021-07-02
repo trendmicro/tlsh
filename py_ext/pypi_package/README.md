@@ -8,10 +8,16 @@ the detection of similar objects by comparing their hash values.  Note that
 the byte stream should have a sufficient amount of complexity.  For example,
 a byte stream of identical bytes will not generate a hash value.
 
-## What's new in py-tlsh 4.7.0
+## What's new in py-tlsh 4.7.1
 This Python module supercedes the python-tlsh package on PyPi.
-The improvements in 4.7.0, are that we added additional functions to Python
-	lvalue, q1ratio, q2ratio, checksum, bucket_value and is_valid
+The improvements in 4.7.1, are that we added additional functions to Python
+* lvalue
+* q1ratio
+* q2ratio
+* checksum
+* bucket_value
+* is_valid
+
 The improvements 4.5.0 were:
 * fixed this package so that it works on Windows
 * compatibility with VirusTotal adoption of TLSH: updated to the T1 hash format with backwards compatibility for old hashes

@@ -78,6 +78,20 @@ for file in small small2 ; do
 done
 
 echo
+echo "testing lvalue, q1ratio, q2ratio, checksum, bucket_value function (added in 4.7.0) ..."
+echo
+echo                    "${PYTHON} ../py_ext/tlsh_parts.py -d T11454F120A8989D5CF8CAC182F93A3E8D475C317365C5B4911C3C4A9CA5438F5E8FB6EB > $TMP/python_parts_test.out"
+PYTHONPATH=${PYTHONPATH} ${PYTHON} ../py_ext/tlsh_parts.py -d T11454F120A8989D5CF8CAC182F93A3E8D475C317365C5B4911C3C4A9CA5438F5E8FB6EB > $TMP/python_parts_test.out
+echo "diff $TMP/python_parts_test.out exp/python_parts_test_EXP"
+      diff $TMP/python_parts_test.out exp/python_parts_test_EXP > /dev/null 2>/dev/null
+if [ $? -ne 0 ]; then
+	echoerr "error: diff $TMP/python_parts_test.out exp/python_parts_test_EXP"
+        popd > /dev/null
+	exit -1
+fi
+echo "pass"
+
+echo
 echo "passed"
 echo 
 ### echo "Note that if py_ext/tlshmodule.cpp has changed, then 'python setup.py build; sudo python setup.py install' must be run"

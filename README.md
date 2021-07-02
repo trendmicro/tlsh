@@ -11,10 +11,15 @@ the byte stream should have a sufficient amount of complexity.  For example,
 a byte stream of identical bytes will not generate a hash value.
 
 ## What's New in TLSH 4.x.x
-29/June/2021  
-Release version 4.7.0
-Updated Python realease with additional functions:
-	lvalue, q1ratio, q2ratio, checksum, bucket_value and is_valid
+02/July/2021  
+Release version 4.7.1
+Updated Python realease with additional functions: 
+* lvalue
+* q1ratio
+* q2ratio
+* checksum
+* bucket_value
+* is_valid
 
 23/April/2021  
 Release version 4.6.0
@@ -285,13 +290,12 @@ ATIS 2014, November, 2014, pages 199-210
 
 # Current Version
 
-**4.7.0**
+**4.7.1**
 <PRE>
-29/06/2021
+02/07/2021
 	Release updated package py-tlsh on Pypi.org
-	Merging in pull request that adds functions to Python package
-		lvalue, q1ratio, q2ratio, checksum, bucket_value and is_valid
-	resolve issue #102 - correct Python version numbers
+	regression tests for C++ and Python functions for:
+		lvalue, q1ratio, q2ratio, checksum, bucket_value
 </PRE>
 
 # Change History

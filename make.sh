@@ -68,5 +68,10 @@ then
 	echo "====================="
 	./test_pattern.sh | grep -E "(^test|^passed|error|^Running|Scenario)"
 
+	echo "====================="
+	echo "tests tlsh_parts"
+	echo "====================="
+	./test_parts.sh | grep -E "(^test|^passed|error|^Running|Scenario)"
+
 	cd ..
 fi
