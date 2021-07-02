@@ -583,10 +583,11 @@ version 4: adding version identifier to each digest: 'T1'
 	resolve issue #102 - correct Python version numbers
 </PRE>
 
-**4.7.1**
+**4.7.2**
 <PRE>
 02/07/2021
 	Release updated package py-tlsh on Pypi.org
 	regression tests for C++ and Python functions for:
 		lvalue, q1ratio, q2ratio, checksum, bucket_value
+	resolve issue #95 - allow Requires-Python: >=2.7
 </PRE>

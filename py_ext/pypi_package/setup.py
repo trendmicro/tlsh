@@ -70,7 +70,7 @@ import setuptools
 
 setuptools.setup(
     name="py-tlsh",
-    version="4.7.1",
+    version="4.7.2",
     description="TLSH (C++ Python extension)",
     long_description=readme,
     long_description_content_type="text/markdown",
@@ -84,7 +84,7 @@ setuptools.setup(
         "Development Status :: 5 - Production/Stable",
         "Natural Language :: English",
         "Operating System :: OS Independent",
-        "Programming Language :: Python :: 3.6",
+        "Programming Language :: Python :: 2.7",
     ],
-    python_requires='>=3.6',
+    python_requires='>=2.7',
 )

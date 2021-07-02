@@ -8,9 +8,9 @@ the detection of similar objects by comparing their hash values.  Note that
 the byte stream should have a sufficient amount of complexity.  For example,
 a byte stream of identical bytes will not generate a hash value.
 
-## What's new in py-tlsh 4.7.1
+## What's new in py-tlsh 4.7.2
 This Python module supercedes the python-tlsh package on PyPi.
-The improvements in 4.7.1, are that we added additional functions to Python
+The improvements in 4.7.2, are that we added additional functions to Python
 * lvalue
 * q1ratio
 * q2ratio
