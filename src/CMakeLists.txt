@@ -65,7 +65,10 @@ set_target_properties(tlsh PROPERTIES OUTPUT_NAME tlsh${BUILD_POSTFIX})
 # it was causing problems when compiling / testing tools on Linux
 ##########################
 
-set(TLSH_SHARED_LIBRARY 0)
+if (NOT DEFINED TLSH_SHARED_LIBRARY)
+    set(TLSH_SHARED_LIBRARY 0)
+endif()
+
 if(TLSH_SHARED_LIBRARY EQUAL 1)
     add_library(tlsh_shared SHARED ${TLSH_SRCS})
     set_target_properties(tlsh_shared PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/lib)
@@ -81,3 +84,4 @@ else()
 endif()
 
 install(FILES ../include/tlsh.h DESTINATION include)
+install(FILES ../include/version.h DESTINATION include)

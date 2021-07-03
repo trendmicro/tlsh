@@ -17,6 +17,10 @@ if [ $# -eq 1 -a "$1" = "debug" ]; then
   mkdir -p build/debug
   cd build/debug
   cmake -DCMAKE_BUILD_TYPE=Debug ../..
+elif [ $# -eq 1 -a "$1" = "-shared" ]; then
+  mkdir -p build/release
+  cd build/release
+  cmake -DTLSH_SHARED_LIBRARY=1 ../..
 else
   mkdir -p build/release
   cd build/release
