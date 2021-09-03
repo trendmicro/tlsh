@@ -28,9 +28,6 @@ if [ $# -eq 1 ] && [ "$1" = "-c" ]; then
 fi
 
 make
-cd ../../bin
-cmake -E create_symlink tlsh_unittest tlsh
-cd -
 
 if test $notest = 0
 then
