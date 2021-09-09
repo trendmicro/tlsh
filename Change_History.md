@@ -607,3 +607,14 @@ version 4: adding version identifier to each digest: 'T1'
 	Thanks to Dkapps for pull request 103
 	Thanks to cgull  for pull request 107
 </PRE>
+
+**4.8.2**
+<PRE>
+09/09/2021
+	4.8.2 release
+	Merged in pull request 107
+	Improve portability, add shared library build, install tlsh_unittest
+	Thanks to Dkapps for pull request 103
+	Thanks to cgull  for pull request 107
+	fixed tlsh_win_version.h
+</PRE>
