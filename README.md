@@ -95,7 +95,15 @@ hash values to determine similarity.  Run it with no parameters for detailed usa
 
 - A JavaScript port available in the `js_ext` directory.
 - A Java port is available in the `java` directory.
+
+## 3rd Party Ports
+
+We list these ports just for reference.
+We have not checked the code in these repositories, and we have not checked that the results are identical to TLSH here.
+We also request that any ports include the files LICENSE and NOTICE.txt exactly as they appear in this repository.
+
 - Another Java port is available [here](https://github.com/idealista/tlsh).
+- Another Java port is available [here](https://github.com/kevemueller/kTLSH).
 - A Golang port is available [here](https://github.com/glaslos/tlsh).
 - A Ruby port is available [here](https://github.com/adamliesko/tlsh)
 
