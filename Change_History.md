@@ -591,3 +591,10 @@ version 4: adding version identifier to each digest: 'T1'
 		lvalue, q1ratio, q2ratio, checksum, bucket_value
 	resolve issue #95 - allow Requires-Python: >=2.7
 </PRE>
+
+**4.8.0**
+<PRE>
+08/09/2021
+	Merged in pull request 103
+	Fix the make install target by adding the version.h in the installed files
+</PRE>
