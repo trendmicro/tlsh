@@ -1,23 +1,21 @@
-#!/bin/bash
+#!/bin/sh
 
 export LC_ALL='C'
 
 echoerr() { echo "$@" 1>&2; }
 
 BASEDIR=$(dirname $0)
-pushd $BASEDIR > /dev/null
+cd $BASEDIR
 
 if test ! -f ../bin/tlsh
 then
 	echoerr "error: (127), you must compile tlsh"
-        popd > /dev/null
 	exit 127
 fi
 
 if test ! -f ../bin/tlsh_pattern
 then
 	echoerr "error: (127), you must compile ../bin/tlsh_pattern"
-        popd > /dev/null
 	exit 127
 fi
 
@@ -51,7 +49,6 @@ for f in	021106_yossivassa.txt 0Alice.txt 11-17-06_Academy.txt 1english-only.txt
 	if test ! -f $FILE
 	then
 		echoerr "error: (1), cannot find file $FILE"
-        	popd > /dev/null
 		exit 1
 	fi
 	echo "../bin/tlsh -f $FILE | cut -f 1"
@@ -64,14 +61,12 @@ EXPECTED_PATFILE=exp/tenfile.pat_EXP
 if test ! -f $EXPECTED_PATFILE
 then
 	echoerr "error: ($testnum), Expected Pattern file $EXPECTED_PATFILE does not exist"
-	popd > /dev/null
 	exit 1
 fi
 
 diff --ignore-all-space $PATTERN_FILE $EXPECTED_PATFILE > /dev/null 2>/dev/null
 if [ $? -ne 0 ]; then
 	echoerr "error: ($testnum) diff $PATTERN_FILE $EXPECTED_PATFILE"
-	popd > /dev/null
 	exit $testnum
 fi
 echo "passed"
@@ -99,14 +94,12 @@ for dir in example_data example_data_variants ; do
 	if test ! -f $EXPECTED_RESFILE
 	then
 		echoerr "error: ($testnum), Expected results file $EXPECTED_RESFILE does not exist"
-		popd > /dev/null
 		exit 1
 	fi
 
 	diff --ignore-all-space $RESFILE $EXPECTED_RESFILE > /dev/null 2>/dev/null
 	if [ $? -ne 0 ]; then
 		echoerr "error: ($testnum) diff $RESFILE $EXPECTED_RESFILE"
-		popd > /dev/null
 		exit $testnum
 	fi
 	echo "passed"

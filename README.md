@@ -290,11 +290,13 @@ ATIS 2014, November, 2014, pages 199-210
 
 # Current Version
 
-**4.8.0**
+**4.8.1**
 <PRE>
-08/09/2021
-	Merged in pull request 103
-	Fix the make install target by adding the version.h in the installed files
+09/09/2021
+	Merged in pull request 107
+	Improve portability, add shared library build, install tlsh_unittest
+	Thanks to Dkapps for pull request 103
+	Thanks to cgull  for pull request 107
 </PRE>
 
 # Change History

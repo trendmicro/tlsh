@@ -1,9 +1,9 @@
-#!/bin/bash
+#!/bin/sh
 
 echoerr() { echo "$@" 1>&2; }
 
 BASEDIR=$(dirname $0)
-pushd $BASEDIR > /dev/null
+cd $BASEDIR
 TMP="tmp"
 PYTHON=$1
 
@@ -38,8 +38,7 @@ echo "diff $TMP/python_test.out exp/python_test_EXP"
       diff $TMP/python_test.out exp/python_test_EXP > /dev/null 2>/dev/null
 if [ $? -ne 0 ]; then
 	echoerr "error: diff $TMP/python_test.out exp/python_test_EXP"
-        popd > /dev/null
-	exit -1
+	exit 255
 fi
 echo "pass"
 echo
@@ -52,8 +51,7 @@ for file in small small2 ; do
 	      diff $TMP/py_$file.tlsh exp/$file.128.1.tlsh_EXP
 	if [ $? -ne 0 ]; then
 		echoerr "error: diff $TMP/py_$file.tlsh exp/$file.128.1.tlsh_EXP"
-		popd > /dev/null
-		exit -1
+		exit 255
 	fi
 
 	echo                    "${PYTHON} ../py_ext/tlsh_digest.py -old example_data/$file.txt > $TMP/py_$file.old.tlsh"
@@ -62,8 +60,7 @@ for file in small small2 ; do
 	      diff $TMP/py_$file.old.tlsh exp/$file.128.1.old.tlsh_EXP
 	if [ $? -ne 0 ]; then
 		echoerr "error: diff $TMP/py_$file.old.tlsh exp/$file.128.1.old.tlsh_EXP"
-		popd > /dev/null
-		exit -1
+		exit 255
 	fi
 
 	echo                    "${PYTHON} ../py_ext/tlsh_digest.py -conservative example_data/$file.txt > $TMP/py_$file.cons.tlsh"
@@ -72,8 +69,7 @@ for file in small small2 ; do
 	      diff $TMP/py_$file.cons.tlsh exp/$file.128.1.cons.tlsh_EXP
 	if [ $? -ne 0 ]; then
 		echoerr "error: diff $TMP/py_$file.cons.tlsh exp/$file.128.1.cons.tlsh_EXP"
-		popd > /dev/null
-		exit -1
+		exit 255
 	fi
 done
 
@@ -86,8 +82,7 @@ echo "diff $TMP/python_parts_test.out exp/python_parts_test_EXP"
       diff $TMP/python_parts_test.out exp/python_parts_test_EXP > /dev/null 2>/dev/null
 if [ $? -ne 0 ]; then
 	echoerr "error: diff $TMP/python_parts_test.out exp/python_parts_test_EXP"
-        popd > /dev/null
-	exit -1
+	exit 255
 fi
 echo "pass"
 
@@ -96,4 +91,3 @@ echo "passed"
 echo 
 ### echo "Note that if py_ext/tlshmodule.cpp has changed, then 'python setup.py build; sudo python setup.py install' must be run"
 
-popd > /dev/null

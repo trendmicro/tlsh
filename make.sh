@@ -13,7 +13,7 @@ fi
 
 ####################################################
 
-if [ $# -eq 1 -a "$1" = "debug" ]; then
+if [ $# -eq 1 ] && [ "$1" = "debug" ]; then
   mkdir -p build/debug
   cd build/debug
   cmake -DCMAKE_BUILD_TYPE=Debug ../..
@@ -27,14 +27,11 @@ else
   cmake ../.. 
 fi
 makecversion=0
-if [ $# -eq 1 -a "$1" = "-c" ]; then
+if [ $# -eq 1 ] && [ "$1" = "-c" ]; then
   makecversion=1
 fi
 
 make
-cd ../../bin
-cmake -E create_symlink tlsh_unittest tlsh
-cd -
 
 if test $notest = 0
 then
