@@ -298,15 +298,11 @@ ATIS 2014, November, 2014, pages 199-210
 
 # Current Version
 
-**4.8.2**
+**4.9.0**
 <PRE>
-09/09/2021
-	4.8.2 release
-	Merged in pull request 107
-	Improve portability, add shared library build, install tlsh_unittest
-	Thanks to Dkapps for pull request 103
-	Thanks to cgull  for pull request 107
-	fixed tlsh_win_version.h
+10/09/2021
+	use OPTION for command line options in make.sh
+	consistent use of tabs for whitespace in make.sh
 </PRE>
 
 # Change History

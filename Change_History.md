@@ -618,3 +618,10 @@ version 4: adding version identifier to each digest: 'T1'
 	Thanks to cgull  for pull request 107
 	fixed tlsh_win_version.h
 </PRE>
+
+**4.9.0**
+<PRE>
+10/09/2021
+	use OPTION for command line options in make.sh
+	consistent use of tabs for whitespace in make.sh
+</PRE>
