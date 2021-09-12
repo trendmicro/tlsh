@@ -198,7 +198,7 @@ int read_file_eval_tlsh(char *fname, Tlsh *th, int show_details, int fc_cons_opt
 
 	fclose(fd);
 
-	if (fc_cons_option <= 1) {
+	if ((fc_cons_option & 2) == 0) {
 		if (sizefile < MIN_DATA_LENGTH)
 			return(WARNING_FILE_TOO_SMALL);
 	} else {
