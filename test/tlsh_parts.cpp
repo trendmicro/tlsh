@@ -71,16 +71,18 @@
 
 #include "tlsh.h"
 #include "tlsh_impl.h"
+#include "shared_file_functions.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 
 static void usage()
 {
-	printf("usage: tlsh_parts -d <digest>\n" );
+	printf("usage:	tlsh_parts -d <digest>\n" );
+	printf("OR:	tlsh_parts -f <fname>\n" );
 	exit(0);
 }
 
-static void show_digest(char *digest, int start, int nchar)
+static void show_digest(const char *digest, int start, int nchar)
 {
 	printf("%s\n", digest);
 	for (int x=0; x<start+nchar; x++) {
@@ -95,40 +97,64 @@ static void show_digest(char *digest, int start, int nchar)
 int main(int argc, char *argv[])
 {
 	char *digest		= NULL;
+	char *fname		= NULL;
 	int argIdx		= 1;
 	while (argc > argIdx) {
 		if (strcmp(argv[argIdx], "-d") == 0) {
 			digest = argv[argIdx+1];
+			argIdx = argIdx+2;
+		} else if (strcmp(argv[argIdx], "-f") == 0) {
+			fname = argv[argIdx+1];
 			argIdx = argIdx+2;
 		} else {
 			printf("\nunknown option '%s'\n\n", argv[argIdx]);
 			usage();
 		}
 	}
-	if (digest == NULL)
+	if ((digest == NULL) && (fname == NULL))
 		usage();
 
 	Tlsh d;
-	int err = d.fromTlshStr(digest);
-	if (err) {
-		printf("invalid TLSH: %s\n", digest);
-		exit(1);
+	if (digest != NULL) {
+		int err = d.fromTlshStr(digest);
+		if (err) {
+			printf("invalid TLSH: %s\n", digest);
+			exit(1);
+		}
+	} else {
+		int show_details	= 0;
+		int fc_cons_option	= 4;	// do not delete buckets
+		int showvers		= 1;
+		int err = read_file_eval_tlsh(fname, &d, show_details, fc_cons_option, showvers);
+		if (err) {
+			printf("error while generating TLSH from file: %s\n", fname);
+			exit(1);
+		}
 	}
-	show_digest(digest, 2, 2);
+	int showvers = 1;
+	const char *digestStr = d.getHash(showvers);
+
+	show_digest(digestStr, 2, 2);
 	printf("Checksum(0)		%d\n", d.Checksum(0) );
 	printf("----\n");
-	show_digest(digest, 4, 2);
+	show_digest(digestStr, 4, 2);
 	printf("Lvalue()		%d\n", d.Lvalue() );
 	printf("----\n");
-	show_digest(digest, 6, 1);
+	show_digest(digestStr, 6, 1);
 	printf("Q1ratio()		%d\n", d.Q1ratio() );
 	printf("----\n");
-	show_digest(digest, 7, 1);
+	show_digest(digestStr, 7, 1);
 	printf("Q2ratio()		%d\n", d.Q2ratio() );
 	printf("----\n");
 	for (int bi=0; bi<EFF_BUCKETS; bi=bi+2) {
-		show_digest(digest, 8+bi/2, 1);
+		show_digest(digestStr, 8+bi/2, 1);
+		if (fname != NULL) {
+			printf("HistogramCount(%3d)	%d\n", bi,   d.HistogramCount(bi) );
+		}
 		printf("BucketValue(%3d)	%d\n", bi,   d.BucketValue(bi) );
+		if (fname != NULL) {
+			printf("HistogramCount(%3d)	%d\n", bi+1, d.HistogramCount(bi+1) );
+		}
 		printf("BucketValue(%3d)	%d\n", bi+1, d.BucketValue(bi+1) );
 		printf("----\n");
 	}

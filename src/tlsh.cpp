@@ -215,6 +215,11 @@ int Tlsh::BucketValue(int bucket)
 	return( impl->BucketValue(bucket) );
 }
 
+int Tlsh::HistogramCount(int bucket)
+{
+	return( impl->HistogramCount(bucket) );
+}
+
 int Tlsh::totalDiff(const Tlsh *other, bool len_diff) const
 {
     if( NULL==impl || NULL == other || NULL == other->impl )

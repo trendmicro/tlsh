@@ -1,0 +1,464 @@
+T1E951784702042376169012B1BA5A76EAF36092FC3311A595B4856235278F9F973763EF
+  ^^
+Checksum(0)		158
+----
+T1E951784702042376169012B1BA5A76EAF36092FC3311A595B4856235278F9F973763EF
+    ^^
+Lvalue()		21
+----
+T1E951784702042376169012B1BA5A76EAF36092FC3311A595B4856235278F9F973763EF
+      ^
+Q1ratio()		7
+----
+T1E951784702042376169012B1BA5A76EAF36092FC3311A595B4856235278F9F973763EF
+       ^
+Q2ratio()		8
+----
+T1E951784702042376169012B1BA5A76EAF36092FC3311A595B4856235278F9F973763EF
+        ^
+HistogramCount(  0)	62
+BucketValue(  0)	1
+HistogramCount(  1)	52
+BucketValue(  1)	0
+----
+T1E951784702042376169012B1BA5A76EAF36092FC3311A595B4856235278F9F973763EF
+         ^
+HistogramCount(  2)	64
+BucketValue(  2)	1
+HistogramCount(  3)	101
+BucketValue(  3)	3
+----
+T1E951784702042376169012B1BA5A76EAF36092FC3311A595B4856235278F9F973763EF
+          ^
+HistogramCount(  4)	52
+BucketValue(  4)	0
+HistogramCount(  5)	49
+BucketValue(  5)	0
+----
+T1E951784702042376169012B1BA5A76EAF36092FC3311A595B4856235278F9F973763EF
+           ^
+HistogramCount(  6)	47
+BucketValue(  6)	0
+HistogramCount(  7)	76
+BucketValue(  7)	2
+----
+T1E951784702042376169012B1BA5A76EAF36092FC3311A595B4856235278F9F973763EF
+            ^
+HistogramCount(  8)	46
+BucketValue(  8)	0
+HistogramCount(  9)	47
+BucketValue(  9)	0
+----
+T1E951784702042376169012B1BA5A76EAF36092FC3311A595B4856235278F9F973763EF
+             ^
+HistogramCount( 10)	62
+BucketValue( 10)	1
+HistogramCount( 11)	46
+BucketValue( 11)	0
+----
+T1E951784702042376169012B1BA5A76EAF36092FC3311A595B4856235278F9F973763EF
+              ^
+HistogramCount( 12)	49
+BucketValue( 12)	0
+HistogramCount( 13)	75
+BucketValue( 13)	2
+----
+T1E951784702042376169012B1BA5A76EAF36092FC3311A595B4856235278F9F973763EF
+               ^
+HistogramCount( 14)	38
+BucketValue( 14)	0
+HistogramCount( 15)	82
+BucketValue( 15)	3
+----
+T1E951784702042376169012B1BA5A76EAF36092FC3311A595B4856235278F9F973763EF
+                ^
+HistogramCount( 16)	56
+BucketValue( 16)	1
+HistogramCount( 17)	83
+BucketValue( 17)	3
+----
+T1E951784702042376169012B1BA5A76EAF36092FC3311A595B4856235278F9F973763EF
+                 ^
+HistogramCount( 18)	63
+BucketValue( 18)	1
+HistogramCount( 19)	70
+BucketValue( 19)	2
+----
+T1E951784702042376169012B1BA5A76EAF36092FC3311A595B4856235278F9F973763EF
+                  ^
+HistogramCount( 20)	48
+BucketValue( 20)	0
+HistogramCount( 21)	62
+BucketValue( 21)	1
+----
+T1E951784702042376169012B1BA5A76EAF36092FC3311A595B4856235278F9F973763EF
+                   ^
+HistogramCount( 22)	68
+BucketValue( 22)	1
+HistogramCount( 23)	70
+BucketValue( 23)	2
+----
+T1E951784702042376169012B1BA5A76EAF36092FC3311A595B4856235278F9F973763EF
+                    ^
+HistogramCount( 24)	74
+BucketValue( 24)	2
+HistogramCount( 25)	60
+BucketValue( 25)	1
+----
+T1E951784702042376169012B1BA5A76EAF36092FC3311A595B4856235278F9F973763EF
+                     ^
+HistogramCount( 26)	44
+BucketValue( 26)	0
+HistogramCount( 27)	49
+BucketValue( 27)	0
+----
+T1E951784702042376169012B1BA5A76EAF36092FC3311A595B4856235278F9F973763EF
+                      ^
+HistogramCount( 28)	42
+BucketValue( 28)	0
+HistogramCount( 29)	67
+BucketValue( 29)	1
+----
+T1E951784702042376169012B1BA5A76EAF36092FC3311A595B4856235278F9F973763EF
+                       ^
+HistogramCount( 30)	43
+BucketValue( 30)	0
+HistogramCount( 31)	69
+BucketValue( 31)	2
+----
+T1E951784702042376169012B1BA5A76EAF36092FC3311A595B4856235278F9F973763EF
+                        ^
+HistogramCount( 32)	69
+BucketValue( 32)	2
+HistogramCount( 33)	82
+BucketValue( 33)	3
+----
+T1E951784702042376169012B1BA5A76EAF36092FC3311A595B4856235278F9F973763EF
+                         ^
+HistogramCount( 34)	44
+BucketValue( 34)	0
+HistogramCount( 35)	65
+BucketValue( 35)	1
+----
+T1E951784702042376169012B1BA5A76EAF36092FC3311A595B4856235278F9F973763EF
+                          ^
+HistogramCount( 36)	77
+BucketValue( 36)	2
+HistogramCount( 37)	83
+BucketValue( 37)	3
+----
+T1E951784702042376169012B1BA5A76EAF36092FC3311A595B4856235278F9F973763EF
+                           ^
+HistogramCount( 38)	70
+BucketValue( 38)	2
+HistogramCount( 39)	72
+BucketValue( 39)	2
+----
+T1E951784702042376169012B1BA5A76EAF36092FC3311A595B4856235278F9F973763EF
+                            ^
+HistogramCount( 40)	63
+BucketValue( 40)	1
+HistogramCount( 41)	61
+BucketValue( 41)	1
+----
+T1E951784702042376169012B1BA5A76EAF36092FC3311A595B4856235278F9F973763EF
+                             ^
+HistogramCount( 42)	73
+BucketValue( 42)	2
+HistogramCount( 43)	76
+BucketValue( 43)	2
+----
+T1E951784702042376169012B1BA5A76EAF36092FC3311A595B4856235278F9F973763EF
+                              ^
+HistogramCount( 44)	56
+BucketValue( 44)	1
+HistogramCount( 45)	89
+BucketValue( 45)	3
+----
+T1E951784702042376169012B1BA5A76EAF36092FC3311A595B4856235278F9F973763EF
+                               ^
+HistogramCount( 46)	68
+BucketValue( 46)	1
+HistogramCount( 47)	70
+BucketValue( 47)	2
+----
+T1E951784702042376169012B1BA5A76EAF36092FC3311A595B4856235278F9F973763EF
+                                ^
+HistogramCount( 48)	79
+BucketValue( 48)	3
+HistogramCount( 49)	70
+BucketValue( 49)	2
+----
+T1E951784702042376169012B1BA5A76EAF36092FC3311A595B4856235278F9F973763EF
+                                 ^
+HistogramCount( 50)	73
+BucketValue( 50)	2
+HistogramCount( 51)	69
+BucketValue( 51)	2
+----
+T1E951784702042376169012B1BA5A76EAF36092FC3311A595B4856235278F9F973763EF
+                                  ^
+HistogramCount( 52)	78
+BucketValue( 52)	3
+HistogramCount( 53)	88
+BucketValue( 53)	3
+----
+T1E951784702042376169012B1BA5A76EAF36092FC3311A595B4856235278F9F973763EF
+                                   ^
+HistogramCount( 54)	50
+BucketValue( 54)	0
+HistogramCount( 55)	116
+BucketValue( 55)	3
+----
+T1E951784702042376169012B1BA5A76EAF36092FC3311A595B4856235278F9F973763EF
+                                    ^
+HistogramCount( 56)	62
+BucketValue( 56)	1
+HistogramCount( 57)	74
+BucketValue( 57)	2
+----
+T1E951784702042376169012B1BA5A76EAF36092FC3311A595B4856235278F9F973763EF
+                                     ^
+HistogramCount( 58)	52
+BucketValue( 58)	0
+HistogramCount( 59)	55
+BucketValue( 59)	0
+----
+T1E951784702042376169012B1BA5A76EAF36092FC3311A595B4856235278F9F973763EF
+                                      ^
+HistogramCount( 60)	77
+BucketValue( 60)	2
+HistogramCount( 61)	62
+BucketValue( 61)	1
+----
+T1E951784702042376169012B1BA5A76EAF36092FC3311A595B4856235278F9F973763EF
+                                       ^
+HistogramCount( 62)	52
+BucketValue( 62)	0
+HistogramCount( 63)	73
+BucketValue( 63)	2
+----
+T1E951784702042376169012B1BA5A76EAF36092FC3311A595B4856235278F9F973763EF
+                                        ^
+HistogramCount( 64)	80
+BucketValue( 64)	3
+HistogramCount( 65)	119
+BucketValue( 65)	3
+----
+T1E951784702042376169012B1BA5A76EAF36092FC3311A595B4856235278F9F973763EF
+                                         ^
+HistogramCount( 66)	110
+BucketValue( 66)	3
+HistogramCount( 67)	51
+BucketValue( 67)	0
+----
+T1E951784702042376169012B1BA5A76EAF36092FC3311A595B4856235278F9F973763EF
+                                          ^
+HistogramCount( 68)	51
+BucketValue( 68)	0
+HistogramCount( 69)	85
+BucketValue( 69)	3
+----
+T1E951784702042376169012B1BA5A76EAF36092FC3311A595B4856235278F9F973763EF
+                                           ^
+HistogramCount( 70)	51
+BucketValue( 70)	0
+HistogramCount( 71)	83
+BucketValue( 71)	3
+----
+T1E951784702042376169012B1BA5A76EAF36092FC3311A595B4856235278F9F973763EF
+                                            ^
+HistogramCount( 72)	55
+BucketValue( 72)	0
+HistogramCount( 73)	64
+BucketValue( 73)	1
+----
+T1E951784702042376169012B1BA5A76EAF36092FC3311A595B4856235278F9F973763EF
+                                             ^
+HistogramCount( 74)	45
+BucketValue( 74)	0
+HistogramCount( 75)	63
+BucketValue( 75)	1
+----
+T1E951784702042376169012B1BA5A76EAF36092FC3311A595B4856235278F9F973763EF
+                                              ^
+HistogramCount( 76)	73
+BucketValue( 76)	2
+HistogramCount( 77)	73
+BucketValue( 77)	2
+----
+T1E951784702042376169012B1BA5A76EAF36092FC3311A595B4856235278F9F973763EF
+                                               ^
+HistogramCount( 78)	61
+BucketValue( 78)	1
+HistogramCount( 79)	62
+BucketValue( 79)	1
+----
+T1E951784702042376169012B1BA5A76EAF36092FC3311A595B4856235278F9F973763EF
+                                                ^
+HistogramCount( 80)	73
+BucketValue( 80)	2
+HistogramCount( 81)	57
+BucketValue( 81)	1
+----
+T1E951784702042376169012B1BA5A76EAF36092FC3311A595B4856235278F9F973763EF
+                                                 ^
+HistogramCount( 82)	57
+BucketValue( 82)	1
+HistogramCount( 83)	58
+BucketValue( 83)	1
+----
+T1E951784702042376169012B1BA5A76EAF36092FC3311A595B4856235278F9F973763EF
+                                                  ^
+HistogramCount( 84)	70
+BucketValue( 84)	2
+HistogramCount( 85)	103
+BucketValue( 85)	3
+----
+T1E951784702042376169012B1BA5A76EAF36092FC3311A595B4856235278F9F973763EF
+                                                   ^
+HistogramCount( 86)	65
+BucketValue( 86)	1
+HistogramCount( 87)	45
+BucketValue( 87)	0
+----
+T1E951784702042376169012B1BA5A76EAF36092FC3311A595B4856235278F9F973763EF
+                                                    ^
+HistogramCount( 88)	76
+BucketValue( 88)	2
+HistogramCount( 89)	52
+BucketValue( 89)	0
+----
+T1E951784702042376169012B1BA5A76EAF36092FC3311A595B4856235278F9F973763EF
+                                                     ^
+HistogramCount( 90)	67
+BucketValue( 90)	1
+HistogramCount( 91)	58
+BucketValue( 91)	1
+----
+T1E951784702042376169012B1BA5A76EAF36092FC3311A595B4856235278F9F973763EF
+                                                      ^
+HistogramCount( 92)	68
+BucketValue( 92)	1
+HistogramCount( 93)	71
+BucketValue( 93)	2
+----
+T1E951784702042376169012B1BA5A76EAF36092FC3311A595B4856235278F9F973763EF
+                                                       ^
+HistogramCount( 94)	46
+BucketValue( 94)	0
+HistogramCount( 95)	69
+BucketValue( 95)	2
+----
+T1E951784702042376169012B1BA5A76EAF36092FC3311A595B4856235278F9F973763EF
+                                                        ^
+HistogramCount( 96)	49
+BucketValue( 96)	0
+HistogramCount( 97)	92
+BucketValue( 97)	3
+----
+T1E951784702042376169012B1BA5A76EAF36092FC3311A595B4856235278F9F973763EF
+                                                         ^
+HistogramCount( 98)	68
+BucketValue( 98)	1
+HistogramCount( 99)	64
+BucketValue( 99)	1
+----
+T1E951784702042376169012B1BA5A76EAF36092FC3311A595B4856235278F9F973763EF
+                                                          ^
+HistogramCount(100)	45
+BucketValue(100)	0
+HistogramCount(101)	72
+BucketValue(101)	2
+----
+T1E951784702042376169012B1BA5A76EAF36092FC3311A595B4856235278F9F973763EF
+                                                           ^
+HistogramCount(102)	63
+BucketValue(102)	1
+HistogramCount(103)	112
+BucketValue(103)	3
+----
+T1E951784702042376169012B1BA5A76EAF36092FC3311A595B4856235278F9F973763EF
+                                                            ^
+HistogramCount(104)	71
+BucketValue(104)	2
+HistogramCount(105)	55
+BucketValue(105)	0
+----
+T1E951784702042376169012B1BA5A76EAF36092FC3311A595B4856235278F9F973763EF
+                                                             ^
+HistogramCount(106)	82
+BucketValue(106)	3
+HistogramCount(107)	82
+BucketValue(107)	3
+----
+T1E951784702042376169012B1BA5A76EAF36092FC3311A595B4856235278F9F973763EF
+                                                              ^
+HistogramCount(108)	77
+BucketValue(108)	2
+HistogramCount(109)	63
+BucketValue(109)	1
+----
+T1E951784702042376169012B1BA5A76EAF36092FC3311A595B4856235278F9F973763EF
+                                                               ^
+HistogramCount(110)	85
+BucketValue(110)	3
+HistogramCount(111)	93
+BucketValue(111)	3
+----
+T1E951784702042376169012B1BA5A76EAF36092FC3311A595B4856235278F9F973763EF
+                                                                ^
+HistogramCount(112)	77
+BucketValue(112)	2
+HistogramCount(113)	56
+BucketValue(113)	1
+----
+T1E951784702042376169012B1BA5A76EAF36092FC3311A595B4856235278F9F973763EF
+                                                                 ^
+HistogramCount(114)	68
+BucketValue(114)	1
+HistogramCount(115)	78
+BucketValue(115)	3
+----
+T1E951784702042376169012B1BA5A76EAF36092FC3311A595B4856235278F9F973763EF
+                                                                  ^
+HistogramCount(116)	45
+BucketValue(116)	0
+HistogramCount(117)	86
+BucketValue(117)	3
+----
+T1E951784702042376169012B1BA5A76EAF36092FC3311A595B4856235278F9F973763EF
+                                                                   ^
+HistogramCount(118)	58
+BucketValue(118)	1
+HistogramCount(119)	132
+BucketValue(119)	3
+----
+T1E951784702042376169012B1BA5A76EAF36092FC3311A595B4856235278F9F973763EF
+                                                                    ^
+HistogramCount(120)	66
+BucketValue(120)	1
+HistogramCount(121)	76
+BucketValue(121)	2
+----
+T1E951784702042376169012B1BA5A76EAF36092FC3311A595B4856235278F9F973763EF
+                                                                     ^
+HistogramCount(122)	50
+BucketValue(122)	0
+HistogramCount(123)	90
+BucketValue(123)	3
+----
+T1E951784702042376169012B1BA5A76EAF36092FC3311A595B4856235278F9F973763EF
+                                                                      ^
+HistogramCount(124)	98
+BucketValue(124)	3
+HistogramCount(125)	77
+BucketValue(125)	2
+----
+T1E951784702042376169012B1BA5A76EAF36092FC3311A595B4856235278F9F973763EF
+                                                                       ^
+HistogramCount(126)	81
+BucketValue(126)	3
+HistogramCount(127)	84
+BucketValue(127)	3
+----

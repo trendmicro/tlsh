@@ -391,6 +391,11 @@ void TlshImpl::fast_update(const unsigned char* data, unsigned int len)
 }
 
 /////////////////////////////////////////////////////////////////////////////
+// fc_cons_option - a bitfield
+//	0	default
+//	1	force (now the default)
+//	2	conservative
+//	4	do not delete a_bucket
 /////////////////////////////////////////////////////////////////////////////
 
 /* to signal the class there is no more data to be added */
@@ -401,12 +406,12 @@ void TlshImpl::final(int fc_cons_option)
       return;
     }   
     // incoming data must more than or equal to MIN_DATA_LENGTH bytes
-    if ((fc_cons_option <= 1) && (this->data_len < MIN_DATA_LENGTH)) {
+    if (((fc_cons_option & 2) == 0) && (this->data_len < MIN_DATA_LENGTH)) {
       // this->lsh_code be empty
       delete [] this->a_bucket; this->a_bucket = NULL;
       return;
     }
-    if ((fc_cons_option == 2) && (this->data_len < MIN_CONSERVATIVE_DATA_LENGTH)) {
+    if ((fc_cons_option & 2) && (this->data_len < MIN_CONSERVATIVE_DATA_LENGTH)) {
       // this->lsh_code be empty
       delete [] this->a_bucket; this->a_bucket = NULL;
       return;
@@ -453,13 +458,15 @@ void TlshImpl::final(int fc_cons_option)
                 h += 2 << (j*2);
             } else if( q1 < k ) {
                 h += 1 << (j*2);
-            }
+	    }
         }
         this->lsh_bin.tmp_code[i] = h;
     }
 
-    //Done with a_bucket so deallocate
-    delete [] this->a_bucket; this->a_bucket = NULL;
+    if ((fc_cons_option & 4) == 0) {
+        //Done with a_bucket so deallocate
+        delete [] this->a_bucket; this->a_bucket = NULL;
+    }
     
     this->lsh_bin.Lvalue = l_capturing(this->data_len);
     this->lsh_bin.Q.QR.Q1ratio = (unsigned int) ((float)(q1*100)/(float) q3) % 16;
@@ -651,6 +658,12 @@ unsigned char bv;
 		return(p3);
 	}
 	return(p4);
+}
+int TlshImpl::HistogramCount(int bucket)
+{
+	if (this->a_bucket == NULL)
+		return(-1);
+	return(this->a_bucket[EFF_BUCKETS - 1 - bucket]);
 }
 
 int TlshImpl::totalDiff(const TlshImpl& other, bool len_diff) const

@@ -625,3 +625,15 @@ version 4: adding version identifier to each digest: 'T1'
 	use OPTION for command line options in make.sh
 	consistent use of tabs for whitespace in make.sh
 </PRE>
+
+**4.9.1**
+<PRE>
+12/09/2021
+	Added function to API
+		int HistogramCount(int bucket);
+	This function prints out the HistogramCount for a Bucket
+	To see the HistogramCount, you need to call the constructor with fc_cons_option & 4 == 1
+		(fc_cons_option is now a bitfield)
+	test_parts.cpp shows you how to use this function.
+	Added regression tests for HistogramCount(int bucket) into test_parts.sh
+</PRE>

@@ -4,10 +4,11 @@ bin/
 lib/
 build/
 Testing/tmp
+Testing/out.parts
 test/simple_unittest
 test/tlsh_version
 VERSION
-include/version.h
+include/tlsh_version.h
 Windows/Release/
 Windows/simple_unittest/Release/
 Windows/tlsh.VC2008.ncb

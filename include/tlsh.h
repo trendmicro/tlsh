@@ -144,6 +144,7 @@ public:
     int Q2ratio();
     int Checksum(int k);
     int BucketValue(int bucket);
+    int HistogramCount(int bucket);
 
     /* calculate difference */
     /* The len_diff parameter specifies if the file length is to be included in the difference calculation (len_diff=true) or if it */

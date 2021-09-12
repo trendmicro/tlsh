@@ -126,6 +126,7 @@ public:
     int Q2ratio();
     int Checksum(int k);
     int BucketValue(int bucket);
+    int HistogramCount(int bucket);
     int fromTlshStr(const char* str);
     bool isValid() const { return lsh_code_valid; }
 
