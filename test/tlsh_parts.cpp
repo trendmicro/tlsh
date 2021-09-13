@@ -98,6 +98,7 @@ int main(int argc, char *argv[])
 {
 	char *digest		= NULL;
 	char *fname		= NULL;
+	int fc_cons_option	= TLSH_OPTION_KEEP_BUCKET;	// do not delete buckets
 	int argIdx		= 1;
 	while (argc > argIdx) {
 		if (strcmp(argv[argIdx], "-d") == 0) {
@@ -106,6 +107,12 @@ int main(int argc, char *argv[])
 		} else if (strcmp(argv[argIdx], "-f") == 0) {
 			fname = argv[argIdx+1];
 			argIdx = argIdx+2;
+		} else if (strcmp(argv[argIdx], "-thread") == 0) {
+			fc_cons_option += TLSH_OPTION_THREADED;
+			argIdx = argIdx+1;
+		} else if (strcmp(argv[argIdx], "-private") == 0) {
+			fc_cons_option += TLSH_OPTION_PRIVATE;
+			argIdx = argIdx+1;
 		} else {
 			printf("\nunknown option '%s'\n\n", argv[argIdx]);
 			usage();
@@ -123,7 +130,6 @@ int main(int argc, char *argv[])
 		}
 	} else {
 		int show_details	= 0;
-		int fc_cons_option	= TLSH_OPTION_KEEP_BUCKET;	// do not delete buckets
 		int showvers		= 1;
 		int err = read_file_eval_tlsh(fname, &d, show_details, fc_cons_option, showvers);
 		if (err) {

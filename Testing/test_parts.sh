@@ -50,24 +50,34 @@ fi
 mkdir tmp
 
 listfiles=`ls example_data`
-for fname in $listfiles ; do
-	OUTFILE=tmp/out.parts.$fname
-	file=example_data/$fname
-	echo "../bin/tlsh_parts -f $file > $OUTFILE"
-	      ../bin/tlsh_parts -f $file > $OUTFILE
+for experiment in "none" "private" "thread" ; do
+	for fname in $listfiles ; do
+		if test $experiment = "none"
+		then
+			OUTFILE=tmp/out.parts.$fname
+			option=""
+			EXPECTED_PARTS=exp/out.parts.$fname.EXP
+		else
+			OUTFILE=tmp/out.parts.$experiment.$fname
+			option="-$experiment"
+			EXPECTED_PARTS=exp/out.parts.$experiment.$fname.EXP
+		fi
+		file=example_data/$fname
+		echo "../bin/tlsh_parts $option -f $file > $OUTFILE"
+		      ../bin/tlsh_parts $option -f $file > $OUTFILE
 
-	EXPECTED_PARTS=exp/out.parts.$fname.EXP
-	if test ! -f $EXPECTED_PARTS
-	then
-		echoerr "error: Expected parts file $EXPECTED_PARTS does not exist"
-		exit 1
-	fi
+		if test ! -f $EXPECTED_PARTS
+		then
+			echoerr "error: Expected parts file $EXPECTED_PARTS does not exist"
+			exit 1
+		fi
 
-	diff --ignore-all-space $OUTFILE $EXPECTED_PARTS > /dev/null 2>/dev/null
-	if [ $? -ne 0 ]; then
-		echoerr "error: diff $OUTFILE $EXPECTED_PARTS"
-		exit 1
-	fi
+		diff --ignore-all-space $OUTFILE $EXPECTED_PARTS > /dev/null 2>/dev/null
+		if [ $? -ne 0 ]; then
+			echoerr "error: diff $OUTFILE $EXPECTED_PARTS"
+			exit 1
+		fi
+	done
 done
 
 echo "passed"

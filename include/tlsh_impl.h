@@ -113,8 +113,8 @@ public:
     TlshImpl();
     ~TlshImpl();
 public:
-    void       update(const unsigned char* data, unsigned int len);
-    void  fast_update(const unsigned char* data, unsigned int len);
+    void       update(const unsigned char* data, unsigned int len, int tlsh_option);
+    void fast_update5(const unsigned char* data, unsigned int len, int tlsh_option);
     void final(int fc_cons_option = 0);
     void reset();
     const char* hash(int showvers) const;

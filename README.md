@@ -298,16 +298,49 @@ ATIS 2014, November, 2014, pages 199-210
 
 # Current Version
 
-**4.9.2**
+**4.9.3**
 <PRE>
 13/09/2021
-	define various tlsh options using #define
-		// #define     TLSH_OPTION_FORCE       1
-		#define        TLSH_OPTION_CONSERVATIVE        2
-		#define        TLSH_OPTION_KEEP_BUCKET         4
-		#define        TLSH_OPTION_PRIVATE             8
-		#define        TLSH_OPTION_THREADED            16
-	use the #define in the code
+	added options -thread and -private
+	-thread	the TLSH is evaluated with 2 threads (faster calculation)
+		Only done for files / bytestreams >= 10000 bytes
+		But this means that it is impossible to calculate the checksum
+		So the checksum is set to zero
+	-private
+		Does not evaluate the checksum
+		Useful if you do not want to leak information
+		Slightly faster than default TLSH (code was written to optimize this)
+Timing (using the utility provide "timing_unittest") : (On Mac 2.3 GHz)
+Byte size: 1 million bytes
+
+eval TLSH DEFAULT (4.9.3 compact hash 1 byte checksum sliding_window=5) 500 times...
+TLSH(buffer) = T1A12500088C838B0A0F0EC3C0ACAB82F3B8228B0308CFA302338C0F0AE2C24F28000008
+BEFORE	ms=1631512230350
+AFTER	ms=1631512234041
+TIME	ms=3691
+TIME	ms=  7.38	per iteration
+
+eval TLSH THREADED (4.9.3 compact hash 1 byte checksum sliding_window=5) 500 times...
+TLSH(buffer) = T1002500088C838B0A0F0EC3C0ACAB82F3B8228B0308CFA302338C0F0AE2C24F28000008
+BEFORE	ms=1631512234041
+AFTER	ms=1631512236464
+TIME	ms=2423
+TIME	ms=  4.85	per iteration
+
+eval TLSH PRIVATE (4.9.3 compact hash 1 byte checksum sliding_window=5) 500 times...
+TLSH(buffer) = T1002500088C838B0A0F0EC3C0ACAB82F3B8228B0308CFA302338C0F0AE2C24F28000008
+BEFORE	ms=1631512236464
+AFTER	ms=1631512239485
+TIME	ms=3021
+TIME	ms=  6.04	per iteration
+
+eval TLSH distance 50 million times...
+Test 2: Calc distance TLSH digest
+dist=138
+BEFORE	ms=1631512239500
+AFTER	ms=1631512240550
+TIME	ms=1050
+TIME	ms= 21.00	per million iterations
 </PRE>
 
 # Change History

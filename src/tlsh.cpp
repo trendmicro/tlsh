@@ -133,17 +133,23 @@ const char *Tlsh::version()
 
 void Tlsh::update(const unsigned char* data, unsigned int len)
 {
-    if ( NULL != impl )
-        impl->update(data, len);
+	//
+	// threaded and private options only available to
+	//	windowsize == 5
+	//	calling final - without calling update first
+	//
+	int tlsh_option	= 0;
+	if (impl != NULL)
+		impl->update(data, len, tlsh_option);
 }
 
-void Tlsh::final(const unsigned char* data, unsigned int len, int fc_cons_option)
+void Tlsh::final(const unsigned char* data, unsigned int len, int tlsh_option)
 {
-    if ( NULL != impl ){
-        if ( NULL != data && len > 0 )
-            impl->update(data, len);
-        impl->final(fc_cons_option);
-    }
+	if (NULL != impl) {
+		if ((data != NULL) && (len > 0))
+			impl->update(data, len, tlsh_option);
+		impl->final(tlsh_option);
+	}
 }
 
 const char* Tlsh::getHash(int showvers) const

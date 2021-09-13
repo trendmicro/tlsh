@@ -71,20 +71,87 @@
 
 #include "tlsh.h"
 
+static void time_tlsh(char *buffer, int buffer_size, int MAX_TRY, int check)
+{
+	struct timeval tp;
+	long before_ms;
+	long after_ms;
 
+	Tlsh t1;
+	int fc_cons_option	= 0;
+	int showvers		= 1;
+
+	for (int experiment=0; experiment<4; experiment++) {
+		const char *experiment_name;
+		const char *result;
+		if (experiment == 0) {
+			fc_cons_option	= 0;
+			experiment_name	= "WARM UP";
+			result	= "T1A12500088C838B0A0F0EC3C0ACAB82F3B8228B0308CFA302338C0F0AE2C24F28000008";
+		} else if (experiment == 1) {
+			fc_cons_option	= 0;
+			experiment_name	= "DEFAULT";
+			result	= "T1A12500088C838B0A0F0EC3C0ACAB82F3B8228B0308CFA302338C0F0AE2C24F28000008";
+		} else if (experiment == 2) {
+			fc_cons_option	= TLSH_OPTION_THREADED;
+			experiment_name	= "THREADED";
+			result	= "T1002500088C838B0A0F0EC3C0ACAB82F3B8228B0308CFA302338C0F0AE2C24F28000008";
+		} else if (experiment == 3) {
+			fc_cons_option	= TLSH_OPTION_PRIVATE;
+			experiment_name	= "PRIVATE";
+			result	= "T1002500088C838B0A0F0EC3C0ACAB82F3B8228B0308CFA302338C0F0AE2C24F28000008";
+		}
+		printf("eval TLSH %s (%s) %d times...\n", experiment_name, Tlsh::version(), MAX_TRY );
+
+		gettimeofday(&tp, NULL);
+		before_ms = tp.tv_sec * 1000 + tp.tv_usec / 1000; //get current timestamp in milliseconds
+		if (check) {
+			for (int tries=0; tries<MAX_TRY; tries++) {
+				t1.reset();
+				t1.final( (const unsigned char*) buffer, buffer_size, fc_cons_option);
+				if (strcmp(t1.getHash(showvers), result) != 0) {
+					printf("test failed...");
+					printf("	result=%s\n", result);
+					printf("	TLSH  =%s\n", t1.getHash(showvers) );
+					exit(1);
+				}
+			}
+		} else {
+			for (int tries=0; tries<MAX_TRY; tries++) {
+				t1.reset();
+				t1.final( (const unsigned char*) buffer, buffer_size, fc_cons_option);
+			}
+		}
+		gettimeofday(&tp, NULL);
+		printf("TLSH(buffer) = %s\n", t1.getHash(showvers) );
+
+		after_ms = tp.tv_sec * 1000 + tp.tv_usec / 1000; //get current timestamp in milliseconds
+		long diff	= (after_ms - before_ms);
+		double per_iter	= (double) diff / (double) MAX_TRY;
+		printf("BEFORE	ms=%ld\n", before_ms);
+		printf("AFTER	ms=%ld\n", after_ms);
+		printf("TIME	ms=%ld\n", diff);
+		printf("TIME	ms=%6.2f	per iteration\n", per_iter);
+		printf("\n");
+	}
+}
 
 #define MILLION	1000000
-#define MAX_TRY	50
+#define MAX_TRY_VALUE	500
 
 int main(int argc, char *argv[])
 {
 	int argIdx		= 1;
 	int buffer_size		= MILLION;
 	int showvers		= 1;
+	int check		= 0;
 	while (argc > argIdx) {
                 if (strcmp(argv[argIdx], "-version") == 0) {
 		        printf("%s\n", Tlsh::version());
 			return 0;
+		}
+                if (strcmp(argv[argIdx], "-check") == 0) {
+			check = 1;
 		}
                 if (strcmp(argv[argIdx], "-size") == 0) {
 			char *str = argv[argIdx+1];
@@ -118,28 +185,13 @@ int main(int argc, char *argv[])
 	}
 	buffer[buffer_size-1] = '\0';
 
-	gettimeofday(&tp, NULL);
-	before_ms = tp.tv_sec * 1000 + tp.tv_usec / 1000; //get current timestamp in milliseconds
-
-	printf("eval TLSH (%s) %d times...\n", Tlsh::version(), MAX_TRY );
-	for (int tries=0; tries<MAX_TRY; tries++) {
-		t1.reset();
-		t1.final( (const unsigned char*) buffer, buffer_size);
-	}
-
-	gettimeofday(&tp, NULL);
-	printf("TLSH(buffer) = %s\n", t1.getHash(showvers) );
-
-	after_ms = tp.tv_sec * 1000 + tp.tv_usec / 1000; //get current timestamp in milliseconds
-	long diff	= (after_ms - before_ms);
-	long per_iter	= diff / MAX_TRY;
-
 	printf("Test 1: Evaluate TLSH digest\n");
-	printf("BEFORE	ms=%ld\n", before_ms);
-	printf("AFTER	ms=%ld\n", after_ms);
-	printf("TIME	ms=%ld\n", diff);
-	printf("TIME	ms=%ld	per iteration\n", per_iter);
+	time_tlsh(buffer, buffer_size, MAX_TRY_VALUE, check);
 	printf("\n");
+
+	int fc_cons_option	= 0;
+	t1.reset();
+	t1.final( (const unsigned char*) buffer, buffer_size, fc_cons_option);
 
 	buffer2 = new char[buffer_size];
 	for (int i = 0; i < buffer_size; i++) {
@@ -150,27 +202,26 @@ int main(int argc, char *argv[])
 
 	t2.reset();
 	t2.final( (const unsigned char*) buffer2, buffer_size);
+	int dist = 0;
+	int max_try = (MAX_TRY_VALUE/10) * MILLION;
+	printf("eval TLSH distance %d million times...\n", max_try / MILLION );
 
 	gettimeofday(&tp, NULL);
 	before_ms = tp.tv_sec * 1000 + tp.tv_usec / 1000; //get current timestamp in milliseconds
-
-	int dist = 0;
-	printf("eval TLSH distance %d million times...\n", MAX_TRY );
-	for (int tries=0; tries<MAX_TRY * MILLION; tries++) {
+	for (int tries=0; tries<max_try; tries++) {
 		dist = t1.totalDiff(&t2);
 	}
-
 	gettimeofday(&tp, NULL);
 	after_ms = tp.tv_sec * 1000 + tp.tv_usec / 1000; //get current timestamp in milliseconds
-	diff		= (after_ms - before_ms);
-	per_iter	= diff / MAX_TRY;
+	long diff	= (after_ms - before_ms);
+	double per_iter	= (double) diff / (double) (max_try / MILLION);
 
 	printf("Test 2: Calc distance TLSH digest\n");
 	printf("dist=%d\n", dist);
 	printf("BEFORE	ms=%ld\n", before_ms);
 	printf("AFTER	ms=%ld\n", after_ms);
 	printf("TIME	ms=%ld\n", diff);
-	printf("TIME	ms=%ld	per million iterations\n", per_iter);
+	printf("TIME	ms=%6.2f	per million iterations\n", per_iter);
 	printf("\n");
 
 	delete[] buffer;

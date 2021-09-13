@@ -57,7 +57,7 @@ project(TLSH)
 
 set(VERSION_MAJOR 4)
 set(VERSION_MINOR 9)
-set(VERSION_PATCH 2)
+set(VERSION_PATCH 3)
 
 # TLSH uses only half the counting buckets.
 # It can use all the buckets now.
@@ -125,11 +125,10 @@ if (CMAKE_BUILD_TYPE STREQUAL Debug)
         set(CMAKE_CXX_FLAGS "-g")
     endif()
 else(CMAKE_BUILD_TYPE STREQUAL Debug)
-    if(CMAKE_COMPILER_IS_GNUCXX)
-        set(CMAKE_CXX_FLAGS "-O2 -fvisibility=internal")  ## Remove TlshImpl symbols
-    endif()
     if(MSVC)
         set(CMAKE_CXX_FLAGS "/O2")        ## Optimize
+    else(MSVS)
+        set(CMAKE_CXX_FLAGS "-O3")
     endif()
 endif(CMAKE_BUILD_TYPE STREQUAL Debug)
 
@@ -140,8 +139,8 @@ endif()
 
 # user can override CXX; make sure tests link and load properly regardless of LD_LIBRARY_PATH
 if(CMAKE_COMPILER_IS_GNUCXX)
-    set(CMAKE_EXE_LINKER_FLAGS "-static-libgcc")
-    set(CMAKE_EXE_LINKER_FLAGS "-static-libstdc++")
+    # previously used:    set(CMAKE_EXE_LINKER_FLAGS "-static-libgcc")
+    set(CMAKE_EXE_LINKER_FLAGS "-pthread -static-libstdc++")
 endif()
 
 enable_testing()

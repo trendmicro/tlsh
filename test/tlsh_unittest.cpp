@@ -491,7 +491,13 @@ int main(int argc, char *argv[])
 		} else if (strcmp(argv[argIdx], "-force") == 0) {
 			argIdx = argIdx+1;
 		} else if (strcmp(argv[argIdx], "-conservative") == 0) {
-			fc_cons_option = 2;
+			fc_cons_option += TLSH_OPTION_CONSERVATIVE;
+			argIdx = argIdx+1;
+		} else if (strcmp(argv[argIdx], "-thread") == 0) {
+			fc_cons_option += TLSH_OPTION_THREADED;
+			argIdx = argIdx+1;
+		} else if (strcmp(argv[argIdx], "-private") == 0) {
+			fc_cons_option += TLSH_OPTION_PRIVATE;
 			argIdx = argIdx+1;
 		} else if (strcmp(argv[argIdx], "-details") == 0) {
 			show_details ++;
