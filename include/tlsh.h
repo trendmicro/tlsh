@@ -60,6 +60,13 @@
 #ifndef HEADER_TLSH_H
 #define HEADER_TLSH_H
 
+// -force option no longer used
+// #define	TLSH_OPTION_FORCE	1
+#define	TLSH_OPTION_CONSERVATIVE	2
+#define	TLSH_OPTION_KEEP_BUCKET		4
+#define	TLSH_OPTION_PRIVATE		8
+#define	TLSH_OPTION_THREADED		16
+
 #if defined WINDOWS || defined MINGW
 #include "tlsh_win_version.h"
 #else

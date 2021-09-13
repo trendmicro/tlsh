@@ -298,16 +298,16 @@ ATIS 2014, November, 2014, pages 199-210
 
 # Current Version
 
-**4.9.1**
+**4.9.2**
 <PRE>
-12/09/2021
-	Added function to API
-		int HistogramCount(int bucket);
-	This function prints out the HistogramCount for a Bucket
-	To see the HistogramCount, you need to call the constructor with fc_cons_option & 4 == 1
-		(fc_cons_option is now a bitfield)
-	test_parts.cpp shows you how to use this function.
-	Added regression tests for HistogramCount(int bucket) into test_parts.sh
+13/09/2021
+	define various tlsh options using #define
+		// #define     TLSH_OPTION_FORCE       1
+		#define        TLSH_OPTION_CONSERVATIVE        2
+		#define        TLSH_OPTION_KEEP_BUCKET         4
+		#define        TLSH_OPTION_PRIVATE             8
+		#define        TLSH_OPTION_THREADED            16
+	use the #define in the code
 </PRE>
 
 # Change History

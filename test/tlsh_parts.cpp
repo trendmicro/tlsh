@@ -123,7 +123,7 @@ int main(int argc, char *argv[])
 		}
 	} else {
 		int show_details	= 0;
-		int fc_cons_option	= 4;	// do not delete buckets
+		int fc_cons_option	= TLSH_OPTION_KEEP_BUCKET;	// do not delete buckets
 		int showvers		= 1;
 		int err = read_file_eval_tlsh(fname, &d, show_details, fc_cons_option, showvers);
 		if (err) {

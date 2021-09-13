@@ -637,3 +637,15 @@ version 4: adding version identifier to each digest: 'T1'
 	test_parts.cpp shows you how to use this function.
 	Added regression tests for HistogramCount(int bucket) into test_parts.sh
 </PRE>
+
+**4.9.2**
+<PRE>
+13/09/2021
+	define various tlsh options using #define
+		// #define     TLSH_OPTION_FORCE       1
+		#define        TLSH_OPTION_CONSERVATIVE        2
+		#define        TLSH_OPTION_KEEP_BUCKET         4
+		#define        TLSH_OPTION_PRIVATE             8
+		#define        TLSH_OPTION_THREADED            16
+	use the #define in the code
+</PRE>

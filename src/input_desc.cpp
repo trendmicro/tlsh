@@ -80,7 +80,7 @@ static int read_file_eval_tlsh_splitline(char *fname, struct InputDescr *inputd,
 
 	fclose(fd);
 
-	if ((fc_cons_option & 2) == 0) {
+	if ((fc_cons_option & TLSH_OPTION_CONSERVATIVE) == 0) {
 		if (sizefile < MIN_DATA_LENGTH)
 			return(WARNING_FILE_TOO_SMALL);
 	} else {

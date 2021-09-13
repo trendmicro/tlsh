@@ -160,15 +160,15 @@ unsigned char faster_b_mapping(unsigned char mod_salt, unsigned char i, unsigned
 	#define SLIDING_WND_SIZE_M1	7
 #endif
 
+#define RNG_SIZE    	SLIDING_WND_SIZE
+#define RNG_IDX(i)	((i+RNG_SIZE)%RNG_SIZE)
+
 void TlshImpl::update(const unsigned char* data, unsigned int len) 
 {
     if (this->lsh_code_valid) {
       fprintf(stderr, "call to update() on a tlsh that is already valid\n");
       return;
     }   
-
-    #define RNG_SIZE    	SLIDING_WND_SIZE
-    #define RNG_IDX(i)	((i+RNG_SIZE)%RNG_SIZE)
 	
     unsigned int fed_len = this->data_len;
 
@@ -406,12 +406,12 @@ void TlshImpl::final(int fc_cons_option)
       return;
     }   
     // incoming data must more than or equal to MIN_DATA_LENGTH bytes
-    if (((fc_cons_option & 2) == 0) && (this->data_len < MIN_DATA_LENGTH)) {
+    if (((fc_cons_option & TLSH_OPTION_CONSERVATIVE) == 0) && (this->data_len < MIN_DATA_LENGTH)) {
       // this->lsh_code be empty
       delete [] this->a_bucket; this->a_bucket = NULL;
       return;
     }
-    if ((fc_cons_option & 2) && (this->data_len < MIN_CONSERVATIVE_DATA_LENGTH)) {
+    if ((fc_cons_option & TLSH_OPTION_CONSERVATIVE) && (this->data_len < MIN_CONSERVATIVE_DATA_LENGTH)) {
       // this->lsh_code be empty
       delete [] this->a_bucket; this->a_bucket = NULL;
       return;
@@ -463,7 +463,7 @@ void TlshImpl::final(int fc_cons_option)
         this->lsh_bin.tmp_code[i] = h;
     }
 
-    if ((fc_cons_option & 4) == 0) {
+    if ((fc_cons_option & TLSH_OPTION_KEEP_BUCKET) == 0) {
         //Done with a_bucket so deallocate
         delete [] this->a_bucket; this->a_bucket = NULL;
     }
