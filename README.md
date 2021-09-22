@@ -12,27 +12,6 @@ a byte stream of identical bytes will not generate a hash value.
 
 ## What's New in TLSH 4.10.x
 22/09/2021
-
-**4.9.3**
-<PRE>
-13/09/2021
-	added options -thread and -private
-	-thread	the TLSH is evaluated with 2 threads (faster calculation)
-		Only done for files / bytestreams >= 10000 bytes
-		But this means that it is impossible to calculate the checksum
-		So the checksum is set to zero
-	-private
-		Does not evaluate the checksum
-		Useful if you do not want to leak information
-		Slightly faster than default TLSH (code was written to optimize this)
-<PRE>
-	added Python tools for clustering file
-		using DBSCAN
-		using HAC-T
-	we provide scripts to show people how to cluster the Malware Bazaar dataset using TLSH
-</PRE>
-22/July/2021  
-
 Release version 4.8.x	- merged in pull requests for more stable installation
 Release version 4.9.x	- added -thread and -private options
 	Both versions are faster than previous versions, but they set the checksum to 00
