@@ -10,46 +10,49 @@ the detection of similar objects by comparing their hash values.  Note that
 the byte stream should have a sufficient amount of complexity.  For example,
 a byte stream of identical bytes will not generate a hash value.
 
-## What's New in TLSH 4.x.x
-02/July/2021  
-Release version 4.7.1
-Updated Python realease with additional functions: 
-* lvalue
-* q1ratio
-* q2ratio
-* checksum
-* bucket_value
-* is_valid
+## What's New in TLSH 4.10.x
+22/09/2021
 
-23/April/2021  
-Release version 4.6.0
-Issue 99 raised issues about what to do when evaluating the TLSH for files over 4GB
-We decided to define that TLSH is the TLSH of the first 4GB of a file
+**4.9.3**
+<PRE>
+13/09/2021
+	added options -thread and -private
+	-thread	the TLSH is evaluated with 2 threads (faster calculation)
+		Only done for files / bytestreams >= 10000 bytes
+		But this means that it is impossible to calculate the checksum
+		So the checksum is set to zero
+	-private
+		Does not evaluate the checksum
+		Useful if you do not want to leak information
+		Slightly faster than default TLSH (code was written to optimize this)
+<PRE>
+	added Python tools for clustering file
+		using DBSCAN
+		using HAC-T
+	we provide scripts to show people how to cluster the Malware Bazaar dataset using TLSH
+</PRE>
+22/July/2021  
 
-14/April/2021  
-We have written technical material that focuses on 2 topics at [https://tlsh.org](https://tlsh.org/)
-- fast nearest neighbour search and scalable clustering
-- robustness to attack
+Release version 4.8.x	- merged in pull requests for more stable installation
+Release version 4.9.x	- added -thread and -private options
+	Both versions are faster than previous versions, but they set the checksum to 00
+	This loses a very small part of the functionality
+	See 4.9.3 in the Change_History to see timing comparisons.
+Release version 4.10.x	- a Python clustering tool
+	See the directory tlshCluster
 
 2020
 - adopted by [Virus Total](https://developers.virustotal.com/v3.0/reference#files-tlsh)
 - adopted by [Malware Bazaar](https://bazaar.abuse.ch/api/#tlsh)
 
-26/March/2020
-- adding version identifier to the digest
-- added output options (-o)
-- added json object output (-ojson)
-- added null digest (TNULL)
-
 TLSH has gained some traction. It has been included in STIX 2.1 and been ported to a number of langauges.
 
-We are adding a version identifier ("T1") to the start of the digest so that we can
+We have added a version identifier ("T1") to the start of the digest so that we can
 cleary distinguish between different variants of the digest (such as non-standard choices of 3 byte checksum).
 This means that we do not rely on the length of the hex string to determine if a hex string is a TLSH digest
 (this is a brittle method for identifying TLSH digests).
 We are doing this to enable compatibility, especially backwards compatibility of the TLSH approach.
 
-This release will add "T1" to the start of TLSH digests.
 The code is backwards compatible, it can still read and interpret 70 hex character strings as TLSH digests.
 And data sets can include mixes of the old and new digests.
 If you need old style TLSH digests to be outputted, then use the command line option '-old'
@@ -292,12 +295,25 @@ TLSH similarity is expressed as a difference score:
 - For the 72 characters hash, there is a detailed table of experimental Detection rates and False Positive rates
   based on the threshhold. see [Table II on page 5](https://github.com/trendmicro/tlsh/blob/master/TLSH_CTC_final.pdf)
 
+# Clustering
+- See the Python code and Jupyter notebooks in tlshCluster.
+- We provide Python code for the HAC-T method.
+  We also provide code so that users can use DBSCAN.
+- We show users how to create dendograms for files, which are a useful diagram showing relationships between files and groups.
+- We provide tools for clustering the Malware Bazaar dataset, which contains a few hundred thousand samples.
+- The HAC-T method is described in [HAC-T and fast search for similarity in security](https://tlsh.org/papersDir/COINS_2020_camera_ready.pdf)
+
 # Publications
 
-- Jonathan Oliver, Chun Cheng, and Yanggui Chen, [TLSH - A Locality Sensitive Hash](https://github.com/trendmicro/tlsh/blob/master/TLSH_CTC_final.pdf).
-4th Cybercrime and Trustworthy Computing Workshop, Sydney, November 2013
-- Jonathan Oliver, Scott Forman, and Chun Cheng, [Using Randomization to Attack Similarity Digests](https://github.com/trendmicro/tlsh/blob/master/Attacking_LSH_and_Sim_Dig.pdf).
-ATIS 2014, November, 2014, pages 199-210
+- Jonathan Oliver, Chun Cheng, and Yanggui Chen,
+	[TLSH - A Locality Sensitive Hash](https://github.com/trendmicro/tlsh/blob/master/TLSH_CTC_final.pdf).
+	4th Cybercrime and Trustworthy Computing Workshop, Sydney, November 2013
+- Jonathan Oliver, Scott Forman, and Chun Cheng,
+	[Using Randomization to Attack Similarity Digests](https://github.com/trendmicro/tlsh/blob/master/Attacking_LSH_and_Sim_Dig.pdf).
+	ATIS 2014, November, 2014, pages 199-210
+- Jonathan Oliver, Muqeet Ali, and Josiah Hagen.
+	[HAC-T and fast search for similarity in security](https://tlsh.org/papersDir/COINS_2020_camera_ready.pdf)
+	2020 International Conference on Omni-layer Intelligent Systems (COINS). IEEE, 2020.
 
 # Current Version
 
