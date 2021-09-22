@@ -12,13 +12,16 @@ a byte stream of identical bytes will not generate a hash value.
 
 ## What's New in TLSH 4.10.x
 22/09/2021
-Release version 4.8.x	- merged in pull requests for more stable installation
-Release version 4.9.x	- added -thread and -private options
-	Both versions are faster than previous versions, but they set the checksum to 00
-	This loses a very small part of the functionality
-	See 4.9.3 in the Change_History to see timing comparisons.
-Release version 4.10.x	- a Python clustering tool
-	See the directory tlshCluster
+
+Release version 4.8.x	- merged in pull requests for more stable installation.
+
+Release version 4.9.x	- added -thread and -private options.
+- Both versions are faster than previous versions, but they set the checksum to 00.
+- This loses a very small part of the functionality.
+- See 4.9.3 in the Change_History to see timing comparisons.
+
+Release version 4.10.x	- a Python clustering tool.
+- See the directory tlshCluster.
 
 2020
 - adopted by [Virus Total](https://developers.virustotal.com/v3.0/reference#files-tlsh)
