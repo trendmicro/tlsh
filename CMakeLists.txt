@@ -140,8 +140,14 @@ endif()
 # user can override CXX; make sure tests link and load properly regardless of LD_LIBRARY_PATH
 if(CMAKE_COMPILER_IS_GNUCXX)
     # previously used:    set(CMAKE_EXE_LINKER_FLAGS "-static-libgcc")
-    set(CMAKE_EXE_LINKER_FLAGS "-pthread -static-libstdc++")
+    set(CMAKE_EXE_LINKER_FLAGS "-static-libstdc++")
 endif()
+
+# from https://stackoverflow.com/questions/5395309/how-do-i-force-cmake-to-include-pthread-option-during-compilation
+set(CMAKE_THREAD_PREFER_PTHREAD TRUE)
+# This flag seems to only be for older versions of CMake, such as https://cmake.org/cmake/help/v3.2/module/FindThreads.html
+set(THREADS_PREFER_PTHREAD_FLAG TRUE)
+find_package(Threads REQUIRED)
 
 enable_testing()
 
