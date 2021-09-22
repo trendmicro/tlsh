@@ -1,0 +1,89 @@
+What is here
+============
+This directory has Python tools / Jupyter notebooks for working with TLSH
+Specifically
+	(1) How to create dendrograms (useful diagrams showing relationships between files)
+		nef_dendrogram.ipynb
+
+	(2) How to run DBSCAN using TLSH
+		In a Jupyter notebook
+			tlsh_dbscan.ipynb
+		As a standalone program
+			tlsh_dbscan.py
+
+	(3) HAC-T
+		HAC-T is the improved clustering algorithm we published at COINS 2020. Read more at:
+			http://tlsh.org/papersDir/COINS_2020_camera_ready.pdf
+		We provide Jupyter notebook
+			compare_hac-t_dbscan.ipynb
+		And a standalone Python program
+			hac-t.py
+
+	(4) How to run cluster the Malware Bazaar dataset (https://bazaar.abuse.ch/) dataset
+		See the directory malbaz
+
+Setting Up a Python environment
+===============================
+We recommend setting up a Python environment for this purpose, so that installing packages does not
+break anything else.
+One approach for doing this is Conda:
+	https://docs.conda.io/en/latest/
+
+(1)
+install conda
+
+(2)
+Do the following commands
+
+$ conda create --name tlshCluster
+$ conda activate tlshCluster
+
+$ conda install pip
+$ pip install py-tlsh
+$ conda install matplotlib
+$ conda install scipy
+$ conda install scikit-learn
+$ conda install jupyter
+$ conda install pandas
+
+To test your install
+====================
+
+$ cd hacDir
+$ ./reg_test.sh
+
+To use
+======
+
+$ conda activate tlshCluster
+$ jupyter notebook
+run the appropriate notebook
+
+OR
+
+$ cd malbaz
+follow the README in that directory
+
+Notes on HAC-T
+==============
+http://tlsh.org/papersDir/COINS_2020_camera_ready.pdf
+You can run and compare HAC-T to DBSCAN in a Jupyter notebook
+	compare_hac-t_dbscan.ipynb
+
+You can run a standalone program hac-t
+	$ conda activate tlshCluster
+	$ python hac-t.py -f dataDir/mb_10K.csv -o dataDir/mb_10K_hac-t_out.txt
+command line options:
+	-f  input file (csv)
+	-o output file
+
+Refs
+====
+
+https://stackabuse.com/hierarchical-clustering-with-python-and-scikit-learn/
+https://stackoverflow.com/questions/53849107/sklearn-agglomerative-clustering-custom-affinity
+
+Resources
+=========
+http://tlsh.org
+

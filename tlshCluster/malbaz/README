@@ -1,0 +1,11 @@
+To run HAC-T and DBSCAN on the Malware Bazaar data set, do the following
+
+(1) set up the Python environment as per the README in the above directory (../README)
+	That README recommends a conda environment
+
+(2) Download __QtrPfr.zip from Malware Bazaar - download the "Full data dump"
+	https://bazaar.abuse.ch/export/#csv
+
+(3) run the script in this directory called process_mb.sh
+	$ ./process_mb.sh
+

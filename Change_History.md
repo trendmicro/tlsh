@@ -694,3 +694,12 @@ AFTER	ms=1631512240550
 TIME	ms=1050
 TIME	ms= 21.00	per million iterations
 </PRE>
+
+**4.10.0**
+<PRE>
+22/09/2021
+	added Python tools for clustering file
+		using DBSCAN
+		using HAC-T
+	we provide scripts to show people how to cluster the Malware Bazaar dataset using TLSH
+</PRE>
