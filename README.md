@@ -299,13 +299,11 @@ TLSH similarity is expressed as a difference score:
 
 # Current Version
 
-**4.10.0**
+**4.10.1**
 <PRE>
-22/09/2021
-	added Python tools for clustering file
-		using DBSCAN
-		using HAC-T
-	we provide scripts to show people how to cluster the Malware Bazaar dataset using TLSH
+30/09/2021
+	merge in pull request 108 Configure CMake for pthreads
+	fix to 48 Bucket hash
 </PRE>
 
 # Change History

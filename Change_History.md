@@ -703,3 +703,10 @@ TIME	ms= 21.00	per million iterations
 		using HAC-T
 	we provide scripts to show people how to cluster the Malware Bazaar dataset using TLSH
 </PRE>
+
+**4.10.1**
+<PRE>
+30/09/2021
+	merge in pull request 108 Configure CMake for pthreads
+	fix to 48 Bucket hash
+</PRE>
