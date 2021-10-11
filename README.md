@@ -299,11 +299,11 @@ TLSH similarity is expressed as a difference score:
 
 # Current Version
 
-**4.10.1**
+**4.11.0**
 <PRE>
-30/09/2021
-	merge in pull request 108 Configure CMake for pthreads
-	fix to 48 Bucket hash
+11/10/2021
+	Jupyter notebook for Malware Bazaar analysis
+	Clustered output and pattern file for Malware Bazaar
 </PRE>
 
 # Change History

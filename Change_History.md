@@ -710,3 +710,10 @@ TIME	ms= 21.00	per million iterations
 	merge in pull request 108 Configure CMake for pthreads
 	fix to 48 Bucket hash
 </PRE>
+
+**4.11.0**
+<PRE>
+11/10/2021
+	Jupyter notebook for Malware Bazaar analysis
+	Clustered output and pattern file for Malware Bazaar
+</PRE>

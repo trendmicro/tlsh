@@ -3,9 +3,91 @@ To run HAC-T and DBSCAN on the Malware Bazaar data set, do the following
 (1) set up the Python environment as per the README in the above directory (../README)
 	That README recommends a conda environment
 
-(2) Download __QtrPfr.zip from Malware Bazaar - download the "Full data dump"
+(2) Download the "Full data dump" from Malware Bazaar -
 	https://bazaar.abuse.ch/export/#csv
+    Rename this file (it will have a random name) as mb_download.zip
 
 (3) run the script in this directory called process_mb.sh
 	$ ./process_mb.sh
 
+(4) to generate the file clust_389300.csv (used by the malbaz.ipynb )
+	$ ./pattern_mb.sh
+
+Making Predictions
+==================
+If you wish to predict the cluster for new samples then use tlsh_pattern
+	(which is in the bin directory)
+TLSH_FILE is the TLSH values of your samples, 1 per line
+
+We have provided you with the pattern file
+	clust_389300.pat
+You can use pattern_mb.sh to create pattern files from Malware Bazaar
+
+The command is:
+	$ tlsh_pattern -l TLSH_FILE -pat PATTERN_FILE -showmiss 100
+
+Example of Making Predictions
+=============================
+
+Our pattern is the contents of Malware Bazaar before	2021/09/17
+We have downloaded 246 samples from the			2021/09/18
+To make predictions for these samples run the command:
+
+	$ tlsh_pattern -l mb_2021-09-18.tlsh -pat clust_389300.pat -showmiss 100 | less
+
+Results
+=======
+
+This method associated 164 / 246 samples to clusters.
+We split the predictions into 3 categories
+	Correct		132/164	- where the cluster label is a very informative
+	Incorrect	13/164	- where the cluster label is inconsistent 
+	Inconclusive	19/164	- where the sample or cluster was not labelled
+
+Correct (132/164)
+
+41	Gafgyt	MiraiGafgyt
+22	NEAR-MISS	RaccoonStealer	RaccoonStealer
+20	NEAR-MISS	Mirai	MiraiGafgyt
+15	Mirai	MiraiGafgyt
+11	NEAR-MISS	Gafgyt	MiraiGafgyt
+8	NEAR-MISS	RedLineStealer	RedLineStealer
+3	Socelars	Socelars
+3	RedLineStealer	RedLineStealer
+3	NEAR-MISS	ArkeiStealer	ArkeiStealer
+2	NEAR-MISS	AgentTesla	TeslaGroup
+1	RaccoonStealer	RaccoonStealer
+1	NEAR-MISS	Smoke Loader	Smoke Loader
+1	NEAR-MISS	Formbook	TeslaGroup
+1	Babuk	Babuk
+
+Incorrect (13/164)
+
+1	Tofsee	Smoke Loader
+1	NEAR-MISS	Tofsee	Smoke Loader
+1	NEAR-MISS	Smoke Loader	RaccoonStealer
+1	NEAR-MISS	RedLineStealer	RaccoonStealer
+1	NEAR-MISS	RaccoonStealer	Smoke Loader
+1	NEAR-MISS	OskiStealer	TeslaGroup
+1	NEAR-MISS	RaccoonStealer	SystemBC
+1	AZORult	RaccoonStealer
+1	CryptBot	RedLineStealer
+2	NEAR-MISS	ArkeiStealer	RemcosRAT
+2	NEAR-MISS	CryptBot	RedLineStealer
+
+Inconclusive (19/164)
+
+3	n/a	Amadey
+1	n/a	WSHRAT
+1	n/a	MiraiGafgyt
+1	Formbook	Cluster 6
+
+3	NEAR-MISS	RedLineStealer	Cluster 12
+2	NEAR-MISS	n/a	SystemBC
+2	NEAR-MISS	n/a	MiraiGafgyt
+1	NEAR-MISS	n/a	Cluster 339815
+1	NEAR-MISS	STRRAT	Cluster 15920
+1	NEAR-MISS	n/a	Cluster 21557
+1	NEAR-MISS	n/a	CoinMiner
+1	NEAR-MISS	n/a	CobaltStrike
+1	NEAR-MISS	AgentTesla	Cluster 6

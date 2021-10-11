@@ -42,7 +42,7 @@ def sim(idx1, idx2):
 	global tptr
 	global nDistCalc
 	nDistCalc += 1
-	
+
 	# print("idx1=", idx1)
 	# print("idx2=", idx2)
 	h1 = tptr[int(idx1[0])]
@@ -74,6 +74,16 @@ from scipy.cluster.hierarchy import dendrogram, linkage
 from matplotlib import pyplot as plt
 
 def tlsh_dendrogram(tlist, labelList=None):
+	if (len(tlist) < 2):
+		print("The list of tlsh is too short. len(tlist)=", len(tlist) )
+		print("No dendrogram can be built.")
+		return
+	# end if
+	if (len(tlist) >= 100):
+		print("warning: The list of TLSH values is too long to show a sensible dendrogram.")
+		print("It is recommended that you filter to a smaller list of TLSH values.")
+		print()
+	# end if
 	tdata = tlist2cdata(tlist)
 	Y = pdist(tdata, sim)
 
@@ -89,88 +99,225 @@ def tlsh_dendrogram(tlist, labelList=None):
 	plt.show()
 
 ##########################################
+# show a malware bazaar cluster
+##########################################
+def mb_show_sha1(family, thisDate=None, nitems=None, fname="malbaz/clust_389300.csv", showN=10, showC=1):
+	(tlist, labels) = tlsh_csvfile(fname, searchColName="family", searchValueList=[family], sDate=thisDate, eDate=thisDate, searchNitems=nitems)
+	if (tlist is None):
+		return
+	if (len(tlist) == 0):
+		print("found no cluster")
+	elif (len(tlist) <= showC):
+		for cenTlsh in tlist:
+			print("cluster with cenTlsh=" + cenTlsh)
+			fullmb = "malbaz/mb_full.csv"
+			(tlist2, labels2) = tlsh_csvfile(fullmb, simTlsh=cenTlsh, simThreshold=30)
+			if (tlist2 is None):
+				print("you need to run the script process_mb.sh in malbaz")
+				return
+			nfound = len(tlist2)
+			if (nfound > showN):
+				print("showing first ", showN, " samples")
+				print("	increase the showN parameter to show more..." )
+				nfound = showN
+			# end if
+			labList  = labels2[0]
+			dateList = labels2[1]
+			hashList = labels2[2]
+			for idx in range(nfound):
+				# print(tlist2[idx] + "\t" + labList[idx] + "\t" + dateList[idx] + "\t" + hashList[idx] )
+				print(hashList[idx] )
+			# end for
+		# end for
+	else:
+		print("found ", len(tlist), " clusters.")
+		print("Use parameters 'thisDate' and 'nitems' to uniquely specify cluster")
+		print("OR")
+		print("set showC parameter to show more clusters")
+	# end if
+
+##########################################
 # tlsh_csv files
 ##########################################
 import csv
 
-def tlsh_csvfile(fname, verbose=0):
+def tlsh_csvfile(fname, searchColName=None, searchValueList=None, simTlsh=None, simThreshold=150, sDate=None, eDate=None, searchNitems=None, verbose=0):
 	tlshCol=-1
 	hashCol=-1
 	lablCol=-1
+	timeCol=-1
+	othCol=-1
+	srchCol=-1
+	itemCol=-1
 
 	tlist=[]
 	labelList=[]
-	with open(fname) as csv_file:
-		csv_reader = csv.reader(csv_file, delimiter=',')
-		line_count = 0
-		for row in csv_reader:
-			if line_count == 0:
-				for x in range(len(row)):
-					rval = row[x].lower()
-					if (rval == 'tlsh'):
-						tlshCol = x
-					elif (rval == 'sha256') or (rval == 'sha1') or (rval == 'md5') or (rval == 'sha1_hash') or (rval == 'sha256_hash'):
-						hashCol = x
-					elif (rval == 'signature'):
-						#############################
-						# signature overrides other label candidates
-						#############################
-						lablCol = x
+	dateList =[]
+	hashList =[]
+	addSampleFlag = True
+
+	if (simTlsh is not None) and (simThreshold == 150):
+		print("using default simThreshold=150")
+
+	# make all lower case so that we catch inconsistencies in the use of case
+	if (searchValueList is not None):
+		searchValueList = [s.lower() for s in searchValueList]
+
+	try:
+		csv_file = open(fname)
+	except:
+		print("error: could not find file: " + fname)
+		return (None, None)
+	# end try/catch
+
+	csv_reader = csv.reader(csv_file, delimiter=',')
+	line_count = 0
+	for row in csv_reader:
+		if line_count == 0:
+			for x in range(len(row)):
+				rval = row[x].lower()
+				if (searchColName is not None) and (searchColName.lower() == rval):
+					srchCol = x
+				# end if
+				if (rval == 'tlsh'):
+					tlshCol = x
+				elif (rval == 'sha256') or (rval == 'sha1') or (rval == 'md5') or (rval == 'sha1_hash') or (rval == 'sha256_hash'):
+					hashCol = x
+				elif (rval == 'signature') or (rval == 'label'):
+					#############################
+					# signature overrides other label candidates
+					#############################
+					if (lablCol != -1):
+						print("warning: found both 'signature' column and 'label' column")
+						print("using ", row[lablCol] )
 					else:
-						if (lablCol == -1):
-							if (verbose > 0):
-								print("using " + rval + " as label")
-							lablCol = x
-						# end if
+						lablCol = x
 					# end if
-				# end for
-				if (tlshCol == -1):
-					print("error: file " + fname + " has no tlsh column: " + str(row) )
-					return (None, None)
-				# end if
-				line_count += 1
-			else:
-				tlshVal = row[tlshCol]
-
-				if (hashCol != -1):
-					hashVal = row[hashCol]
+				elif (rval == 'first_seen_utc') or (rval == 'firstseen'):
+					timeCol = x
+				elif (rval == 'nitems'):
+					itemCol = x
 				else:
-					hashVal = ""
+					if (othCol == -1):
+						othCol = x
 				# end if
-
-				if (lablCol != -1):
-					lablVal = row[lablCol]
-				else:
-					lablVal = ""
+			# end for
+			if (lablCol == -1) and (othCol != -1):
+				if (verbose > 0):
+					print("using " + row[othCol] + " as label")
 				# end if
-				if (lablCol != -1) and (hashCol != -1):
-					lab = lablVal + " " + hashVal
-					lab = lablVal
-				elif (lablCol != -1):
-					lab = lablVal
-				else:
-					lab = hashVal
-
-				okLine = False
-				if (len(tlshVal) == 72) and (tlshVal[:2] == "T1"):
-					okLine = True
-				if (len(tlshVal) == 70):
-					okLine = True
-				if (okLine):
-					tlist.append(tlshVal)
-					labelList.append(lab )
-				elif (tlshVal != 'TNULL'):
-					print("warning. Bad line line=", line_count, " tlshVal=", tlshVal )
-				# end if
-
-				line_count += 1
+				lablCol = othCol
 			# end if
-		# end for
-		if (verbose > 0):
-			print(f'Read in {line_count} lines.')
-		return(tlist, labelList)
-	print("error: could not find file: " + fname)
-	return (None, None)
+
+			if (tlshCol == -1):
+				print("error: file " + fname + " has no tlsh column: " + str(row) )
+				return (None, None)
+			# end if
+			line_count += 1
+		else:
+			tlshVal = row[tlshCol]
+			hashVal = row[hashCol] if (hashCol != -1) else ""
+			lablVal = row[lablCol] if (lablCol != -1) else ""
+			srchVal = row[srchCol] if (srchCol != -1) else ""
+			itemVal = row[itemCol] if (itemCol != -1) else ""
+
+			if (timeCol != -1):
+				ts	= row[timeCol]
+				# first_seen_utc (in malware bazaar) takes format "2021-09-17 06:39:44"
+				# we want the first 10 characters
+				dateVal = ts[:10]
+			else:
+				dateVal = ""
+			# end if
+
+			if (lablCol != -1) and (hashCol != -1):
+				lab = lablVal + " " + hashVal
+				lab = lablVal
+			elif (lablCol != -1):
+				lab = lablVal
+			else:
+				lab = hashVal
+			# end if
+
+			#####################
+			# check line OK
+			#####################
+			okLine		= False
+			if (len(tlshVal) == 72) and (tlshVal[:2] == "T1"):
+				okLine = True
+			if (len(tlshVal) == 70):
+				okLine = True
+
+			if (okLine):
+				#####################
+				# check search criteria
+				#####################
+				includeLine	= True
+				if (srchVal != "") and (searchValueList is not None):
+					if (srchVal.lower() not in searchValueList):
+						includeLine	= False
+					# end if
+				# end if
+				if (simTlsh is not None):
+					h1 = tlsh.Tlsh()
+					h1.fromTlshStr(simTlsh)
+					h2 = tlsh.Tlsh()
+					h2.fromTlshStr(tlshVal)
+					dist=h1.diff(h2)
+					if (dist > simThreshold):
+						includeLine	= False
+					elif (dist == 0):
+						# the search query is an item in our file
+						#	so modify the label
+						#	and do not add the Query
+						addSampleFlag = False
+						lab = "QUERY " + lab
+					# end if
+				# end if
+				#####################
+				# check date range
+				#####################
+				if (sDate is not None) and (dateVal != ""):
+					if (dateVal < sDate):
+						includeLine	= False
+					# end if
+				# end if
+				if (eDate is not None) and (dateVal != ""):
+					# print("check dateVal=", dateVal, " eDate=", eDate)
+					if (dateVal > eDate):
+						includeLine	= False
+					# end if
+				# end if
+				#####################
+				# check item value
+				#####################
+				if includeLine and (searchNitems is not None) and (itemVal != ""):
+					if (itemVal != str(searchNitems)):
+						includeLine	= False
+					# end if
+				# end if
+				if (includeLine):
+					tlist.append(tlshVal)
+					labelList.append(lab)
+					dateList .append(dateVal)
+					hashList .append(hashVal)
+				# end if
+			elif (tlshVal not in ["TNULL", "", "n/a"]):
+				print("warning. Bad line line=", line_count, " tlshVal=", tlshVal )
+			# end if
+
+			line_count += 1
+		# end if
+	# end for
+	if (verbose > 0):
+		print(f'Read in {line_count} lines.')
+	if (simTlsh is not None) and (addSampleFlag):
+		tlist.append(simTlsh)
+		labelList.append("QUERY")
+		dateList .append("")
+		hashList .append("")
+	# end if
+	return(tlist, [labelList, dateList, hashList])
 
 ##########################################
 # assign clusters to points using sklearn
@@ -261,14 +408,17 @@ def outputClusters(outfname, tlist, clusterNumber, labelList, quiet=False):
 			noise.append(idx)
 		# end if
 	# end for
-	with open(outfname, "w") as f:
-		global tptr
-		#
-		# we call tlist2cdata to that we set tptr
-		#
-		tdata = tlist2cdata(tlist)
-		# cluster is set to None since it is not used (by this program)
-		cluster = None
-		printAllCluster(f, cluster, members, tlist, tptr, labelList)
-		if (not quiet):
-			print("written ", outfname)
+
+
+	global tptr
+	#
+	# we call tlist2cdata to that we set tptr
+	#
+	tdata = tlist2cdata(tlist)
+	# cluster is set to None since it is not used (by this program)
+	cluster = None
+	cenfname = ""
+	verbose = 0
+	if (not quiet):
+		verbose = 1
+	printAllCluster(outfname, cenfname, cluster, members, tlist, tptr, labelList, verbose)

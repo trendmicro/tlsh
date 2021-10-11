@@ -188,7 +188,7 @@ def VPTSearch(node, searchItem, searchIdx, cluster, notInC, best):
 		# end if
 	# end if
 
-def Tentative_Merge(gA, gB, cluster, memberList, tlshList, tobjList, labelList, rootVPT, CDist):
+def Tentative_Merge(gA, gB, cluster, memberList, tlshList, tobjList, rootVPT, CDist):
 	global hac_verbose
 	membersA = memberList[gA]
 	for A in membersA:
@@ -205,8 +205,8 @@ def Tentative_Merge(gA, gB, cluster, memberList, tlshList, tobjList, labelList, 
 			### print("A=", A, best);
 
 			### print("before merge", gA, gB)
-			### printCluster(sys.stdout, gA, cluster, memberList, tlshList, tobjList, labelList)
-			### printCluster(sys.stdout, gB, cluster, memberList, tlshList, tobjList, labelList)
+			### printCluster(sys.stdout, gA, cluster, memberList, tlshList, tobjList, None)
+			### printCluster(sys.stdout, gB, cluster, memberList, tlshList, tobjList, None)
 
 			if (hac_verbose >= 1):
 				print("Merge(2) A=", A, " B=", B, " dist=", dist)
@@ -358,7 +358,7 @@ def print_number_clusters(memberList, end=False):
 	else:
 		print("ncl=", count, "	nsingle=", single)
 
-def HAC_T_step3(tlshList, tobjList, labelList, CDist, rootVPT, memberList, cluster):
+def HAC_T_step3(tlshList, tobjList, CDist, rootVPT, memberList, cluster):
 	global hac_verbose
 
 	ITERATION = 1
@@ -405,8 +405,8 @@ def HAC_T_step3(tlshList, tobjList, labelList, CDist, rootVPT, memberList, clust
 					if (mergeOK):
 						if (hac_verbose >= 2):
 							print("merging as dist(A=", A, ",B=", B, ") =", dist, " need to go again...")
-							printCluster(sys.stdout, cluster[A], cluster, memberList, tlshList, tobjList, labelList)
-							printCluster(sys.stdout, cluster[B], cluster, memberList, tlshList, tobjList, labelList)
+							printCluster(sys.stdout, cluster[A], cluster, memberList, tlshList, tobjList, None)
+							printCluster(sys.stdout, cluster[B], cluster, memberList, tlshList, tobjList, None)
 
 						if (hac_verbose >= 1):
 							print("Merge(3) A=", A, " B=", B, " dist=", dist)
@@ -423,7 +423,7 @@ def HAC_T_step3(tlshList, tobjList, labelList, CDist, rootVPT, memberList, clust
 	# end for
 	return(ITERATION)
 
-def HAC_T_opt(fname, CDist, step3, outfname, verbose=0):
+def HAC_T_opt(fname, CDist, step3, outfname, cenfname, verbose=0):
 	global hac_verbose
 	hac_verbose = verbose
 	global hac_allowStringyClusters
@@ -432,7 +432,7 @@ def HAC_T_opt(fname, CDist, step3, outfname, verbose=0):
 	##########################
 	# Step 0: read in data / grow VPT
 	##########################
-	(tlshList, tobjList, labelList) = read_data(fname)
+	(tlshList, tobjList, labels) = read_data(fname)
 	tidxList = range(0, len(tlshList) )
 
 	##########################
@@ -488,18 +488,15 @@ def HAC_T_opt(fname, CDist, step3, outfname, verbose=0):
 		if (hac_verbose >= 1):
 			print_time("Not-doing-Step-3", 1)
 	else:
-		HAC_T_step3(tlshList, tobjList, labelList, CDist, rootVPT, memberList, cluster)
+		HAC_T_step3(tlshList, tobjList, CDist, rootVPT, memberList, cluster)
 		if (hac_verbose >= 1) and (ndata >= 1000):
 			print_time("End-Step-3", 1)
 	# end if
 	if (hac_verbose >= 1) or (showNumberClusters >= 1):
 		print_number_clusters(memberList, True)
-	with open(outfname, "w") as f:
-		printAllCluster(f, cluster, memberList, tlshList, tobjList, labelList)
-		if (hac_verbose >= 1):
-			print("written ", outfname)
+	printAllCluster(outfname, cenfname, cluster, memberList, tlshList, tobjList, labels, hac_verbose)
 
-def HAC_T(fname, CDist, step3, outfname, allowStringy=0, verbose=0):
+def HAC_T(fname, CDist, step3, outfname, cenfname, allowStringy=0, verbose=0):
 	global hac_verbose
 	hac_verbose = 0
 	global hac_allowStringyClusters
@@ -508,7 +505,7 @@ def HAC_T(fname, CDist, step3, outfname, allowStringy=0, verbose=0):
 	##########################
 	# Step 0: read in data / grow VPT
 	##########################
-	(tlshList, tobjList, labelList) = read_data(fname)
+	(tlshList, tobjList, labels) = read_data(fname)
 	tidxList = range(0, len(tlshList) )
 
 	##########################
@@ -594,7 +591,7 @@ def HAC_T(fname, CDist, step3, outfname, allowStringy=0, verbose=0):
 		B = rec['pointB']
 		d = rec['dist']
 		if cluster[A] != cluster[B]:
-			res = Tentative_Merge(cluster[A], cluster[B], cluster, memberList, tlshList, tobjList, labelList, rootVPT, CDist)
+			res = Tentative_Merge(cluster[A], cluster[B], cluster, memberList, tlshList, tobjList, rootVPT, CDist)
 			if (res > 0):
 				count_tentative_sucess += 1
 			else:
@@ -621,7 +618,7 @@ def HAC_T(fname, CDist, step3, outfname, allowStringy=0, verbose=0):
 		if (hac_verbose >= 1) and (ndata >= 1000):
 			print_time("Not-doing-Step-3")
 	else:
-		ITERATION = HAC_T_step3(tlshList, tobjList, labelList, CDist, rootVPT, memberList, cluster)
+		ITERATION = HAC_T_step3(tlshList, tobjList, CDist, rootVPT, memberList, cluster)
 		if (ITERATION != 2):
 			print("INFO: NOT OPTIMAL CLUSTERING")
 		if (hac_verbose >= 1) and (ndata >= 1000):
@@ -629,10 +626,7 @@ def HAC_T(fname, CDist, step3, outfname, allowStringy=0, verbose=0):
 	# end if
 	if (hac_verbose >= 1) or (showNumberClusters >= 1):
 		print_number_clusters(memberList, True)
-	with open(outfname, "w") as f:
-		printAllCluster(f, cluster, memberList, tlshList, tobjList, labelList)
-		if (hac_verbose >= 1):
-			print("written ", outfname)
+	printAllCluster(outfname, cenfname, cluster, memberList, tlshList, tobjList, labels, hac_verbose)
 
 	cln = 0
 	dbscan_like_cluster = [-1] * len(cluster)
@@ -646,15 +640,15 @@ def HAC_T(fname, CDist, step3, outfname, allowStringy=0, verbose=0):
 	# end for
 	return(dbscan_like_cluster)
 
-def DBSCAN_procedure(fname, CDist, outfname, verbose=0):
-	(tlist, labelList) = tlsh_csvfile(fname)
+def DBSCAN_procedure(fname, CDist, outfname, cenfname, verbose=0):
+	(tlist, labels) = tlsh_csvfile(fname)
 	res = runDBSCAN(tlist, eps=CDist, min_samples=2)
-	outputClusters(outfname, tlist, res.labels_, labelList)
+	outputClusters(outfname, tlist, res.labels_, labels)
 	return(res.labels_)
 
 def read_data(fname):
 	# print("start fname=", fname)
-	(tlshList, labelList) = tlsh_csvfile(fname)
+	(tlshList, labels) = tlsh_csvfile(fname)
 	tobjList = []
 	for tstr in tlshList:
 		h1 = tlsh.Tlsh()
@@ -662,4 +656,4 @@ def read_data(fname):
 		tobjList.append(h1)
 	# end for
 	# print("end")
-	return(tlshList, tobjList, labelList)
+	return(tlshList, tobjList, labels)

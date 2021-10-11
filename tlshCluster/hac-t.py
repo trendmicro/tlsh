@@ -5,7 +5,7 @@ from pylib.hac_lib import *
 ##############################################
 
 def simple_unittests():
-	(tlshList, tobjList, labelList) = read_data(fname)
+	(tlshList, tobjList, labels) = read_data(fname)
 
 	tidxList = range(0, len(tlshList) )
 	root = VPTGrow(tlshList, tobjList, tidxList)
@@ -54,6 +54,7 @@ parser.add_argument('-allow',	help='allow stringy clusters',	type=int,       def
 parser.add_argument('-cdist',   help='cdist',			type=int,       default=30)
 parser.add_argument('-f',       help='fname',			type=str,       default="")
 parser.add_argument('-o',       help='outfname',		type=str,       default="")
+parser.add_argument('-oc',      help='out centers fname',	type=str,       default="")
 parser.add_argument('-step3',   help='step3',			type=int,       default=1)
 parser.add_argument('-showtime',help='showtime',		type=int,       default=0)
 parser.add_argument('-showcl',  help='show number clusters',	type=int,       default=0)
@@ -67,6 +68,7 @@ allow		= args.allow
 CDist		= args.cdist
 fname		= args.f
 outfname	= args.o
+cenfname	= args.oc
 step3		= args.step3
 showtime	= args.showtime
 showcl		= args.showcl
@@ -103,13 +105,13 @@ if (showtime == 1):
 
 if (opt == 1):
 	step3 = 1
-	HAC_T_opt(fname, CDist, step3, outfname)
+	HAC_T_opt(fname, CDist, step3, outfname, cenfname)
 elif (dbscan == 1):
-	DBSCAN_procedure(fname, CDist, outfname)
+	DBSCAN_procedure(fname, CDist, outfname, cenfname)
 elif (allow == 1):
-	HAC_T    (fname, CDist, step3, outfname, True)
+	HAC_T    (fname, CDist, step3, outfname, cenfname, True)
 else:
-	HAC_T    (fname, CDist, step3, outfname, False)
+	HAC_T    (fname, CDist, step3, outfname, cenfname, False)
 
 if (showtime == 1):
 	endTime		= datetime.datetime.now()
