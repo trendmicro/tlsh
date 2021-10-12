@@ -330,7 +330,7 @@ static void usage(const char *fullPathName, int fullUsage)
 	printf("     list (-l listfile) with every other element in that set, using the –xref flag\n");
 	printf("\n");
 	printf("parameters: \n");
-	printf("  -c file|digest:     Specifies a filename or digest whose TLSH value will be compared to a specified TLSH digest (-d) OR the TLSH value of a sepcified\n");
+	printf("  -c file|digest:     Specifies a filename or digest whose TLSH value will be compared to a specified TLSH digest (-d) OR the TLSH value of a specified\n");
 	printf("                      file (-f) OR the TLSH values of files in a specified directory (-r) OR the TLSH values in a specified listfile (-l)\n");
 	printf("  -xref:              Used only when a set of files (-r dir) or TLSH values (-l listfile) is specified.\n");
 	printf("                      Results in the calculation of distance between each element in the set.\n");
