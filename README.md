@@ -299,11 +299,11 @@ TLSH similarity is expressed as a difference score:
 
 # Current Version
 
-**4.11.0**
+**4.11.1**
 <PRE>
-11/10/2021
-	Jupyter notebook for Malware Bazaar analysis
-	Clustered output and pattern file for Malware Bazaar
+22/10/2021
+	resolve issue #115
+	CREATE_LINK does not work on CENTOS 7
 </PRE>
 
 # Change History

@@ -93,7 +93,8 @@ set_target_properties(tlsh_parts PROPERTIES OUTPUT_NAME tlsh_parts${BUILD_POSTFI
 set_target_properties(tlsh_parts PROPERTIES SKIP_BUILD_RPATH TRUE)
 
 file(MAKE_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
-file(CREATE_LINK tlsh_unittest ${CMAKE_SOURCE_DIR}/bin/tlsh SYMBOLIC)
+# issue #115 - CREATE_LINK does not work on CENTOS 7
+# file(CREATE_LINK tlsh_unittest ${CMAKE_SOURCE_DIR}/bin/tlsh SYMBOLIC)
 
 install(TARGETS tlsh_unittest DESTINATION bin)
 install(CODE "file(CREATE_LINK tlsh_unittest \$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/bin/tlsh SYMBOLIC)")

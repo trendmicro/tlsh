@@ -52,6 +52,13 @@ fi
 
 make $VERBOSEOPTION
 
+cd ../../bin
+if test ! -f tlsh
+then
+	ln -s tlsh_unittest tlsh
+fi
+cd -
+
 if test $notest = 0
 then
 	echo
