@@ -57,7 +57,7 @@ endif()
 
 set(TLSH_SRCS tlsh.cpp tlsh_impl.cpp tlsh_util.cpp input_desc.cpp shared_file_functions.cpp)
 add_library(tlsh_static STATIC ${TLSH_SRCS})
-target_link_libraries(tlsh_static PRIVATE Threads::Threads)
+target_link_libraries(tlsh_static PRIVATE)
 set_target_properties(tlsh_static PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/lib)
 set_target_properties(tlsh_static PROPERTIES OUTPUT_NAME tlsh${BUILD_POSTFIX})
 
@@ -72,7 +72,7 @@ endif()
 
 if(TLSH_SHARED_LIBRARY EQUAL 1)
     add_library(tlsh_shared SHARED ${TLSH_SRCS})
-    target_link_libraries(tlsh_shared PRIVATE Threads::Threads)
+    target_link_libraries(tlsh_shared PRIVATE)
     set_target_properties(tlsh_shared PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/lib)
     set_target_properties(tlsh_shared PROPERTIES OUTPUT_NAME tlsh${BUILD_POSTFIX})
     set_target_properties(tlsh_shared PROPERTIES VERSION "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}"

@@ -54,7 +54,7 @@
 
 add_executable(rand_tags rand_tags.cpp)
 target_link_libraries(rand_tags PRIVATE tlsh_static)
-target_link_libraries(rand_tags PRIVATE Threads::Threads)
+target_link_libraries(rand_tags PRIVATE)
 set_target_properties(rand_tags PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
 set_target_properties(rand_tags PROPERTIES OUTPUT_NAME rand_tags${BUILD_POSTFIX})
 

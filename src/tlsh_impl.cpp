@@ -358,7 +358,9 @@ static void raw_fast_update5_private(
 	unsigned char *slide_window
 	);
 
+#ifdef THREADING_IMPLEMENTED
 #include <thread>
+#endif
 
 struct raw_args {
 	// inputs
@@ -386,6 +388,7 @@ void thread2()
 
 void TlshImpl::fast_update5(const unsigned char* data, unsigned int len, int tlsh_option)
 {
+#ifdef THREADING_IMPLEMENTED
 	if ((len >= 10000) && (tlsh_option & TLSH_OPTION_THREADED)) {
 		unsigned len2A = len / 2;
 		unsigned len2B = len - len2A;
@@ -423,6 +426,7 @@ void TlshImpl::fast_update5(const unsigned char* data, unsigned int len, int tls
 		}
 		return;
 	}
+#endif
 	if (tlsh_option & TLSH_OPTION_PRIVATE) {
 		raw_fast_update5_private(data, len, this->data_len, this->a_bucket,                               this->slide_window);
 		this->data_len += len;

@@ -57,7 +57,7 @@ project(TLSH)
 
 set(VERSION_MAJOR 4)
 set(VERSION_MINOR 11)
-set(VERSION_PATCH 1)
+set(VERSION_PATCH 2)
 
 # TLSH uses only half the counting buckets.
 # It can use all the buckets now.
@@ -139,8 +139,9 @@ endif()
 
 # user can override CXX; make sure tests link and load properly regardless of LD_LIBRARY_PATH
 if(CMAKE_COMPILER_IS_GNUCXX)
-    # previously used:    set(CMAKE_EXE_LINKER_FLAGS "-static-libgcc")
-    set(CMAKE_EXE_LINKER_FLAGS "-static-libstdc++")
+    # issue #116 Library will not compile on CENTOS 7
+    # set(CMAKE_EXE_LINKER_FLAGS "-static-libstdc++")
+    set(CMAKE_EXE_LINKER_FLAGS "-static-libgcc")
 endif()
 
 # from https://stackoverflow.com/questions/5395309/how-do-i-force-cmake-to-include-pthread-option-during-compilation

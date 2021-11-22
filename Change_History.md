@@ -724,3 +724,10 @@ TIME	ms= 21.00	per million iterations
 	resolve issue #115
 	CREATE_LINK does not work on CENTOS 7
 </PRE>
+
+**4.11.2**
+<PRE>
+23/10/2021
+	resolve issue #116
+	Library will not compile on CENTOS 7 (use of threads)
+</PRE>

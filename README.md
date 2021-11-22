@@ -299,11 +299,11 @@ TLSH similarity is expressed as a difference score:
 
 # Current Version
 
-**4.11.1**
+**4.11.2**
 <PRE>
-22/10/2021
-	resolve issue #115
-	CREATE_LINK does not work on CENTOS 7
+23/10/2021
+	resolve issue #116
+	Library will not compile on CENTOS 7 (use of threads)
 </PRE>
 
 # Change History
