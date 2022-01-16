@@ -19,8 +19,5 @@
 		<RepositoryUrl>https://github.com/trendmicro/tlsh.git</RepositoryUrl>
 		<PackageProjectUrl>https://github.com/trendmicro/tlsh</PackageProjectUrl>
 	</PropertyGroup>
-	<ItemGroup>
-	  <PackageReference Include="System.Memory" Version="4.5.4" />
-	</ItemGroup>
 
 </Project>
