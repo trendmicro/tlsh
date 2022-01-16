@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<TargetFramework>netstandard2.0</TargetFramework>
+		<AssemblyName>Tlsh</AssemblyName>
+		<RootNamespace>TrendMicro.Tlsh</RootNamespace>
+		<LangVersion>9.0</LangVersion>
+		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+		<PackageId>$(AssemblyName).net</PackageId>
+		<Authors>Henning Krause</Authors>
+		<Company> </Company>
+		<Product>Tlsh.net</Product>
+		<Description>TLSH is a fuzzy matching library. Given a byte stream with a minimum length of 50 bytes TLSH generates a hash value which can be used for similarity comparisons.</Description>
+		<PackageTags>Tlsh, Locality Sensitive Hashing</PackageTags>
+		<NeutralLanguage>en</NeutralLanguage>
+		<PackageLicenseExpression>BSD OR Apache-2.0</PackageLicenseExpression>
+		<PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+		<EnforceCodeStyleInBuild>False</EnforceCodeStyleInBuild>
+		<RepositoryType>git</RepositoryType>
+		<RepositoryUrl>https://github.com/trendmicro/tlsh.git</RepositoryUrl>
+		<PackageProjectUrl>https://github.com/trendmicro/tlsh</PackageProjectUrl>
+	</PropertyGroup>
+
+</Project>
