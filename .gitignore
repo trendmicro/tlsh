@@ -7,6 +7,7 @@ Testing/tmp
 Testing/out.parts
 test/simple_unittest
 test/tlsh_version
+TestResults
 VERSION
 include/tlsh_version.h
 Windows/Release/

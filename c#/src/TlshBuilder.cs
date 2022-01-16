@@ -204,39 +204,46 @@ namespace TrendMicro.Tlsh
 			var j3 = (j - 3 + rngSize) % rngSize;
 			var j4 = (j - 4 + rngSize) % rngSize;
 
+			
 			var fedLen = _DataLen;
 
 			for (var i = offset; i < offset + len; i++, fedLen++)
 			{
-				_SlideWindow[j] = data[i] & 0xFF;
+				var slideWindow = _SlideWindow;
+				slideWindow[j] = data[i] & 0xFF;
 
 				if (fedLen >= 4)
 				{
 					// only calculate when input >= 5 bytes
 
-					_Checksum = TlshUtil.PearsonHash(0, _SlideWindow[j], _SlideWindow[j1], _Checksum);
+					ref var slj = ref slideWindow[j];
+					ref var slj1 = ref slideWindow[j1];
+					_Checksum = TlshUtil.PearsonHash(0, slj, slj1, _Checksum);
 					if (_ChecksumLength > 1)
 					{
 						_ChecksumArray[0] = _Checksum;
 						for (var k = 1; k < _ChecksumLength; k++)
 						{
 							// use calculated 1 byte checksums to expand the total checksum to 3 bytes
-							_ChecksumArray[k] = TlshUtil.PearsonHash(_ChecksumArray[k - 1], _SlideWindow[j],
-								_SlideWindow[j1], _ChecksumArray[k]);
+							_ChecksumArray[k] = TlshUtil.PearsonHash(_ChecksumArray[k - 1], slj,
+								slj1, _ChecksumArray[k]);
 						}
 					}
 
-					var r = TlshUtil.PearsonHash(2, _SlideWindow[j], _SlideWindow[j1], _SlideWindow[j2]);
+					ref var slj2 = ref slideWindow[j2];
+					var r = TlshUtil.PearsonHash(2, slj, slj1, slj2);
 					_ABucket[r]++;
-					r = TlshUtil.PearsonHash(3, _SlideWindow[j], _SlideWindow[j1], _SlideWindow[j3]);
+					ref var slj3 = ref slideWindow[j3];
+					r = TlshUtil.PearsonHash(3, slj, slj1, slj3);
 					_ABucket[r]++;
-					r = TlshUtil.PearsonHash(5, _SlideWindow[j], _SlideWindow[j2], _SlideWindow[j3]);
+					r = TlshUtil.PearsonHash(5, slj, slj2, slj3);
 					_ABucket[r]++;
-					r = TlshUtil.PearsonHash(7, _SlideWindow[j], _SlideWindow[j2], _SlideWindow[j4]);
+					ref var slj4 = ref slideWindow[j4];
+					r = TlshUtil.PearsonHash(7, slj, slj2, slj4);
 					_ABucket[r]++;
-					r = TlshUtil.PearsonHash(11, _SlideWindow[j], _SlideWindow[j1], _SlideWindow[j4]);
+					r = TlshUtil.PearsonHash(11, slj, slj1, slj4);
 					_ABucket[r]++;
-					r = TlshUtil.PearsonHash(13, _SlideWindow[j], _SlideWindow[j3], _SlideWindow[j4]);
+					r = TlshUtil.PearsonHash(13, slj, slj3, slj4);
 					_ABucket[r]++;
 				}
 

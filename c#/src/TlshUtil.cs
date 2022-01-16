@@ -96,13 +96,11 @@ namespace TrendMicro.Tlsh
 	 * and the output will also be an integer in the range [0, 255] */
 		public static int PearsonHash(int salt, int i, int j, int k)
 		{
-			int h;
-
-			h = VTable[salt];
-			h = VTable[h ^ i];
-			h = VTable[h ^ j];
-			h = VTable[h ^ k];
-			return h;
+				var h = VTable[salt];
+				h = VTable[h ^ i];
+				h = VTable[h ^ j];
+				h = VTable[h ^ k];
+				return h;
 		}
 
 //	/** Natural logarithm of 1.5 */
