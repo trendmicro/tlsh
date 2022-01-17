@@ -126,7 +126,7 @@ namespace TrendMicro.Tlsh
 		}
 		*/
 
-		private static readonly long[] TopValues =
+		private static readonly uint[] TopValues =
 		{
 			1,
 			2,
@@ -290,24 +290,24 @@ namespace TrendMicro.Tlsh
 			1628642751,
 			1791507135,
 			1970657856,
-			2167723648L,
-			2384496256L,
-			2622945920L,
-			2885240448L,
-			3173764736L,
-			3491141248L,
-			3840255616L,
-			4224281216L
+			2167723648,
+			2384496256,
+			2622945920,
+			2885240448,
+			3173764736,
+			3491141248,
+			3840255616,
+			4224281216
 		};
 
 		/**
 	 * The maximum amount of data allowed in a TLSH computation.
 	 * Slightly less than 4GiB.
 	 */
-		public static readonly long MaxDataLength = TopValues[TopValues.Length - 1];
+		public static readonly uint MaxDataLength = TopValues[TopValues.Length - 1];
 
 		/** Compute length portion of TLSH */
-		public static int LCapturing(long len)
+		public static int LCapturing(uint len)
 		{
 			var bottom = 0;
 			var top = TopValues.Length;

@@ -56,235 +56,348 @@
  */
 
 using System;
-using System.Text;
-using TrendMicro.Tlsh;
+using System.Security.Cryptography;
 
 namespace TrendMicro.Tlsh
 {
- /**
- * A TLSH structure that can be encoded to a hex string or
- * compared to another TLSH structure.
- * <p>
- * TLSH structures are created by {@link TlshBuilder} or by calling
- * {@link #fromTlshStr(String)}
- */
-	public readonly struct Tlsh
+	/// <summary>
+	/// Computes the TLSH hash for the input data.
+	/// </summary>
+	public class Tlsh: ICryptoTransform
 	{
-		/*
-		 * Porting notes:
-		 * This code is mostly copied from tlsh_impl.h/tlsh_impl.cpp
-		 * In particular, this class is lsh_bin_struct with the diff operation
-		 * that only really applies to the struct moved here.
-		 * Also, the code dispenses with the C-style union code which
-		 * doesn't help us in Java land.
-		 */
+		private const int SlidingWndSize = 5;
+		private const int Buckets = 256;
 
-		private const int RangeLvalue = 256;
-		private const int RangeQRatio = 16;
+		/// <summary>
+		/// Minimum data length before a hash can be produced
+		/// </summary>
+		public const int MinDataLength = 256;
+
+		/// <summary>
+		/// Minimum data length before a hash can be produced with the force option
+		/// </summary>
+		public const int MinForceDataLength = 50;
+
+		/// <summary>
+		/// The maximum amount of data allowed in a TLSH computation. Slightly less than 4GiB.
+		/// </summary>
+		public static readonly uint MaxDataLength = TlshUtil.MaxDataLength;
+
+		private readonly uint[] _ABucket;
+		private readonly int[] _SlideWindow;
+		private uint _DataLen;
+
+		private readonly VersionOption _Version;
+		private readonly int _BucketCount;
+
+		private readonly int _ChecksumLength;
+		private int _Checksum;
+		private readonly int[] _ChecksumArray;
+		private readonly int _CodeSize;
+		
+	
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Tlsh"/> class using recommended default values.
+		/// </summary>
+		public Tlsh(): this(BucketOption.Default, ChecksumOption.OneByte, VersionOption.Version4) { }
+
+	
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Tlsh"/> class using the specified values.
+		/// </summary>
+		/// <param name="bucketOption">Specifies the bucket count; more buckets can give better difference calculations but require more space to store the computed hash.</param>
+		/// <param name="checksumOption">Specifies the checksum length; longer checksums are more resilient but increase hash creation time.</param>
+		/// <param name="versionOption">The version of TLSH to use. It is usually best to use the latest version, unless you need an older version for compatibility reasons.</param>
+		public Tlsh(BucketOption bucketOption, ChecksumOption checksumOption, VersionOption versionOption)
+		{
+			_Version = versionOption;
+			_BucketCount = (int) bucketOption;
+			_CodeSize = _BucketCount >> 2; // Each bucket contributes 2 bits to output code
+			_ChecksumLength = (int) checksumOption;
+
+			_SlideWindow = new int[SlidingWndSize];
+			_ABucket = new uint[Buckets];
+
+			_ChecksumArray = _ChecksumLength > 1 ? new int[_ChecksumLength] : null;
+		}
 
 
 		/// <summary>
-		/// Creates a TLSH instance from a string.
+		/// Add all the data in the given array to the current hash
 		/// </summary>
-		/// <param name="input">The input string to parse from.</param>
-		/// <returns>The parsed TLSH structure.</returns>
-		/// <exception cref="ArgumentException">If the input string cannot be parsed.</exception>
-		public static Tlsh Parse(string input)
+		/// <param name="data">The data to add.</param>
+		public void Update(byte[] data) => Update(data, 0, (uint)data.Length);
+
+
+		/// <summary>
+		/// Add data in the given array to the current hash.
+		/// </summary>
+		/// <param name="data">The data to add.</param>
+		/// <param name="offset">The offset in the array to start reading from.</param>
+		/// <param name="length">How many bytes to read from the array.</param>
+		/// <exception cref="InvalidOperationException">The data hashed exceeds <see cref="MaxDataLength"/>.</exception>
+		public void Update(byte[] data, int offset, uint length)
 		{
-			(int[] checksum, int[] tmpCode, VersionOption? versionOption) Initialize()
+			const int rngSize = SlidingWndSize;
+			// #define RNG_IDX(i) ((i+RNG_SIZE)%RNG_SIZE)
+
+			// Indexes into the sliding window. They cycle like
+			// 0 4 3 2 1
+			// 1 0 4 3 2
+			// 2 1 0 4 3
+			// 3 2 1 0 4
+			// 4 3 2 1 0
+			// 0 4 3 2 1
+			// and so on
+			var j = (int)(_DataLen % rngSize);
+			var j1 = (j - 1 + rngSize) % rngSize;
+			var j2 = (j - 2 + rngSize) % rngSize;
+			var j3 = (j - 3 + rngSize) % rngSize;
+			var j4 = (j - 4 + rngSize) % rngSize;
+
+			
+			var fedLen = _DataLen;
+
+			for (var i = offset; i < offset + length; i++, fedLen++)
 			{
-				foreach (BucketOption bucketOption in AllBucketOptions)
+				var slideWindow = _SlideWindow;
+				slideWindow[j] = data[i] & 0xFF;
+
+				if (fedLen >= 4)
 				{
-					foreach (ChecksumOption checksumOption in AllChecksumOptions)
+					// only calculate when input >= 5 bytes
+
+					ref var slj = ref slideWindow[j];
+					ref var slj1 = ref slideWindow[j1];
+					_Checksum = TlshUtil.PearsonHash(0, slj, slj1, _Checksum);
+					if (_ChecksumLength > 1)
 					{
-						if (TryParse(input, bucketOption, checksumOption, VersionOption.Original, out var checksum, out var tmpCode, out var versionOption)) return (checksum, tmpCode, versionOption);
-						if (TryParse(input, bucketOption, checksumOption, VersionOption.Version4, out checksum, out tmpCode, out versionOption)) return (checksum, tmpCode, versionOption);
+						_ChecksumArray[0] = _Checksum;
+						for (var k = 1; k < _ChecksumLength; k++)
+						{
+							// use calculated 1 byte checksums to expand the total checksum to 3 bytes
+							_ChecksumArray[k] = TlshUtil.PearsonHash(_ChecksumArray[k - 1], slj,
+								slj1, _ChecksumArray[k]);
+						}
+					}
+
+					ref var slj2 = ref slideWindow[j2];
+					var r = TlshUtil.PearsonHash(2, slj, slj1, slj2);
+					_ABucket[r]++;
+					ref var slj3 = ref slideWindow[j3];
+					r = TlshUtil.PearsonHash(3, slj, slj1, slj3);
+					_ABucket[r]++;
+					r = TlshUtil.PearsonHash(5, slj, slj2, slj3);
+					_ABucket[r]++;
+					ref var slj4 = ref slideWindow[j4];
+					r = TlshUtil.PearsonHash(7, slj, slj2, slj4);
+					_ABucket[r]++;
+					r = TlshUtil.PearsonHash(11, slj, slj1, slj4);
+					_ABucket[r]++;
+					r = TlshUtil.PearsonHash(13, slj, slj3, slj4);
+					_ABucket[r]++;
+				}
+
+				// rotate the sliding window indexes
+				var jTmp = j4;
+				j4 = j3;
+				j3 = j2;
+				j2 = j1;
+				j1 = j;
+				j = jTmp;
+			}
+
+			_DataLen += length;
+
+			if (_DataLen > MaxDataLength)
+			{
+				throw new InvalidOperationException("Too much data has been hashed");
+			}
+		}
+
+		/// <summary>
+		/// Find quartiles based on current buckets.
+		/// </summary>
+		/// <returns></returns>
+		private (uint, uint, uint) FindQuartile()
+		{
+			var bucketCopy = new uint[_BucketCount];
+			Array.Copy(_ABucket, bucketCopy, _BucketCount);
+			var quartile = _BucketCount >> 2;
+			var p1 = quartile - 1;
+			var p2 = p1 + quartile;
+			var p3 = p2 + quartile;
+
+			Array.Sort(bucketCopy);
+
+			return (bucketCopy[p1], bucketCopy[p2], bucketCopy[p3]);
+		}
+
+
+		/// <summary>
+		/// Get the computed TLSH structure. This call will succeed only if <see cref="IsValid"/> returns true. Otherwise, an <see cref="InvalidOperationException"/> will be thrown.
+		/// </summary>
+		/// <param name="force">attempt to force hash creation even if not enough data has been hashed. This is not guaranteed to produce output.</param>
+		/// <exception cref="InvalidOperationException">If a hash cannot be product because too little data has been seen.</exception>
+		public TlshValue GetHash(bool force = false)
+		{
+			if (TryGetHash(out var result, force)) return result;
+			throw new InvalidOperationException("TLSH not valid; either not enough data or data has too little variance");
+		}
+
+		
+		/// <summary>
+		/// Get the computed TLSH structure. This call will succeed only if <see cref="IsValid"/> returns true.
+		/// </summary>
+		/// <param name="result">If the result is <c>true</c>, this variable will contain the computed TLSH value.</param>
+		/// <param name="force">attempt to force hash creation even if not enough data has been hashed. This is not guaranteed to produce output.</param>
+		/// <returns><c>true</c>, if the TLSH value could be computed. <c>false</c> otherwise.</returns>
+		public bool TryGetHash(out TlshValue result, bool force = false)
+		{
+			if (!IsValid(force))
+			{
+				result = default;
+				return false;
+			}
+
+			var (q1, q2, q3) = FindQuartile();
+
+			// issue #79 - divide by 0 if q3 == 0
+			// This should already by caught by isValid but an extra check here just in case
+			if (q3 == 0)
+			{
+				result = default;
+				return false;
+			}
+
+			var tmpCode = new int[_CodeSize];
+			for (var i = 0; i < _CodeSize; i++)
+			{
+				var h = 0;
+				for (var j = 0; j < 4; j++)
+				{
+					var k = _ABucket[4 * i + j];
+					if (q3 < k)
+					{
+						h += 3 << (j * 2);
+					}
+					else if (q2 < k)
+					{
+						h += 2 << (j * 2);
+					}
+					else if (q1 < k)
+					{
+						h += 1 << (j * 2);
 					}
 				}
 
-				return (default, default, default);
+				tmpCode[i] = h;
 			}
 
-			static bool TryParse(string value, BucketOption bucketOption, ChecksumOption checksumOption, VersionOption tryVersion, out int[] ints, out int[] tmpCode, out VersionOption? actualVersion)
-			{
+			var lvalue = TlshUtil.LCapturing(_DataLen);
+			var q1Ratio = (int)(q1 * 100.0f / q3) & 0xF;
+			var q2Ratio = (int)(q2 * 100.0f / q3) & 0xF;
 
-				if (value.Length != HashStringLength(bucketOption, checksumOption, tryVersion))
-				{
-					ints = default;
-					tmpCode = default;
-					actualVersion = default;
-					return false;
-				}
-				ints = new int[(int)checksumOption];
-				tmpCode = new int[(int)bucketOption / 4];
-				actualVersion = tryVersion;
+			if (_ChecksumLength == 1)
+			{
+				result = new TlshValue(_Version, new[] { _Checksum }, lvalue, q1Ratio, q2Ratio, tmpCode);
 				return true;
-
-			}
-			
-			var (checksum, tmpCode, versionOption) = Initialize();
-
-			if (checksum == null)
-			{
-				throw new ArgumentException("Invalid hash string, length does not match any known encoding", nameof(input));
 			}
 
-			var offset = versionOption.Value.VersionString.Length;
-			for (var k = 0; k < checksum.Length; k++)
-			{
-				checksum[k] = TlshUtil.FromHexSwapped(input, offset);
-				offset += 2;
-			}
-
-			var lvalue = TlshUtil.FromHexSwapped(input, offset);
-			offset += 2;
-
-			var qRatios = TlshUtil.FromHex(input, offset);
-			offset += 2;
-
-			for (var i = 0; i < tmpCode.Length; i++)
-			{
-				// un-reverse the code during encoding
-				tmpCode[tmpCode.Length - i - 1] = TlshUtil.FromHex(input, offset);
-				offset += 2;
-			}
-
-			return new Tlsh(versionOption.Value, checksum, lvalue, qRatios >> 4, qRatios & 0xF, tmpCode);
+			var checkSumCopy = new int[_ChecksumArray.Length];
+			_ChecksumArray.CopyTo(checkSumCopy, 0);
+			result = new TlshValue(_Version, checkSumCopy, lvalue, q1Ratio, q2Ratio, tmpCode);
+			return true;
 		}
 
-		private static int HashStringLength(BucketOption bucketOption, ChecksumOption checksumOption, VersionOption versionOption) => versionOption.VersionString.Length + ((int)bucketOption / 2) + ((int)checksumOption * 2) + 4;
-
-
-		public VersionOption Version { get; }
-		private readonly int[] _Checksum; // 1 or 3 bytes
-		private readonly int _Lvalue; // 1 byte
-		private readonly int _Q1Ratio; // 4 bits
-		private readonly int _Q2Ratio; // 4 bits
-		private readonly int[] _Codes; // 32/64 bytes
-		private static readonly Array AllChecksumOptions = Enum.GetValues(typeof(ChecksumOption));
-		private static readonly Array AllBucketOptions = Enum.GetValues(typeof(BucketOption));
-
-		public Tlsh(VersionOption versionOption, int[] checksum, int lvalue, int q1Ratio, int q2Ratio, int[] codes)
+		/// <summary>
+		/// Reset the hasher so that it can be used to create a new hash
+		/// </summary>
+		public void Reset()
 		{
-			Version = versionOption;
-			_Checksum = checksum;
-			_Lvalue = lvalue;
-			_Q1Ratio = q1Ratio;
-			_Q2Ratio = q2Ratio;
-			_Codes = codes;
+			Array.Clear(_SlideWindow, 0, _SlideWindow.Length);
+			Array.Clear(_ABucket, 0, _ABucket.Length);
+			_Checksum = 0;
+			if (_ChecksumArray != null)
+			{
+				Array.Clear(_ChecksumArray, 0, _ChecksumArray.Length);
+			}
+
+			_DataLen = 0;
+		}
+
+		/// <summary>
+		/// Check if enough data has been processed to produce a TLSH structure. TLSH
+		/// requires a minimum amount of data, and the data must have a certain amount of
+		/// variance, before a hash can be created.
+		/// </summary>
+		/// <param name="force">Try to force hash creation even if insufficient data has been seen.</param>
+		/// <returns><c>true</c>, if enough data has been processed to produce a TLSH structure. <c>false</c>, otherwise.</returns>
+		public bool IsValid(bool force = false)
+		{
+			// incoming data must be more than or equal to MIN_DATA_LENGTH bytes
+			if (_DataLen < MinForceDataLength || !force && _DataLen < MinDataLength)
+			{
+				return false;
+			}
+
+			// buckets must be more than 50% non-zero
+			var nonzero = 0;
+			for (var i = 0; i < _BucketCount; i++)
+			{
+				if (_ABucket[i] > 0) nonzero++;
+			}
+
+			return nonzero > _BucketCount >> 1 && _DataLen <= MaxDataLength;
 		}
 
 		/// <inheritdoc />
-		public override string ToString() => GetEncoded();
-
-
-		private string GetEncoded()
+		void IDisposable.Dispose()
 		{
-			// The C++ code reverses the order of some of the fields before
-			// converting to hex, so copy that behaviour.
-			var sb = new StringBuilder(HashStringLength());
-			sb.Append(Version.VersionString);
-
-			foreach (var entry in _Checksum)
-			{
-				TlshUtil.ToHexSwapped(entry, sb);
-			}
-
-			TlshUtil.ToHexSwapped(_Lvalue, sb);
-			TlshUtil.ToHex(_Q1Ratio << 4 | _Q2Ratio, sb);
-			for (var i = 0; i < _Codes.Length; i++)
-			{
-				// reverse the code during encoding
-				TlshUtil.ToHex(_Codes[_Codes.Length - 1 - i], sb);
-			}
-
-			return sb.ToString();
+			
 		}
 
-		/**
-	 * Calculate how long the output hex string will be
-	 */
-		private int HashStringLength()
+		/// <inheritdoc />
+		int ICryptoTransform.TransformBlock(byte[] inputBuffer, int inputOffset, int inputCount, byte[] outputBuffer, int outputOffset)
 		{
-			// extra 4 characters come from length and Q1 and Q2 ratio.
-			return Version.VersionString.Length + _Codes.Length * 2 + _Checksum.Length * 2 + 4;
+			Update(inputBuffer, inputOffset, (uint)inputCount);
+			if (outputBuffer != null && (inputBuffer != outputBuffer || inputOffset != outputOffset))
+			{
+				// We let BlockCopy do the destination array validation
+				Buffer.BlockCopy(inputBuffer, inputOffset, outputBuffer, outputOffset, inputCount);
+			}
+
+			return inputCount;
 		}
 
-		/**
-	 * Calculate the difference with another TLSH hash.
-	 * <p>
-	 * There is no hard-and-fast way to interpret the difference number output by
-	 * this function, it is not a percentage or probability. Lower scores are more
-	 * similar, higher scores are less similar. A value of 0 means the data the
-	 * hashes were generated from is likely identical. A value less than 50 means
-	 * the data the hashes were generated from is likely quite similar. Scores over
-	 * 1000 are possible for very different data.
-	 * 
-	 * @param other
-	 *            the hash to compute the difference from
-	 * 
-	 * @param len_diff
-	 *            The len_diff parameter specifies if the file length is to be
-	 *            included in the difference calculation (len_diff=true) or if it is
-	 *            to be excluded (len_diff=false). In general, the length should be
-	 *            considered in the difference calculation, but there could be
-	 *            applications where a part of the adversarial activity might be to
-	 *            add a lot of content. For example to add 1 million zero bytes at
-	 *            the end of a file. In that case, the caller would want to exclude
-	 *            the length from the calculation.
-	 * 
-	 * @return the difference computed as per the TLSH algorithm
-	 * @throws IllegalArgumentException
-	 *             If the given TLSH structure was created with different options;
-	 *             hashes can only be compared if they were created with the same
-	 *             bucket and checksum options.
-	 */
-		public int TotalDiff(Tlsh other, bool lenDiff)
+		/// <inheritdoc />
+		byte[] ICryptoTransform.TransformFinalBlock(byte[] inputBuffer, int inputOffset, int inputCount)
 		{
-			if (_Checksum.Length != other._Checksum.Length || _Codes.Length != other._Codes.Length)
+			byte[] outputBytes;
+			if (inputCount != 0)
 			{
-				throw new ArgumentException(
-					"Given TLSH structure was created with different options from this hash and cannot be compared", nameof(other));
+				outputBytes = new byte[inputCount];
+				Buffer.BlockCopy(inputBuffer, inputOffset, outputBytes, 0, inputCount);
 			}
-
-			var diff = 0;
-
-			if (lenDiff)
-			{
-				var ldiff = TlshUtil.ModDiff(_Lvalue, other._Lvalue, RangeLvalue);
-				if (ldiff == 0)
-					diff = 0;
-				else if (ldiff == 1)
-					diff = 1;
-				else
-					diff += ldiff * 12;
-			}
-
-			var q1diff = TlshUtil.ModDiff(_Q1Ratio, other._Q1Ratio, RangeQRatio);
-			if (q1diff <= 1)
-				diff += q1diff;
 			else
-				diff += (q1diff - 1) * 12;
-
-			var q2diff = TlshUtil.ModDiff(_Q2Ratio, other._Q2Ratio, RangeQRatio);
-			if (q2diff <= 1)
-				diff += q2diff;
-			else
-				diff += (q2diff - 1) * 12;
-
-			for (var k = 0; k < _Checksum.Length; k++)
 			{
-				if (_Checksum[k] != other._Checksum[k])
-				{
-					diff++;
-					break;
-				}
+				outputBytes = Array.Empty<byte>();
 			}
 
-			diff += TlshUtil.HDistance(_Codes, other._Codes);
-
-			return diff;
+			Reset();
+			return outputBytes;
 		}
 
+		/// <inheritdoc />
+		bool ICryptoTransform.CanReuseTransform => true;
+
+		/// <inheritdoc />
+		bool ICryptoTransform.CanTransformMultipleBlocks => true;
+
+		/// <inheritdoc />
+		int ICryptoTransform.InputBlockSize => 1;
+
+		/// <inheritdoc />
+		int ICryptoTransform.OutputBlockSize => 1;
 	}
 }

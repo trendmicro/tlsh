@@ -79,22 +79,22 @@ namespace TrendMicro.Tlsh
 		[TestMethod]
 		public void test_performance_getHash()
 		{
-			TlshBuilder tlsh = new TlshBuilder();
-			byte[] b = new byte[TlshBuilder.MinDataLength];
+			var tlsh = new Tlsh();
+			var b = new byte[Tlsh.MinDataLength];
 			using var rng = RandomNumberGenerator.Create();
 			rng.GetBytes(b);
 
-			int numIters = 250000;
+			var numIters = 250000;
 			var start = Stopwatch.StartNew();
-			for (int i = 0; i < numIters; ++i)
+			for (var i = 0; i < numIters; ++i)
 			{
 				tlsh.Update(b);
 				tlsh.GetHash(false);
 				tlsh.Reset();
 			}
 
-			long diff = start.ElapsedMilliseconds;
-			float timePerIter = (float) diff / numIters;
+			var diff = start.ElapsedMilliseconds;
+			var timePerIter = (float) diff / numIters;
 			Console.WriteLine("It took " + diff + "ms to run " + numIters + " iterations, for " + timePerIter + "ns/call");
 
 		}
@@ -129,21 +129,21 @@ namespace TrendMicro.Tlsh
      */
 		private void test_performance_update(BucketOption bucketOption, ChecksumOption checksumOption)
 		{
-			TlshBuilder tlsh = new TlshBuilder(bucketOption, checksumOption);
-			byte[] b = new byte[16384];
+			var tlsh = new Tlsh(bucketOption, checksumOption, VersionOption.Version4);
+			var b = new byte[16384];
 			using var rng = RandomNumberGenerator.Create();
 			rng.GetBytes(b);
 
-			int numIters = 10000;
+			var numIters = 10000;
 			var start = Stopwatch.StartNew();
-			for (int i = 0; i < numIters; ++i)
+			for (var i = 0; i < numIters; ++i)
 			{
 				tlsh.Update(b);
 			}
 
 			tlsh.GetHash(false);
-			long diff = start.ElapsedMilliseconds;
-			long totalHashed = (long)numIters * b.Length;
+			var diff = start.ElapsedMilliseconds;
+			var totalHashed = (long)numIters * b.Length;
 			Console.WriteLine("With {0} buckets and {1} byte checksum it took {2}ms to hash {3} bytes, for {4} bytes hashed/s\n",
 				(int) bucketOption, (int) checksumOption, (diff), totalHashed,
 				(totalHashed * 1000000000L) / (diff));
