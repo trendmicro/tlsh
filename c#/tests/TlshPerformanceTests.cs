@@ -60,97 +60,94 @@ using System.Diagnostics;
 using System.Security.Cryptography;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace TrendMicro.Tlsh
-{
+namespace TrendMicro.Tlsh;
 
-	/**
+/**
  * Some methods to see the performance of the TLSH implementation.
  *
  */
-	[TestClass]
-	public class TlshPerformanceTests
-	{
-		// TODO: This kind of micro-benchmarking is probably better done
-		// in a framework like JMH
+[TestClass]
+public class TlshPerformanceTests
+{
+	// TODO: This kind of micro-benchmarking is probably better done
+	// in a framework like JMH
 
-		/**
+	/**
      * Attempt to test the performance of the getHash method
      */
-		[TestMethod]
-		public void test_performance_getHash()
+	[TestMethod]
+	public void test_performance_getHash()
+	{
+		var tlsh = new Tlsh();
+		var b = new byte[Tlsh.MinDataLength];
+		using var rng = RandomNumberGenerator.Create();
+		rng.GetBytes(b);
+
+		var numIters = 250000;
+		var start = Stopwatch.StartNew();
+		for (var i = 0; i < numIters; ++i)
 		{
-			var tlsh = new Tlsh();
-			var b = new byte[Tlsh.MinDataLength];
-			using var rng = RandomNumberGenerator.Create();
-			rng.GetBytes(b);
-
-			var numIters = 250000;
-			var start = Stopwatch.StartNew();
-			for (var i = 0; i < numIters; ++i)
-			{
-				tlsh.Update(b);
-				tlsh.GetHash(false);
-				tlsh.Reset();
-			}
-
-			var diff = start.ElapsedMilliseconds;
-			var timePerIter = (float) diff / numIters;
-			Console.WriteLine("It took " + diff + "ms to run " + numIters + " iterations, for " + timePerIter + "ns/call");
-
-		}
-
-		[TestMethod]
-		public void test_performance_update_128_1()
-		{
-			test_performance_update(BucketOption.Default, ChecksumOption.OneByte);
-		}
-
-		[TestMethod]
-		public void test_performance_update_128_3()
-		{
-			test_performance_update(BucketOption.Default, ChecksumOption.ThreeBytes);
-		}
-
-		[TestMethod]
-		public void test_performance_update_256_1()
-		{
-			test_performance_update(BucketOption.Extended, ChecksumOption.OneByte);
-		}
-
-		[TestMethod]
-
-		public void test_performance_update_256_3()
-		{
-			test_performance_update(BucketOption.Extended, ChecksumOption.ThreeBytes);
-		}
-
-		/**
-     * Attempt to test the performance of the update method
-     */
-		private void test_performance_update(BucketOption bucketOption, ChecksumOption checksumOption)
-		{
-			var tlsh = new Tlsh(bucketOption, checksumOption, VersionOption.Version4);
-			var b = new byte[16384];
-			using var rng = RandomNumberGenerator.Create();
-			rng.GetBytes(b);
-
-			var numIters = 10000;
-			var start = Stopwatch.StartNew();
-			for (var i = 0; i < numIters; ++i)
-			{
-				tlsh.Update(b);
-			}
-
+			tlsh.Update(b);
 			tlsh.GetHash(false);
-			var diff = start.ElapsedMilliseconds;
-			var totalHashed = (long)numIters * b.Length;
-			Console.WriteLine("With {0} buckets and {1} byte checksum it took {2}ms to hash {3} bytes, for {4} bytes hashed/s\n",
-				(int) bucketOption, (int) checksumOption, (diff), totalHashed,
-				(totalHashed * 1000000000L) / (diff));
-
+			tlsh.Reset();
 		}
 
+		var diff = start.ElapsedMilliseconds;
+		var timePerIter = (float) diff / numIters;
+		Console.WriteLine("It took " + diff + "ms to run " + numIters + " iterations, for " + timePerIter + "ns/call");
 
 	}
+
+	[TestMethod]
+	public void test_performance_update_128_1()
+	{
+		test_performance_update(BucketOption.Default, ChecksumOption.OneByte);
+	}
+
+	[TestMethod]
+	public void test_performance_update_128_3()
+	{
+		test_performance_update(BucketOption.Default, ChecksumOption.ThreeBytes);
+	}
+
+	[TestMethod]
+	public void test_performance_update_256_1()
+	{
+		test_performance_update(BucketOption.Extended, ChecksumOption.OneByte);
+	}
+
+	[TestMethod]
+
+	public void test_performance_update_256_3()
+	{
+		test_performance_update(BucketOption.Extended, ChecksumOption.ThreeBytes);
+	}
+
+	/**
+     * Attempt to test the performance of the update method
+     */
+	private void test_performance_update(BucketOption bucketOption, ChecksumOption checksumOption)
+	{
+		var tlsh = new Tlsh(bucketOption, checksumOption, VersionOption.Version4);
+		var b = new byte[16384];
+		using var rng = RandomNumberGenerator.Create();
+		rng.GetBytes(b);
+
+		var numIters = 10000;
+		var start = Stopwatch.StartNew();
+		for (var i = 0; i < numIters; ++i)
+		{
+			tlsh.Update(b);
+		}
+
+		tlsh.GetHash(false);
+		var diff = start.ElapsedMilliseconds;
+		var totalHashed = (long)numIters * b.Length;
+		Console.WriteLine("With {0} buckets and {1} byte checksum it took {2}ms to hash {3} bytes, for {4} bytes hashed/s\n",
+			(int) bucketOption, (int) checksumOption, (diff), totalHashed,
+			(totalHashed * 1000000000L) / (diff));
+
+	}
+
 
 }

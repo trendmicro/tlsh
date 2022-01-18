@@ -56,6 +56,7 @@
  */
 
 using System;
+using System.IO;
 using System.Text;
 
 namespace TrendMicro.Tlsh
@@ -87,11 +88,11 @@ namespace TrendMicro.Tlsh
 		/// <exception cref="ArgumentException">If the input string cannot be parsed.</exception>
 		public static TlshValue Parse(string input)
 		{
-			(int[] checksum, int[] tmpCode, VersionOption? versionOption) Initialize()
+			(byte[] checksum, int[] tmpCode, VersionOption? versionOption) Initialize()
 			{
-				foreach (BucketOption bucketOption in AllBucketOptions)
+				foreach (var bucketOption in AllBucketOptions)
 				{
-					foreach (ChecksumOption checksumOption in AllChecksumOptions)
+					foreach (var checksumOption in AllChecksumOptions)
 					{
 						if (TryParse(input, bucketOption, checksumOption, VersionOption.Original, out var checksum, out var tmpCode, out var versionOption)) return (checksum, tmpCode, versionOption);
 						if (TryParse(input, bucketOption, checksumOption, VersionOption.Version4, out checksum, out tmpCode, out versionOption)) return (checksum, tmpCode, versionOption);
@@ -101,7 +102,7 @@ namespace TrendMicro.Tlsh
 				return (default, default, default);
 			}
 
-			static bool TryParse(string value, BucketOption bucketOption, ChecksumOption checksumOption, VersionOption tryVersion, out int[] ints, out int[] tmpCode, out VersionOption? actualVersion)
+			static bool TryParse(string value, BucketOption bucketOption, ChecksumOption checksumOption, VersionOption tryVersion, out byte[] ints, out int[] tmpCode, out VersionOption? actualVersion)
 			{
 
 				if (value.Length != HashStringLength(bucketOption, checksumOption, tryVersion))
@@ -112,7 +113,7 @@ namespace TrendMicro.Tlsh
 					return false;
 				}
 
-				ints = new int[(int)checksumOption];
+				ints = new byte[(int)checksumOption];
 				tmpCode = new int[(int)bucketOption / 4];
 				actualVersion = tryVersion;
 				return true;
@@ -156,15 +157,15 @@ namespace TrendMicro.Tlsh
 		/// Returns the version of this <see cref="Tlsh"/> value.
 		/// </summary>
 		public VersionOption Version { get; }
-		private readonly int[] _Checksum; // 1 or 3 bytes
-		private readonly int _Lvalue; // 1 byte
+		private readonly byte[] _Checksum; // 1 or 3 bytes
+		private readonly byte _Lvalue; // 1 byte
 		private readonly int _Q1Ratio; // 4 bits
 		private readonly int _Q2Ratio; // 4 bits
 		private readonly int[] _Codes; // 32/64 bytes
-		private static readonly Array AllChecksumOptions = Enum.GetValues(typeof(ChecksumOption));
-		private static readonly Array AllBucketOptions = Enum.GetValues(typeof(BucketOption));
+		private static readonly ChecksumOption[] AllChecksumOptions = (ChecksumOption[])Enum.GetValues(typeof(ChecksumOption));
+		private static readonly BucketOption[] AllBucketOptions = (BucketOption[])Enum.GetValues(typeof(BucketOption));
 
-		internal TlshValue(VersionOption versionOption, int[] checksum, int lvalue, int q1Ratio, int q2Ratio, int[] codes)
+		internal TlshValue(VersionOption versionOption, byte[] checksum, byte lvalue, int q1Ratio, int q2Ratio, int[] codes)
 		{
 			Version = versionOption;
 			_Checksum = checksum;
@@ -184,20 +185,25 @@ namespace TrendMicro.Tlsh
 			var sb = new StringBuilder(HashStringLength());
 			sb.Append(Version.VersionString);
 
+			EncodeValue(b => sb.AppendFormat("{0:X2}", b));
+
+			return sb.ToString();
+		}
+
+		private void EncodeValue(Action<byte> consumer)
+		{
 			foreach (var entry in _Checksum)
 			{
-				TlshUtil.ToHexSwapped(entry, sb);
+				consumer(TlshUtil.Swap(entry));
 			}
 
-			TlshUtil.ToHexSwapped(_Lvalue, sb);
-			TlshUtil.ToHex(_Q1Ratio << 4 | _Q2Ratio, sb);
+			consumer(TlshUtil.Swap(_Lvalue));
+			consumer((byte) (_Q1Ratio << 4 | _Q2Ratio));
 			for (var i = 0; i < _Codes.Length; i++)
 			{
 				// reverse the code during encoding
-				TlshUtil.ToHex(_Codes[_Codes.Length - 1 - i], sb);
+				consumer((byte) (_Codes[_Codes.Length - 1 - i]));
 			}
-
-			return sb.ToString();
 		}
 
 		/// <summary>
@@ -299,5 +305,13 @@ namespace TrendMicro.Tlsh
 
 		/// <inheritdoc />
 		public static bool operator !=(TlshValue left, TlshValue right) => !left.Equals(right);
+
+		public byte[] ToByteArray()
+		{
+			var memoryStream = new MemoryStream();
+			var binaryWriter = new BinaryWriter(memoryStream);
+			EncodeValue(binaryWriter.Write);
+			return memoryStream.ToArray();
+		}
 	}
 }

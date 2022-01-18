@@ -60,38 +60,37 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
 
-namespace TrendMicro.Tlsh
+namespace TrendMicro.Tlsh;
+
+/**
+ * Utilities to extract the known answers from the example data
+ */
+public class ExampleDataUtilities
 {
 
 	/**
- * Utilities to extract the known answers from the example data
- */
-	public class ExampleDataUtilities
-	{
-
-		/**
 	 * Return the root of the tlsh source project. Can be overridden
 	 * by setting the tlsh.root system property.
 	 */
-		public static string? GetSourceRoot()
+	public static string? GetSourceRoot()
+	{
+		var sourceRoot = Directory.GetCurrentDirectory();
+		do
 		{
-			var sourceRoot = Directory.GetCurrentDirectory();
-			do
+			// test for existence of expected file. Not bullet-proof, but okay.
+			var testingFolder = Path.Combine(sourceRoot, "Testing");
+			var license = Path.Combine(sourceRoot, "LICENSE");
+			if (Directory.Exists(testingFolder) && File.Exists(license))
 			{
-				// test for existence of expected file. Not bullet-proof, but okay.
-				var testingFolder = Path.Combine(sourceRoot, "Testing");
-				var license = Path.Combine(sourceRoot, "LICENSE");
-				if (Directory.Exists(testingFolder) && File.Exists(license))
-				{
-					return sourceRoot;
-				}
+				return sourceRoot;
+			}
 
-			} while ((sourceRoot = Path.GetDirectoryName(sourceRoot)) != null);
+		} while ((sourceRoot = Path.GetDirectoryName(sourceRoot)) != null);
 
-			throw new FileNotFoundException("Cannot find source root");
-		}
+		throw new FileNotFoundException("Cannot find source root");
+	}
 
-		/**
+	/**
 	 * Get a map from absolute canonical file path to expected TLSH hash value for
 	 * the file at that path
 	 * @param sourceRoot
@@ -103,118 +102,117 @@ namespace TrendMicro.Tlsh
 	 *    The size of the TLSH checksum
 	 * @return
 	 */
-		public static Dictionary<string, string> GetExpectedHashes(string? sourceRoot, int hashLength, int checksumLength)
+	public static Dictionary<string, string> GetExpectedHashes(string? sourceRoot, int hashLength, int checksumLength)
+	{
+		var hashes = new Dictionary<string, string>();
+		var expectedFile = Path.Combine(sourceRoot, "Testing", "exp", $"example_data.{hashLength}.{checksumLength}.len.out_EXP");
+		// Files referenced in the expected outputs files are relative to this folder,
+		// not the data file itself
+		var relativeTo = Path.GetDirectoryName(Path.GetDirectoryName(expectedFile));
+		using var br = new StreamReader(expectedFile);
+		var line = br.ReadLine();
+		while (line != null)
 		{
-			var hashes = new Dictionary<string, string>();
-			var expectedFile = Path.Combine(sourceRoot, "Testing", "exp", $"example_data.{hashLength}.{checksumLength}.len.out_EXP");
-			// Files referenced in the expected outputs files are relative to this folder,
-			// not the data file itself
-			var relativeTo = Path.GetDirectoryName(Path.GetDirectoryName(expectedFile));
-			using var br = new StreamReader(expectedFile);
-			var line = br.ReadLine();
-			while (line != null)
+			var parts = Regex.Split(line.Trim(), "\\s+");
+			if (parts.Length == 2)
 			{
-				var parts = Regex.Split(line.Trim(), "\\s+");
-				if (parts.Length == 2)
+				var expectedHash = parts[0];
+				var relativeFile = parts[1];
+				var absoluteFile = Path.GetFullPath(relativeFile, relativeTo);
+				if (!File.Exists(absoluteFile))
 				{
-					var expectedHash = parts[0];
-					var relativeFile = parts[1];
-					var absoluteFile = Path.GetFullPath(relativeFile, relativeTo);
-					if (!File.Exists(absoluteFile))
-					{
-						throw new FileNotFoundException($"File {absoluteFile} is referenced in data file but cannot be found");
-					}
-
-					hashes[absoluteFile] = expectedHash;
+					throw new FileNotFoundException($"File {absoluteFile} is referenced in data file but cannot be found");
 				}
 
-				line = br.ReadLine();
+				hashes[absoluteFile] = expectedHash;
 			}
 
-			return hashes;
+			line = br.ReadLine();
 		}
 
-		/**
+		return hashes;
+	}
+
+	/**
 	 * A basic struct-type class
 	 */
-		public readonly struct FilesAndDiff
-		{
-			public string SourceFile { get; }
-			public string TargetFile { get; }
-			public int ExpectedDiff { get; }
+	public readonly struct FilesAndDiff
+	{
+		public string SourceFile { get; }
+		public string TargetFile { get; }
+		public int ExpectedDiff { get; }
 
-			public FilesAndDiff(string sourceFile, string targetFile, int expectedDiff)
-			{
-				SourceFile = sourceFile;
-				TargetFile = targetFile;
-				ExpectedDiff = expectedDiff;
-			}
+		public FilesAndDiff(string sourceFile, string targetFile, int expectedDiff)
+		{
+			SourceFile = sourceFile;
+			TargetFile = targetFile;
+			ExpectedDiff = expectedDiff;
 		}
+	}
 
-		public static List<FilesAndDiff> GetExpectedDiffScores(string? sourceRoot, int hashLength, int checksumLength, bool includeLength)
+	public static List<FilesAndDiff> GetExpectedDiffScores(string? sourceRoot, int hashLength, int checksumLength, bool includeLength)
+	{
+		var diffs = new List<FilesAndDiff>();
+		// Example file name: example_data.128.1.xlen.xref.scores_EXP
+		var expectedFile = Path.Combine(sourceRoot, "Testing", "exp", $"example_data.{hashLength}.{checksumLength}.{(includeLength ? "len" : "xlen")}.xref.scores_EXP");
+		// Files referenced in the expected outputs files are relative to this folder,
+		// not the data file itself
+		var relativeTo = Path.GetDirectoryName(Path.GetDirectoryName(expectedFile));
+		using var br = new StreamReader(expectedFile);
+		var line = br.ReadLine();
+		while (line != null)
 		{
-			var diffs = new List<FilesAndDiff>();
-			// Example file name: example_data.128.1.xlen.xref.scores_EXP
-			var expectedFile = Path.Combine(sourceRoot, "Testing", "exp", $"example_data.{hashLength}.{checksumLength}.{(includeLength ? "len" : "xlen")}.xref.scores_EXP");
-			// Files referenced in the expected outputs files are relative to this folder,
-			// not the data file itself
-			var relativeTo = Path.GetDirectoryName(Path.GetDirectoryName(expectedFile));
-			using var br = new StreamReader(expectedFile);
-			var line = br.ReadLine();
-			while (line != null)
+			var parts = Regex.Split(line.Trim(), "\\s+");
+			if (parts.Length == 3)
 			{
-				var parts = Regex.Split(line.Trim(), "\\s+");
-				if (parts.Length == 3)
+				var sourceFile = parts[0];
+				var targetFile = parts[1];
+				var diff = parts[2];
+				var absoluteSourceFile = Path.GetFullPath(sourceFile, relativeTo);
+				if (!File.Exists(absoluteSourceFile))
 				{
-					var sourceFile = parts[0];
-					var targetFile = parts[1];
-					var diff = parts[2];
-					var absoluteSourceFile = Path.GetFullPath(sourceFile, relativeTo);
-					if (!File.Exists(absoluteSourceFile))
-					{
-						throw new FileNotFoundException($"File {absoluteSourceFile} is referenced in data file but cannot be found");
-					}
-
-					var absoluteTargetFile = Path.GetFullPath(targetFile, relativeTo);
-					if (!File.Exists(absoluteTargetFile))
-					{
-						throw new FileNotFoundException($"File {absoluteTargetFile} is referenced in data file but cannot be found");
-					}
-
-					diffs.Add(new FilesAndDiff(absoluteSourceFile, absoluteTargetFile, int.Parse(diff)));
+					throw new FileNotFoundException($"File {absoluteSourceFile} is referenced in data file but cannot be found");
 				}
 
-				line = br.ReadLine();
+				var absoluteTargetFile = Path.GetFullPath(targetFile, relativeTo);
+				if (!File.Exists(absoluteTargetFile))
+				{
+					throw new FileNotFoundException($"File {absoluteTargetFile} is referenced in data file but cannot be found");
+				}
+
+				diffs.Add(new FilesAndDiff(absoluteSourceFile, absoluteTargetFile, int.Parse(diff)));
 			}
 
-			return diffs;
+			line = br.ReadLine();
 		}
 
-		private static readonly Dictionary<string, byte[]> FileCache = new();
+		return diffs;
+	}
 
-		/**
+	private static readonly Dictionary<string, byte[]> FileCache = new();
+
+	/**
 	 * Read an entire file into a byte array and cache it.
 	 * Not safe for large files.
 	 */
-		public static byte[] GetFileBytes(string exampleFile)
+	public static byte[] GetFileBytes(string exampleFile)
+	{
+		// Would be nice to use Map.computeIfAbsent but that requires 1.8-level
+		// source compatibility
+		if (FileCache.TryGetValue(exampleFile, out var bytes)) return bytes;
+		try
 		{
-			// Would be nice to use Map.computeIfAbsent but that requires 1.8-level
-			// source compatibility
-			if (FileCache.TryGetValue(exampleFile, out var bytes)) return bytes;
-			try
-			{
-				bytes = File.ReadAllBytes(exampleFile);
-			}
-			catch (IOException e)
-			{
-				throw new InvalidOperationException($"{exampleFile}Cannot read file ", e);
-			}
-
-			FileCache[exampleFile] = bytes;
-
-			return bytes;
+			bytes = File.ReadAllBytes(exampleFile);
+		}
+		catch (IOException e)
+		{
+			throw new InvalidOperationException($"{exampleFile}Cannot read file ", e);
 		}
 
-		public static void ClearFileCache() => FileCache.Clear();
+		FileCache[exampleFile] = bytes;
+
+		return bytes;
 	}
+
+	public static void ClearFileCache() => FileCache.Clear();
 }

@@ -59,7 +59,7 @@ namespace TrendMicro.Tlsh
 	/// <summary>
 	/// Specifies the size of hte TLSH checksum.
 	/// </summary>
-	public enum ChecksumOption
+	public enum ChecksumOption: byte
 	{
 		/// <summary>
 		/// Create a 1-byte checksum. Recommended.

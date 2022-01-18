@@ -56,7 +56,6 @@
  */
 
 using System;
-using System.Text;
 
 namespace TrendMicro.Tlsh
 {
@@ -72,7 +71,7 @@ namespace TrendMicro.Tlsh
 		 */
 
 		/** Pearson's sample random table */
-		private static readonly int[] VTable =
+		private static readonly byte[] VTable =
 		{
 			1, 87, 49, 12, 176, 178, 102, 166, 121, 193, 6, 84, 249, 230, 44, 163,
 			14, 197, 213, 181, 161, 85, 218, 80, 64, 239, 24, 226, 236, 142, 38, 200,
@@ -94,13 +93,14 @@ namespace TrendMicro.Tlsh
 
 		/** Pearson's hash function. All inputs must be integers in the range [0, 255],
 	 * and the output will also be an integer in the range [0, 255] */
-		public static int PearsonHash(int salt, int i, int j, int k)
+		public static byte PearsonHash(byte salt, byte i, byte j, byte k)
 		{
-				var h = VTable[salt];
-				h = VTable[h ^ i];
-				h = VTable[h ^ j];
-				h = VTable[h ^ k];
-				return h;
+			var vTable = VTable;
+			var h = vTable[salt];
+			h = vTable[h ^ i];
+			h = vTable[h ^ j];
+			h = vTable[h ^ k];
+			return h;
 		}
 
 //	/** Natural logarithm of 1.5 */
@@ -307,11 +307,11 @@ namespace TrendMicro.Tlsh
 		public static readonly uint MaxDataLength = TopValues[TopValues.Length - 1];
 
 		/** Compute length portion of TLSH */
-		public static int LCapturing(uint len)
+		public static byte LCapturing(uint len)
 		{
 			var bottom = 0;
-			var top = TopValues.Length;
-			var idx = top >> 1;
+			var top = (byte) TopValues.Length;
+			var idx = (byte) (top >> 1);
 
 			while (idx < TopValues.Length)
 			{
@@ -327,14 +327,14 @@ namespace TrendMicro.Tlsh
 
 				if (len < TopValues[idx])
 				{
-					top = idx - 1;
+					top = (byte) (idx - 1);
 				}
 				else
 				{
 					bottom = idx + 1;
 				}
 
-				idx = (bottom + top) >> 1;
+				idx = (byte)((bottom + top) >> 1);
 			}
 
 			throw new ArgumentException($"Can only compute length portion of TLSH for data lengths up to {MaxDataLength} bytes", nameof(len));
@@ -409,47 +409,35 @@ namespace TrendMicro.Tlsh
 			}
 		}
 
-		private static readonly char[] HexChars = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
-
-		/**
-	 * Convert an input integer assumed to contain a value in [0, 255] to two hex characters
-	 * and write them to the given string buffer.
-	 */
-		public static void ToHex(int src, StringBuilder dest)
-		{
-			dest.Append(HexChars[(src >> 4) & 0xF]);
-			dest.Append(HexChars[src & 0xF]);
-		}
 
 		/**
 	 * Convert an input integer assumed to contain a value in [0, 255] to two hex characters
 	 * and write them to the given string buffer in swapped order, e.g. the value 1 will be
 	 * written as '10', not '01'
 	 */
-		public static void ToHexSwapped(int src, StringBuilder dest)
+		public static byte Swap(byte src)
 		{
-			dest.Append(HexChars[src & 0xF]);
-			dest.Append(HexChars[(src >> 4) & 0xF]);
+			return (byte) (((src & 0xF) << 4) | (((src >> 4) & 0xF)));
 		}
 
 		/**
 	 * Convert two hex characters in the given string starting at the given offset
 	 * to an integer
 	 */
-		public static int FromHex(string src, int offset) => HexCharToInt(src[offset]) << 4 | HexCharToInt(src[offset + 1]);
+		public static int FromHex(string src, int offset) => HexCharToByte(src[offset]) << 4 | HexCharToByte(src[offset + 1]);
 
 		/**
 	 * Convert two hex characters in the given string starting at the given offset
 	 * to an integer, assuming they were encoded with ToHexSwapped
 	 */
-		public static int FromHexSwapped(string src, int offset) => HexCharToInt(src[offset + 1]) << 4 | HexCharToInt(src[offset]);
+		public static byte FromHexSwapped(string src, int offset) => (byte)(HexCharToByte(src[offset + 1]) << 4 | HexCharToByte(src[offset]));
 
-		private static int HexCharToInt(char hexChar) =>
+		private static byte HexCharToByte(char hexChar) =>
 			hexChar switch
 			{
-				>= '0' and <= '9' => hexChar - '0',
-				>= 'A' and <= 'F' => hexChar - 'A' + 10,
-				>= 'a' and <= 'f' => hexChar - 'a' + 10,
+				>= '0' and <= '9' => (byte)(hexChar - '0'),
+				>= 'A' and <= 'F' => (byte)(hexChar - 'A' + 10),
+				>= 'a' and <= 'f' => (byte)(hexChar - 'a' + 10),
 				_ => throw new ArgumentException($"Invalid hex character '{hexChar}'", nameof(hexChar))
 			};
 	}

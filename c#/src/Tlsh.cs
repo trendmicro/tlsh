@@ -56,14 +56,13 @@
  */
 
 using System;
-using System.Security.Cryptography;
 
 namespace TrendMicro.Tlsh
 {
 	/// <summary>
 	/// Computes the TLSH hash for the input data.
 	/// </summary>
-	public class Tlsh: ICryptoTransform
+	public class Tlsh
 	{
 		private const int SlidingWndSize = 5;
 		private const int Buckets = 256;
@@ -84,18 +83,17 @@ namespace TrendMicro.Tlsh
 		public static readonly uint MaxDataLength = TlshUtil.MaxDataLength;
 
 		private readonly uint[] _ABucket;
-		private readonly int[] _SlideWindow;
+		private readonly byte[] _SlideWindow;
 		private uint _DataLen;
 
 		private readonly VersionOption _Version;
 		private readonly int _BucketCount;
 
 		private readonly int _ChecksumLength;
-		private int _Checksum;
-		private readonly int[] _ChecksumArray;
+		private byte _Checksum;
+		private readonly byte[] _ChecksumArray;
 		private readonly int _CodeSize;
 		
-	
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Tlsh"/> class using recommended default values.
 		/// </summary>
@@ -115,10 +113,10 @@ namespace TrendMicro.Tlsh
 			_CodeSize = _BucketCount >> 2; // Each bucket contributes 2 bits to output code
 			_ChecksumLength = (int) checksumOption;
 
-			_SlideWindow = new int[SlidingWndSize];
+			_SlideWindow = new byte[SlidingWndSize];
 			_ABucket = new uint[Buckets];
 
-			_ChecksumArray = _ChecksumLength > 1 ? new int[_ChecksumLength] : null;
+			_ChecksumArray = _ChecksumLength > 1 ? new byte[_ChecksumLength] : null;
 		}
 
 
@@ -161,7 +159,7 @@ namespace TrendMicro.Tlsh
 			for (var i = offset; i < offset + length; i++, fedLen++)
 			{
 				var slideWindow = _SlideWindow;
-				slideWindow[j] = data[i] & 0xFF;
+				slideWindow[j] = (byte)(data[i] & 0xFF);
 
 				if (fedLen >= 4)
 				{
@@ -304,7 +302,7 @@ namespace TrendMicro.Tlsh
 				return true;
 			}
 
-			var checkSumCopy = new int[_ChecksumArray.Length];
+			var checkSumCopy = new byte[_ChecksumArray.Length];
 			_ChecksumArray.CopyTo(checkSumCopy, 0);
 			result = new TlshValue(_Version, checkSumCopy, lvalue, q1Ratio, q2Ratio, tmpCode);
 			return true;
@@ -350,54 +348,5 @@ namespace TrendMicro.Tlsh
 
 			return nonzero > _BucketCount >> 1 && _DataLen <= MaxDataLength;
 		}
-
-		/// <inheritdoc />
-		void IDisposable.Dispose()
-		{
-			
-		}
-
-		/// <inheritdoc />
-		int ICryptoTransform.TransformBlock(byte[] inputBuffer, int inputOffset, int inputCount, byte[] outputBuffer, int outputOffset)
-		{
-			Update(inputBuffer, inputOffset, (uint)inputCount);
-			if (outputBuffer != null && (inputBuffer != outputBuffer || inputOffset != outputOffset))
-			{
-				// We let BlockCopy do the destination array validation
-				Buffer.BlockCopy(inputBuffer, inputOffset, outputBuffer, outputOffset, inputCount);
-			}
-
-			return inputCount;
-		}
-
-		/// <inheritdoc />
-		byte[] ICryptoTransform.TransformFinalBlock(byte[] inputBuffer, int inputOffset, int inputCount)
-		{
-			byte[] outputBytes;
-			if (inputCount != 0)
-			{
-				outputBytes = new byte[inputCount];
-				Buffer.BlockCopy(inputBuffer, inputOffset, outputBytes, 0, inputCount);
-			}
-			else
-			{
-				outputBytes = Array.Empty<byte>();
-			}
-
-			Reset();
-			return outputBytes;
-		}
-
-		/// <inheritdoc />
-		bool ICryptoTransform.CanReuseTransform => true;
-
-		/// <inheritdoc />
-		bool ICryptoTransform.CanTransformMultipleBlocks => true;
-
-		/// <inheritdoc />
-		int ICryptoTransform.InputBlockSize => 1;
-
-		/// <inheritdoc />
-		int ICryptoTransform.OutputBlockSize => 1;
 	}
 }

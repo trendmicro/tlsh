@@ -57,463 +57,436 @@
 
 
 using System;
-using System.IO;
-using System.Security.Cryptography;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Shouldly;
 
-namespace TrendMicro.Tlsh
+namespace TrendMicro.Tlsh;
+
+[TestClass]
+public class TlshTestS
 {
-	/**
- * Unit tests for TLSH creation and diff operations
- */
-	[TestClass]
-	public class TlshTestS
+	private static string? _SourceRoot;
+
+	[ClassInitialize]
+	public static void InitClass(TestContext context)
 	{
-		private static string? _SourceRoot;
+		_SourceRoot = ExampleDataUtilities.GetSourceRoot();
+	}
 
-		[ClassInitialize]
-		public static void InitClass(TestContext context)
+	[ClassCleanup]
+	public static void TeardownClass()
+	{
+		ExampleDataUtilities.ClearFileCache();
+	}
+
+	[TestMethod]
+	public void Test_hash_128_checksum_1()
+	{
+		Test_hash(BucketOption.Default, ChecksumOption.OneByte, VersionOption.Version4);
+	}
+
+	[TestMethod]
+	public void Test_hash_128_checksum_3()
+	{
+		Test_hash(BucketOption.Default, ChecksumOption.ThreeBytes);
+	}
+
+	[TestMethod]
+	public void Test_hash_256_checksum_1()
+	{
+		Test_hash(BucketOption.Extended, ChecksumOption.OneByte);
+	}
+
+	[TestMethod]
+	public void Test_hash_256_checksum_3()
+	{
+		Test_hash(BucketOption.Extended, ChecksumOption.ThreeBytes);
+	}
+
+	private void Test_hash(BucketOption bucketOption, ChecksumOption checksumOption)
+	{
+		Test_hash(bucketOption, checksumOption, VersionOption.Original);
+	}
+
+	private void Test_hash(BucketOption bucketOption, ChecksumOption checksumOption, VersionOption versionOption)
+	{
+		var expectedHashes = ExampleDataUtilities.GetExpectedHashes(_SourceRoot, (int)bucketOption, (int)checksumOption);
+		expectedHashes.ShouldNotBeNull();
+		expectedHashes.ShouldNotBeEmpty();
+
+		var tlsh = new Tlsh(bucketOption, checksumOption, versionOption);
+		foreach (var (file, expectedHash) in expectedHashes)
 		{
-			_SourceRoot = ExampleDataUtilities.GetSourceRoot();
-		}
+			var wholeFile = ExampleDataUtilities.GetFileBytes(file);
+			var smallSource = wholeFile.Length < Tlsh.MinDataLength;
+			tlsh.Update(wholeFile);
+			tlsh.IsValid(smallSource).ShouldBeTrue();
+			var hash = tlsh.GetHash(smallSource);
+			var hashString = hash.ToString();
 
-		[ClassCleanup]
-		public static void TeardownClass()
+			hashString.ShouldBe(expectedHash, $"Hashes do not match for file {file}");
+			tlsh.Reset();
+			tlsh.IsValid().ShouldBeFalse();
+		}
+	}
+
+	[TestMethod]
+	public void Test_diff_128_checksum_1_with_length()
+	{
+		Test_diff(BucketOption.Default, ChecksumOption.OneByte, true);
+	}
+
+	[TestMethod]
+	public void Test_diff_128_checksum_1_without_length()
+	{
+		Test_diff(BucketOption.Default, ChecksumOption.OneByte, false);
+	}
+
+	[TestMethod]
+	public void Test_diff_128_checksum_3_with_length()
+	{
+		Test_diff(BucketOption.Default, ChecksumOption.ThreeBytes, true);
+	}
+
+	[TestMethod]
+	public void Test_diff_128_checksum_3_without_length()
+	{
+		Test_diff(BucketOption.Default, ChecksumOption.ThreeBytes, false);
+	}
+
+	[TestMethod]
+	public void Test_diff_256_checksum_1_with_length()
+	{
+		Test_diff(BucketOption.Extended, ChecksumOption.OneByte, true);
+	}
+
+	[TestMethod]
+	public void Test_diff_256_checksum_1_without_length()
+	{
+		Test_diff(BucketOption.Extended, ChecksumOption.OneByte, false);
+	}
+
+	[TestMethod]
+	public void Test_diff_256_checksum_3_with_length()
+	{
+		Test_diff(BucketOption.Extended, ChecksumOption.ThreeBytes, true);
+	}
+
+	[TestMethod]
+	public void Test_diff_256_checksum_3_without_length()
+	{
+		Test_diff(BucketOption.Extended, ChecksumOption.ThreeBytes, false);
+	}
+
+	private void Test_diff(BucketOption bucketOption, ChecksumOption checksumOption, bool includeLength)
+	{
+		var expectedDiffs = ExampleDataUtilities.GetExpectedDiffScores(_SourceRoot,
+			(int)bucketOption, (int)checksumOption, includeLength);
+		expectedDiffs.ShouldNotBeNull();
+		expectedDiffs.ShouldNotBeEmpty();
+
+		foreach (var filesAndDiff in expectedDiffs)
 		{
-			ExampleDataUtilities.ClearFileCache();
+			var sourceFile = ExampleDataUtilities.GetFileBytes(filesAndDiff.SourceFile);
+			var targetFile = ExampleDataUtilities.GetFileBytes(filesAndDiff.TargetFile);
+			var smallSource = sourceFile.Length < Tlsh.MinDataLength;
+			var smallTarget = targetFile.Length < Tlsh.MinDataLength;
+
+			var sourceTlshCreator = new Tlsh(bucketOption, checksumOption, VersionOption.Version4);
+			sourceTlshCreator.Update(sourceFile);
+			sourceTlshCreator.IsValid(smallSource).ShouldBeTrue($"TLSH not valid for source file {filesAndDiff.SourceFile} (target file {filesAndDiff.TargetFile})");
+			var sourceTlsh = sourceTlshCreator.GetHash(smallSource);
+
+			var targetTlshCreator = new Tlsh(bucketOption, checksumOption, VersionOption.Version4);
+			targetTlshCreator.Update(targetFile);
+			targetTlshCreator.IsValid(smallTarget).ShouldBeTrue($"TLSH not valid for target file {filesAndDiff.TargetFile} (source file {filesAndDiff.SourceFile})");
+			var targetTlsh = targetTlshCreator.GetHash(smallTarget);
+			sourceTlsh.DistanceTo(targetTlsh, includeLength).ShouldBe(filesAndDiff.ExpectedDiff, $"Incorrect diff for {filesAndDiff.SourceFile} and {filesAndDiff.TargetFile}");
+			// Make sure diff is symmetric
+			targetTlsh.DistanceTo(sourceTlsh, includeLength).ShouldBe(filesAndDiff.ExpectedDiff, $"Incorrect diff for {filesAndDiff.SourceFile} and {filesAndDiff.TargetFile}");
 		}
+	}
 
-		[TestMethod]
-		public void Test_hash_128_checksum_1()
-		{
-			Test_hash(BucketOption.Default, ChecksumOption.OneByte, VersionOption.Version4);
-		}
-
-		[TestMethod]
-		public void Test_hash_128_checksum_3()
-		{
-			Test_hash(BucketOption.Default, ChecksumOption.ThreeBytes);
-		}
-
-		[TestMethod]
-		public void Test_hash_256_checksum_1()
-		{
-			Test_hash(BucketOption.Extended, ChecksumOption.OneByte);
-		}
-
-		[TestMethod]
-		public void Test_hash_256_checksum_3()
-		{
-			Test_hash(BucketOption.Extended, ChecksumOption.ThreeBytes);
-		}
-
-		private void Test_hash(BucketOption bucketOption, ChecksumOption checksumOption)
-		{
-			Test_hash(bucketOption, checksumOption, VersionOption.Original);
-		}
-
-		private void Test_hash(BucketOption bucketOption, ChecksumOption checksumOption, VersionOption versionOption)
-		{
-			var expectedHashes = ExampleDataUtilities.GetExpectedHashes(_SourceRoot, (int)bucketOption, (int)checksumOption);
-			expectedHashes.ShouldNotBeNull();
-			expectedHashes.ShouldNotBeEmpty();
-
-			var tlsh = new Tlsh(bucketOption, checksumOption, versionOption);
-			foreach (var (file, expectedHash) in expectedHashes)
-			{
-				var wholeFile = ExampleDataUtilities.GetFileBytes(file);
-				var smallSource = wholeFile.Length < Tlsh.MinDataLength;
-				tlsh.Update(wholeFile);
-				tlsh.IsValid(smallSource).ShouldBeTrue();
-				var hash = tlsh.GetHash(smallSource);
-				var hashString = hash.ToString();
-
-				hashString.ShouldBe(expectedHash, $"Hashes do not match for file {file}");
-				tlsh.Reset();
-				tlsh.IsValid().ShouldBeFalse();
-			}
-		}
-
-		[TestMethod]
-		public void Test_diff_128_checksum_1_with_length()
-		{
-			Test_diff(BucketOption.Default, ChecksumOption.OneByte, true);
-		}
-
-		[TestMethod]
-		public void Test_diff_128_checksum_1_without_length()
-		{
-			Test_diff(BucketOption.Default, ChecksumOption.OneByte, false);
-		}
-
-		[TestMethod]
-		public void Test_diff_128_checksum_3_with_length()
-		{
-			Test_diff(BucketOption.Default, ChecksumOption.ThreeBytes, true);
-		}
-
-		[TestMethod]
-		public void Test_diff_128_checksum_3_without_length()
-		{
-			Test_diff(BucketOption.Default, ChecksumOption.ThreeBytes, false);
-		}
-
-		[TestMethod]
-		public void Test_diff_256_checksum_1_with_length()
-		{
-			Test_diff(BucketOption.Extended, ChecksumOption.OneByte, true);
-		}
-
-		[TestMethod]
-		public void Test_diff_256_checksum_1_without_length()
-		{
-			Test_diff(BucketOption.Extended, ChecksumOption.OneByte, false);
-		}
-
-		[TestMethod]
-		public void Test_diff_256_checksum_3_with_length()
-		{
-			Test_diff(BucketOption.Extended, ChecksumOption.ThreeBytes, true);
-		}
-
-		[TestMethod]
-		public void Test_diff_256_checksum_3_without_length()
-		{
-			Test_diff(BucketOption.Extended, ChecksumOption.ThreeBytes, false);
-		}
-
-		private void Test_diff(BucketOption bucketOption, ChecksumOption checksumOption, bool includeLength)
-		{
-			var expectedDiffs = ExampleDataUtilities.GetExpectedDiffScores(_SourceRoot,
-				(int)bucketOption, (int)checksumOption, includeLength);
-			expectedDiffs.ShouldNotBeNull();
-			expectedDiffs.ShouldNotBeEmpty();
-
-			foreach (var filesAndDiff in expectedDiffs)
-			{
-				var sourceFile = ExampleDataUtilities.GetFileBytes(filesAndDiff.SourceFile);
-				var targetFile = ExampleDataUtilities.GetFileBytes(filesAndDiff.TargetFile);
-				var smallSource = sourceFile.Length < Tlsh.MinDataLength;
-				var smallTarget = targetFile.Length < Tlsh.MinDataLength;
-
-				var sourceTlshCreator = new Tlsh(bucketOption, checksumOption, VersionOption.Version4);
-				sourceTlshCreator.Update(sourceFile);
-				sourceTlshCreator.IsValid(smallSource).ShouldBeTrue($"TLSH not valid for source file {filesAndDiff.SourceFile} (target file {filesAndDiff.TargetFile})");
-				var sourceTlsh = sourceTlshCreator.GetHash(smallSource);
-
-				var targetTlshCreator = new Tlsh(bucketOption, checksumOption, VersionOption.Version4);
-				targetTlshCreator.Update(targetFile);
-				targetTlshCreator.IsValid(smallTarget).ShouldBeTrue($"TLSH not valid for target file {filesAndDiff.TargetFile} (source file {filesAndDiff.SourceFile})");
-				var targetTlsh = targetTlshCreator.GetHash(smallTarget);
-				sourceTlsh.DistanceTo(targetTlsh, includeLength).ShouldBe(filesAndDiff.ExpectedDiff, $"Incorrect diff for {filesAndDiff.SourceFile} and {filesAndDiff.TargetFile}");
-				// Make sure diff is symmetric
-				targetTlsh.DistanceTo(sourceTlsh, includeLength).ShouldBe(filesAndDiff.ExpectedDiff, $"Incorrect diff for {filesAndDiff.SourceFile} and {filesAndDiff.TargetFile}");
-			}
-		}
-
-		[TestMethod]
-		public void TestCryptoTransform_Read()
-		{
-			var data = new byte[1024];
-			var rng = new Random();
-			rng.NextBytes(data);
-			var hash = new Tlsh();
-			hash.Update(data);
-			hash.TryGetHash(out var expected).ShouldBeTrue();
-
-			var hash2 = new Tlsh();
-
-			var source = new MemoryStream(data);
-			var dest = new MemoryStream();
-			var stream = new CryptoStream(source, hash2, CryptoStreamMode.Read);
-			stream.CopyTo(dest);
-			hash.TryGetHash(out var actual).ShouldBeTrue();
-			actual.ToString().ShouldBe(expected.ToString());
-			dest.ToArray().ShouldBe(data);
-		}
-
-
-		/**
+	/**
 	 * Test diff when checksums have different lengths
 	 */
-		[TestMethod]
-		public void Test_diff_different_checksum()
-		{
-			var buf = new byte[1024];
-			new Random().NextBytes(buf);
-			var checksum1 = new Tlsh(BucketOption.Default, ChecksumOption.OneByte, VersionOption.Version4);
-			checksum1.Update(buf);
-			var tlsh1 = checksum1.GetHash();
+	[TestMethod]
+	public void Test_diff_different_checksum()
+	{
+		var buf = new byte[1024];
+		new Random().NextBytes(buf);
+		var checksum1 = new Tlsh(BucketOption.Default, ChecksumOption.OneByte, VersionOption.Version4);
+		checksum1.Update(buf);
+		var tlsh1 = checksum1.GetHash();
 
-			var checksum3 = new Tlsh(BucketOption.Default, ChecksumOption.ThreeBytes, VersionOption.Version4);
-			checksum3.Update(buf);
-			var tlsh3 = checksum3.GetHash();
+		var checksum3 = new Tlsh(BucketOption.Default, ChecksumOption.ThreeBytes, VersionOption.Version4);
+		checksum3.Update(buf);
+		var tlsh3 = checksum3.GetHash();
 
-			Should.Throw<ArgumentException>(() => tlsh1.DistanceTo(tlsh3, true));
-		}
+		Should.Throw<ArgumentException>(() => tlsh1.DistanceTo(tlsh3, true));
+	}
 
-		/**
+	/**
 	 * Test diff with different bucket counts
 	 */
-		[TestMethod]
-		public void Test_diff_different_buckets()
-		{
-			var buf = new byte[1024];
-			new Random().NextBytes(buf);
-			var buckets128 = new Tlsh(BucketOption.Default, ChecksumOption.OneByte, VersionOption.Version4);
-			buckets128.Update(buf);
-			var tlsh128 = buckets128.GetHash();
+	[TestMethod]
+	public void Test_diff_different_buckets()
+	{
+		var buf = new byte[1024];
+		new Random().NextBytes(buf);
+		var buckets128 = new Tlsh(BucketOption.Default, ChecksumOption.OneByte, VersionOption.Version4);
+		buckets128.Update(buf);
+		var tlsh128 = buckets128.GetHash();
 
-			var buckets256 = new Tlsh(BucketOption.Extended, ChecksumOption.OneByte, VersionOption.Version4);
-			buckets256.Update(buf);
-			var tlsh256 = buckets256.GetHash();
+		var buckets256 = new Tlsh(BucketOption.Extended, ChecksumOption.OneByte, VersionOption.Version4);
+		buckets256.Update(buf);
+		var tlsh256 = buckets256.GetHash();
 
-			Should.Throw<ArgumentException>(() => tlsh128.DistanceTo(tlsh256, true));
-		}
+		Should.Throw<ArgumentException>(() => tlsh128.DistanceTo(tlsh256, true));
+	}
 
-		/**
+	/**
 	 * Test force flag in isValid call
 	 */
-		[TestMethod]
-		public void Test_isValid()
-		{
-			var buf = new byte[Tlsh.MinDataLength];
-			new Random().NextBytes(buf);
-			var tlshCreator = new Tlsh();
-			// not quite enough, even when forcing
-			tlshCreator.Update(buf, 0, Tlsh.MinForceDataLength - 1);
+	[TestMethod]
+	public void Test_isValid()
+	{
+		var buf = new byte[Tlsh.MinDataLength];
+		new Random().NextBytes(buf);
+		var tlshCreator = new Tlsh();
+		// not quite enough, even when forcing
+			
+		tlshCreator.Update(buf, 0, Tlsh.MinForceDataLength - 1);
 
-			tlshCreator.IsValid().ShouldBeFalse();
-			tlshCreator.IsValid(true).ShouldBeFalse();
+		tlshCreator.IsValid().ShouldBeFalse();
+		tlshCreator.IsValid(true).ShouldBeFalse();
 
-			// one more byte should do it for forcing
-			tlshCreator.Update(buf, Tlsh.MinForceDataLength - 1, 1);
+		// one more byte should do it for forcing
+		tlshCreator.Update(buf, Tlsh.MinForceDataLength - 1, 1);
 
-			tlshCreator.IsValid().ShouldBeFalse();
-			tlshCreator.IsValid(true).ShouldBeTrue();
+		tlshCreator.IsValid().ShouldBeFalse();
+		tlshCreator.IsValid(true).ShouldBeTrue();
 
-			// add all but one of the remaining bytes, should not change validity
-			tlshCreator.Update(buf, Tlsh.MinForceDataLength, Tlsh.MinDataLength - Tlsh.MinForceDataLength - 1);
-			tlshCreator.IsValid().ShouldBeFalse();
-			tlshCreator.IsValid(true).ShouldBeTrue();
+		// add all but one of the remaining bytes, should not change validity
+		tlshCreator.Update(buf, Tlsh.MinForceDataLength, Tlsh.MinDataLength - Tlsh.MinForceDataLength - 1);
+		tlshCreator.IsValid().ShouldBeFalse();
+		tlshCreator.IsValid(true).ShouldBeTrue();
 
-			// add the last byte
-			tlshCreator.Update(buf, Tlsh.MinDataLength - 1, 1);
-			tlshCreator.IsValid().ShouldBeTrue();
-			tlshCreator.IsValid(true).ShouldBeTrue();
-		}
+		// add the last byte
+		tlshCreator.Update(buf, Tlsh.MinDataLength - 1, 1);
+		tlshCreator.IsValid().ShouldBeTrue();
+		tlshCreator.IsValid(true).ShouldBeTrue();
+	}
 
-		/**
+	/**
 	 * Test input that is not varied enough
 	 */
-		[TestMethod]
-		public void Test_isValid_too_little_variance()
+	[TestMethod]
+	public void Test_isValid_too_little_variance()
+	{
+		var buf = new byte[1000];
+		for (var i = 0; i < buf.Length;)
 		{
-			var buf = new byte[1000];
-			for (var i = 0; i < buf.Length;)
-			{
-				buf[i] = (byte)'a';
-				buf[i + 1] = (byte)'b';
-				buf[i + 2] = (byte)'c';
-				buf[i + 3] = (byte)'d';
-				buf[i + 4] = (byte)'e';
-				i += 5;
-			}
-
-			var tlshCreator = new Tlsh();
-			tlshCreator.Update(buf);
-
-			// Should not be able to force validi.ShouldBeFalse();
-			tlshCreator.IsValid().ShouldBeFalse();
-			tlshCreator.IsValid(true).ShouldBeFalse();
+			buf[i] = (byte)'a';
+			buf[i + 1] = (byte)'b';
+			buf[i + 2] = (byte)'c';
+			buf[i + 3] = (byte)'d';
+			buf[i + 4] = (byte)'e';
+			i += 5;
 		}
 
-		/**
+		var tlshCreator = new Tlsh();
+		tlshCreator.Update(buf);
+
+		// Should not be able to force validi.ShouldBeFalse();
+		tlshCreator.IsValid().ShouldBeFalse();
+		tlshCreator.IsValid(true).ShouldBeFalse();
+	}
+
+	/**
 	 * Test force flag in getHash call
 	 */
-		[TestMethod]
-		public void Test_getHash()
-		{
-			var buf = new byte[Tlsh.MinDataLength];
-			new Random().NextBytes(buf);
-			var tlshCreator = new Tlsh();
-			// not quite enough, even when forcing
-			tlshCreator.Update(buf, 0, Tlsh.MinForceDataLength - 1);
+	[TestMethod]
+	public void Test_getHash()
+	{
+		var buf = new byte[Tlsh.MinDataLength];
+		new Random().NextBytes(buf);
+		var tlshCreator = new Tlsh();
+		// not quite enough, even when forcing
+		tlshCreator.Update(buf, 0, Tlsh.MinForceDataLength - 1);
 
-			Should.Throw<InvalidOperationException>(() => tlshCreator.GetHash());
+		Should.Throw<InvalidOperationException>(() => tlshCreator.GetHash());
 
-			Should.Throw<InvalidOperationException>(() => tlshCreator.GetHash(true));
+		Should.Throw<InvalidOperationException>(() => tlshCreator.GetHash(true));
 
-			// one more byte should do it for forcing
-			tlshCreator.Update(buf, Tlsh.MinForceDataLength - 1, 1);
-			tlshCreator.GetHash(true);
-			Should.Throw<InvalidOperationException>(() => tlshCreator.GetHash());
+		// one more byte should do it for forcing
+		tlshCreator.Update(buf, Tlsh.MinForceDataLength - 1, 1);
+		tlshCreator.GetHash(true);
+		Should.Throw<InvalidOperationException>(() => tlshCreator.GetHash());
 
-			// add the last rest
-			tlshCreator.Update(buf, Tlsh.MinForceDataLength, Tlsh.MinDataLength - Tlsh.MinForceDataLength);
-			tlshCreator.GetHash(true);
-			tlshCreator.GetHash();
-		}
+		// add the last rest
+		tlshCreator.Update(buf, Tlsh.MinForceDataLength, Tlsh.MinDataLength - Tlsh.MinForceDataLength);
+		tlshCreator.GetHash(true);
+		tlshCreator.GetHash();
+	}
 
-		/**
+	/**
 	 * Test input that is not varied enough
 	 */
-		[TestMethod]
-		public void Test_getHashNoThrow()
-		{
-			var buf = new byte[Tlsh.MinDataLength];
-			new Random().NextBytes(buf);
-			var tlshCreator = new Tlsh();
-			// not quite enough, even when forcing
-			tlshCreator.Update(buf, 0, Tlsh.MinDataLength - 1);
+	[TestMethod]
+	public void Test_getHashNoThrow()
+	{
+		var buf = new byte[Tlsh.MinDataLength];
+		new Random().NextBytes(buf);
+		var tlshCreator = new Tlsh();
+		// not quite enough, even when forcing
+		tlshCreator.Update(buf, 0, Tlsh.MinDataLength - 1);
 
-			tlshCreator.TryGetHash(out _).ShouldBeFalse();
+		tlshCreator.TryGetHash(out _).ShouldBeFalse();
 
-			// add the final required byte
-			tlshCreator.Update(buf, Tlsh.MinDataLength - 1, 1);
-			tlshCreator.TryGetHash(out _).ShouldBeTrue();
-		}
+		// add the final required byte
+		tlshCreator.Update(buf, Tlsh.MinDataLength - 1, 1);
+		tlshCreator.TryGetHash(out _).ShouldBeTrue();
+	}
 
-		/**
+	/**
 	 * Test that multiple calls to the update(byte, int, int) method have the
 	 * same result as one call to the update(byte) method
 	 */
-		[TestMethod]
-		public void Test_multiple_vs_single_updates()
-		{
-			var buf = new byte[Tlsh.MinDataLength];
-			new Random().NextBytes(buf);
+	[TestMethod]
+	public void Test_multiple_vs_single_updates()
+	{
+		var buf = new byte[Tlsh.MinDataLength];
+		new Random().NextBytes(buf);
 
-			var singleUpdate = new Tlsh();
-			singleUpdate.Update(buf);
-			var singleUpdateHash = singleUpdate.GetHash();
+		var singleUpdate = new Tlsh();
+		singleUpdate.Update(buf);
+		var singleUpdateHash = singleUpdate.GetHash();
 
-			var multipleUpdates = new Tlsh();
-			for (var i = 0; i < buf.Length; ++i) multipleUpdates.Update(buf, i, 1);
+		var multipleUpdates = new Tlsh();
+		for (var i = 0; i < buf.Length; ++i) multipleUpdates.Update(buf, i, 1);
 
-			var multipleUpdatesHash = multipleUpdates.GetHash();
-			singleUpdateHash.ShouldNotBeSameAs(multipleUpdatesHash);
+		var multipleUpdatesHash = multipleUpdates.GetHash();
+		singleUpdateHash.ShouldNotBeSameAs(multipleUpdatesHash);
 
-			singleUpdateHash.ToString().ShouldBe(multipleUpdatesHash.ToString());
-		}
+		singleUpdateHash.ToString().ShouldBe(multipleUpdatesHash.ToString());
+	}
 
-		[TestMethod]
-		public void Test_from_encoded_string_128_1()
-		{
-			Test_from_encoded_string(BucketOption.Default, ChecksumOption.OneByte);
-		}
+	[TestMethod]
+	public void Test_from_encoded_string_128_1()
+	{
+		Test_from_encoded_string(BucketOption.Default, ChecksumOption.OneByte);
+	}
 
-		[TestMethod]
-		public void Test_from_encoded_string_128_3()
-		{
-			Test_from_encoded_string(BucketOption.Default, ChecksumOption.ThreeBytes);
-		}
+	[TestMethod]
+	public void Test_from_encoded_string_128_3()
+	{
+		Test_from_encoded_string(BucketOption.Default, ChecksumOption.ThreeBytes);
+	}
 
-		[TestMethod]
-		public void Test_from_encoded_string_256_1()
-		{
-			Test_from_encoded_string(BucketOption.Extended, ChecksumOption.OneByte);
-		}
+	[TestMethod]
+	public void Test_from_encoded_string_256_1()
+	{
+		Test_from_encoded_string(BucketOption.Extended, ChecksumOption.OneByte);
+	}
 
-		[TestMethod]
-		public void Test_from_encoded_string_256_3()
-		{
-			Test_from_encoded_string(BucketOption.Extended, ChecksumOption.ThreeBytes);
-		}
+	[TestMethod]
+	public void Test_from_encoded_string_256_3()
+	{
+		Test_from_encoded_string(BucketOption.Extended, ChecksumOption.ThreeBytes);
+	}
 
-		/**
+	/**
 	 * Tests that encoded strings can be successfully decoded
 	 */
-		private void Test_from_encoded_string(BucketOption bucketOption, ChecksumOption checksumOption)
-		{
-			var buf = new byte[Tlsh.MinDataLength];
-			new Random().NextBytes(buf);
+	private void Test_from_encoded_string(BucketOption bucketOption, ChecksumOption checksumOption)
+	{
+		var buf = new byte[Tlsh.MinDataLength];
+		new Random().NextBytes(buf);
 
-			var tlshCreator = new Tlsh(bucketOption, checksumOption, VersionOption.Version4);
-			tlshCreator.Update(buf);
-			var tlsh = tlshCreator.GetHash();
+		var tlshCreator = new Tlsh(bucketOption, checksumOption, VersionOption.Version4);
+		tlshCreator.Update(buf);
+		var tlsh = tlshCreator.GetHash();
 
-			var encoded = tlsh.ToString();
+		var encoded = tlsh.ToString();
 
-			var decoded = TlshValue.Parse(encoded);
+		var decoded = TlshValue.Parse(encoded);
 
-			tlsh.DistanceTo(decoded, true).ShouldBe(0);
+		tlsh.DistanceTo(decoded, true).ShouldBe(0);
 
-			// make sure re-encoding is identical to original encoding
-			var reEncoded = decoded.ToString();
+		// make sure re-encoding is identical to original encoding
+		var reEncoded = decoded.ToString();
 
-			reEncoded.ShouldBe(encoded);
-		}
+		reEncoded.ShouldBe(encoded);
+	}
 
-		/**
+	/**
 	 * Tests that lower-case strings can be successfully decoded
 	 */
-		[TestMethod]
-		public void Test_fromTlshStr_lowercase()
-		{
-			var encoded = "14d02b0987d87fa9f74228e362144b556ac8f02705130a5551476442a453e929c8842d";
+	[TestMethod]
+	public void Test_fromTlshStr_lowercase()
+	{
+		var encoded = "14d02b0987d87fa9f74228e362144b556ac8f02705130a5551476442a453e929c8842d";
 
-			var decoded = TlshValue.Parse(encoded);
+		var decoded = TlshValue.Parse(encoded);
 
-			// make sure re-encoding is identical to original encoding
-			var reEncoded = decoded.ToString();
+		// make sure re-encoding is identical to original encoding
+		var reEncoded = decoded.ToString();
 
-			reEncoded.ToLower().ShouldBe(encoded);
-		}
+		reEncoded.ToLower().ShouldBe(encoded);
+	}
 
-		/**
+	/**
 	 * Test a string of wrong length is not decoded
 	 */
-		[TestMethod]
-		public void Test_fromTlshStr_bad_length()
-		{
-			const string truncated = "14d02b0987d87fa9f74228e362144b556ac8f02705130a5551476442a453";
+	[TestMethod]
+	public void Test_fromTlshStr_bad_length()
+	{
+		const string truncated = "14d02b0987d87fa9f74228e362144b556ac8f02705130a5551476442a453";
 
-			Should.Throw<ArgumentException>(() => TlshValue.Parse(truncated));
-		}
+		Should.Throw<ArgumentException>(() => TlshValue.Parse(truncated));
+	}
 
-		/**
+	/**
 	 * Test a string of wrong length is not decoded
 	 */
-		[TestMethod]
-		public void Test_fromTlshStr_not_hex()
-		{
-			// right length, but last character not hex
-			const string notQuiteHex = "14D02B0987D87FA9F74228E362144B556AC8F02705130A5551476442A453E929C8842G";
+	[TestMethod]
+	public void Test_fromTlshStr_not_hex()
+	{
+		// right length, but last character not hex
+		const string notQuiteHex = "14D02B0987D87FA9F74228E362144B556AC8F02705130A5551476442A453E929C8842G";
 
-			Should.Throw<ArgumentException>(() => TlshValue.Parse(notQuiteHex));
-		}
+		Should.Throw<ArgumentException>(() => TlshValue.Parse(notQuiteHex));
+	}
 
-		/**
+	/**
 	 * Lengthy test for input length above 2GB - Issue #84
 	 */
-		[TestMethod]
-		public void Test_large_input()
+	[TestMethod]
+	public void Test_large_input()
+	{
+		var b = new byte[1 << 10];
+		new Random().NextBytes(b);
+		const long desiredInputSize = 0x9000_0000L;
+		long bytesHashed = 0;
+		var creator = new Tlsh();
+		while (bytesHashed < desiredInputSize)
 		{
-			var b = new byte[1 << 10];
-			new Random().NextBytes(b);
-			const long desiredInputSize = 0x9000_0000L;
-			long bytesHashed = 0;
-			var creator = new Tlsh();
-			while (bytesHashed < desiredInputSize)
-			{
-				creator.Update(b);
-				bytesHashed += b.Length;
-			}
-
-			creator.IsValid().ShouldBeTrue();
+			creator.Update(b);
+			bytesHashed += b.Length;
 		}
 
-		/**
+		creator.IsValid().ShouldBeTrue();
+	}
+
+	/**
 	 * Test bounds for LCapturing function
 	 */
-		[TestMethod]
-		public void Test_l_capturing()
-		{
-			TlshUtil.LCapturing(Tlsh.MaxDataLength - 1).ShouldBe(169);
-			TlshUtil.LCapturing(Tlsh.MaxDataLength).ShouldBe(169);
-			Should.Throw<ArgumentException>(() => TlshUtil.LCapturing(Tlsh.MaxDataLength + 1));
-		}
+	[TestMethod]
+	public void Test_l_capturing()
+	{
+		TlshUtil.LCapturing(Tlsh.MaxDataLength - 1).ShouldBe((byte) 169);
+		TlshUtil.LCapturing(Tlsh.MaxDataLength).ShouldBe((byte) 169);
+		Should.Throw<ArgumentException>(() => TlshUtil.LCapturing(Tlsh.MaxDataLength + 1));
 	}
 }
