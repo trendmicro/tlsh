@@ -18,6 +18,8 @@
 		<RepositoryType>git</RepositoryType>
 		<RepositoryUrl>https://github.com/trendmicro/tlsh.git</RepositoryUrl>
 		<PackageProjectUrl>https://github.com/trendmicro/tlsh</PackageProjectUrl>
+		<SignAssembly>True</SignAssembly>
+		<AssemblyOriginatorKeyFile>..\keyfile.key</AssemblyOriginatorKeyFile>
 	</PropertyGroup>
 
 </Project>

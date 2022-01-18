@@ -7,6 +7,10 @@
     <IsPackable>false</IsPackable>
 
     <AssemblyName>tlsh.tests</AssemblyName>
+
+    <SignAssembly>True</SignAssembly>
+
+    <AssemblyOriginatorKeyFile>..\keyfile.key</AssemblyOriginatorKeyFile>
   </PropertyGroup>
 
   <ItemGroup>

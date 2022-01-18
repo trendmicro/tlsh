@@ -63,7 +63,7 @@ using Shouldly;
 namespace TrendMicro.Tlsh;
 
 [TestClass]
-public class TlshTestS
+public class TlshTests
 {
 	private static string? _SourceRoot;
 
