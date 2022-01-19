@@ -55,6 +55,7 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+using System;
 using System.Security.Cryptography;
 
 namespace TrendMicro.Tlsh
@@ -67,6 +68,7 @@ namespace TrendMicro.Tlsh
 		private readonly Tlsh _Tlsh;
 		private readonly BucketOption _BucketOption;
 		private readonly ChecksumOption _ChecksumOption;
+		private readonly bool _ForceHashCreation;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Tlsh"/> class using recommended default values.
@@ -79,21 +81,23 @@ namespace TrendMicro.Tlsh
 		/// <param name="bucketOption">Specifies the bucket count; more buckets can give better difference calculations but require more space to store the computed hash.</param>
 		/// <param name="checksumOption">Specifies the checksum length; longer checksums are more resilient but increase hash creation time.</param>
 		/// <param name="versionOption">The version of TLSH to use. It is usually best to use the latest version, unless you need an older version for compatibility reasons.</param>
-		public TlshHashAlgorithm(BucketOption bucketOption, ChecksumOption checksumOption, VersionOption versionOption)
+		/// <param name="forceHashCreation">Attempt to force hash creation even if not enough data has been hashed. This is not guaranteed to produce output.</param>
+		public TlshHashAlgorithm(BucketOption bucketOption, ChecksumOption checksumOption, VersionOption versionOption, bool forceHashCreation = false)
 		{
 			_Tlsh = new Tlsh(bucketOption, checksumOption, versionOption);
 			_BucketOption = bucketOption;
 			_ChecksumOption = checksumOption;
+			_ForceHashCreation = forceHashCreation;
 		}
 
 		/// <inheritdoc />
-		public override int HashSize => ((int) _ChecksumOption + 1 + 1 + (int) _BucketOption / 4)*8;
+		public override int HashSize => _Tlsh.IsValid(_ForceHashCreation) ? ((int)_ChecksumOption + 1 + 1 + (int)_BucketOption / 4) * 8 : 0;
 
 		/// <inheritdoc />
 		protected override void HashCore(byte[] array, int ibStart, int cbSize) => _Tlsh.Update(array, ibStart, (uint) cbSize);
 
 		/// <inheritdoc />
-		protected override byte[] HashFinal() => _Tlsh.GetHash().ToByteArray();
+		protected override byte[] HashFinal() => _Tlsh.TryGetHash(out var result, _ForceHashCreation) ? result.ToByteArray() : Array.Empty<byte>();
 
 		/// <inheritdoc />
 		public override void Initialize() => _Tlsh.Reset();

@@ -18,17 +18,17 @@ public class TlshHashAlgorithmTests
 	{
 		var (data, expected) = GetTestData(bucketOption, checksumOption);
 
-		var hash2 = new TlshHashAlgorithm(bucketOption, checksumOption, VersionOption.Version4);
+		var hash = new TlshHashAlgorithm(bucketOption, checksumOption, VersionOption.Version4);
 
 		var source = new MemoryStream(data);
 		var dest = new MemoryStream();
-		var stream = new CryptoStream(source, hash2, CryptoStreamMode.Read);
+		var stream = new CryptoStream(source, hash, CryptoStreamMode.Read);
 		stream.CopyTo(dest);
 
 		dest.ToArray().ShouldBe(data);
 
-		hash2.Hash.ShouldBe(expected.ToByteArray());
-		AssertHashSize(hash2.HashSize, bucketOption, checksumOption);
+		hash.Hash.ShouldBe(expected.ToByteArray());
+		AssertHashSize(hash.HashSize, bucketOption, checksumOption);
 	}
 	
 	[TestMethod]
@@ -43,7 +43,21 @@ public class TlshHashAlgorithmTests
 
 		var actual = hash2.ComputeHash(data);
 		actual.ShouldBe(expected.ToByteArray());
+	
 		AssertHashSize(hash2.HashSize, bucketOption, checksumOption);
+	}
+
+	[TestMethod]
+	public void Test_NotEnoughData()
+	{
+		var data = new byte[60];
+		var rng = new Random();
+		rng.NextBytes(data);
+		var hash = new TlshHashAlgorithm();
+
+		var actual = hash.ComputeHash(data);
+		actual.ShouldBeEmpty();
+		hash.HashSize.ShouldBe(0);
 	}
 
 	private static void AssertHashSize(int hashSize, BucketOption bucketOption, ChecksumOption checksumOption)

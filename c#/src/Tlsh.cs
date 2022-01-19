@@ -235,7 +235,7 @@ namespace TrendMicro.Tlsh
 		/// <summary>
 		/// Get the computed TLSH structure. This call will succeed only if <see cref="IsValid"/> returns true. Otherwise, an <see cref="InvalidOperationException"/> will be thrown.
 		/// </summary>
-		/// <param name="force">attempt to force hash creation even if not enough data has been hashed. This is not guaranteed to produce output.</param>
+		/// <param name="force">Attempt to force hash creation even if not enough data has been hashed. This is not guaranteed to produce output.</param>
 		/// <exception cref="InvalidOperationException">If a hash cannot be product because too little data has been seen.</exception>
 		public TlshValue GetHash(bool force = false)
 		{
