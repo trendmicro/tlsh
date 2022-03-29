@@ -57,7 +57,7 @@ public class TlshHashAlgorithmTests
 
 		var actual = hash.ComputeHash(data);
 		actual.ShouldBeEmpty();
-		hash.HashSize.ShouldBe(0);
+		AssertHashSize(hash.HashSize, BucketOption.Default, ChecksumOption.OneByte);
 	}
 
 	private static void AssertHashSize(int hashSize, BucketOption bucketOption, ChecksumOption checksumOption)

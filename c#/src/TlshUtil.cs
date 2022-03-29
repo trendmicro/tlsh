@@ -56,6 +56,7 @@
  */
 
 using System;
+using System.Runtime.CompilerServices;
 
 namespace TrendMicro.Tlsh
 {
@@ -93,6 +94,7 @@ namespace TrendMicro.Tlsh
 
 		/** Pearson's hash function. All inputs must be integers in the range [0, 255],
 	 * and the output will also be an integer in the range [0, 255] */
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static byte PearsonHash(byte salt, byte i, byte j, byte k)
 		{
 			var vTable = VTable;

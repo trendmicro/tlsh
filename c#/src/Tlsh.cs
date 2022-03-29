@@ -154,11 +154,16 @@ namespace TrendMicro.Tlsh
 			var j4 = (j - 4 + rngSize) % rngSize;
 
 			
+			// The variables are all local for performance reasons.
 			var fedLen = _DataLen;
+			var checksumArray = _ChecksumArray;
+			var slideWindow = _SlideWindow;
+			var aBucket = _ABucket;
+			var checksum = _Checksum;
+			var checksumLength = _ChecksumLength;
 
 			for (var i = offset; i < offset + length; i++, fedLen++)
 			{
-				var slideWindow = _SlideWindow;
 				slideWindow[j] = (byte)(data[i] & 0xFF);
 
 				if (fedLen >= 4)
@@ -167,33 +172,32 @@ namespace TrendMicro.Tlsh
 
 					ref var slj = ref slideWindow[j];
 					ref var slj1 = ref slideWindow[j1];
-					_Checksum = TlshUtil.PearsonHash(0, slj, slj1, _Checksum);
-					if (_ChecksumLength > 1)
+					checksum = TlshUtil.PearsonHash(0, slj, slj1, checksum);
+					if (checksumLength > 1)
 					{
-						_ChecksumArray[0] = _Checksum;
-						for (var k = 1; k < _ChecksumLength; k++)
+						checksumArray[0] = checksum;
+						for (var k = 1; k < checksumLength; k++)
 						{
 							// use calculated 1 byte checksums to expand the total checksum to 3 bytes
-							_ChecksumArray[k] = TlshUtil.PearsonHash(_ChecksumArray[k - 1], slj,
-								slj1, _ChecksumArray[k]);
+							checksumArray[k] = TlshUtil.PearsonHash(checksumArray[k - 1], slj, slj1, checksumArray[k]);
 						}
 					}
 
 					ref var slj2 = ref slideWindow[j2];
 					var r = TlshUtil.PearsonHash(2, slj, slj1, slj2);
-					_ABucket[r]++;
+					aBucket[r]++;
 					ref var slj3 = ref slideWindow[j3];
 					r = TlshUtil.PearsonHash(3, slj, slj1, slj3);
-					_ABucket[r]++;
+					aBucket[r]++;
 					r = TlshUtil.PearsonHash(5, slj, slj2, slj3);
-					_ABucket[r]++;
+					aBucket[r]++;
 					ref var slj4 = ref slideWindow[j4];
 					r = TlshUtil.PearsonHash(7, slj, slj2, slj4);
-					_ABucket[r]++;
+					aBucket[r]++;
 					r = TlshUtil.PearsonHash(11, slj, slj1, slj4);
-					_ABucket[r]++;
+					aBucket[r]++;
 					r = TlshUtil.PearsonHash(13, slj, slj3, slj4);
-					_ABucket[r]++;
+					aBucket[r]++;
 				}
 
 				// rotate the sliding window indexes
@@ -205,6 +209,7 @@ namespace TrendMicro.Tlsh
 				j = jTmp;
 			}
 
+			_Checksum = checksum;
 			_DataLen += length;
 
 			if (_DataLen > MaxDataLength)

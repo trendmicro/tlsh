@@ -69,7 +69,7 @@ namespace TrendMicro.Tlsh
 		private readonly BucketOption _BucketOption;
 		private readonly ChecksumOption _ChecksumOption;
 		private readonly bool _ForceHashCreation;
-
+		
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Tlsh"/> class using recommended default values.
 		/// </summary>
@@ -88,16 +88,17 @@ namespace TrendMicro.Tlsh
 			_BucketOption = bucketOption;
 			_ChecksumOption = checksumOption;
 			_ForceHashCreation = forceHashCreation;
+			HashSize = ((int)_ChecksumOption + 1 + 1 + (int)_BucketOption / 4) * 8;
 		}
 
 		/// <inheritdoc />
-		public override int HashSize => _Tlsh.IsValid(_ForceHashCreation) ? ((int)_ChecksumOption + 1 + 1 + (int)_BucketOption / 4) * 8 : 0;
+		public override int HashSize { get; }
 
 		/// <inheritdoc />
 		protected override void HashCore(byte[] array, int ibStart, int cbSize) => _Tlsh.Update(array, ibStart, (uint) cbSize);
 
 		/// <inheritdoc />
-		protected override byte[] HashFinal() => _Tlsh.TryGetHash(out var result, _ForceHashCreation) ? result.ToByteArray() : Array.Empty<byte>();
+		protected override byte[] HashFinal() => _Tlsh.TryGetHash(out var hash, _ForceHashCreation) ? hash.ToByteArray() : Array.Empty<byte>();
 
 		/// <inheritdoc />
 		public override void Initialize() => _Tlsh.Reset();
