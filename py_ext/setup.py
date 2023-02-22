@@ -22,23 +22,23 @@ with open(join(realpath('..'), 'CMakeLists.txt'), 'r') as f:
       tlsh_3b = ''
 
 if os.name == 'nt':
-  tlsh_module = Extension('tlsh', \
-    sources = ['tlshmodule.cpp', \
-      join(realpath('..'), 'src', 'tlsh.cpp'), \
-      join(realpath('..'), 'src', 'tlsh_impl.cpp'), \
-      join(realpath('..'), 'src', 'tlsh_util.cpp') \
-    ], \
+  tlsh_module = Extension('tlsh',
+    sources = ['tlshmodule.cpp',
+      join(realpath('..'), 'src', 'tlsh.cpp'),
+      join(realpath('..'), 'src', 'tlsh_impl.cpp'),
+      join(realpath('..'), 'src', 'tlsh_util.cpp'),
+    ],
     include_dirs = [join(realpath('..'), 'include'),
-                    join(realpath('..'), 'Windows')],\
-    define_macros = [('WINDOWS', None),], \
+                    join(realpath('..'), 'Windows')],
+    define_macros = [('WINDOWS', None),],
   )
 else:
-  tlsh_module = Extension('tlsh', \
-    sources = ['tlshmodule.cpp', \
-      join(realpath('..'), 'src', 'tlsh.cpp'), \
-      join(realpath('..'), 'src', 'tlsh_impl.cpp'), \
-      join(realpath('..'), 'src', 'tlsh_util.cpp') \
-    ], \
+  tlsh_module = Extension('tlsh',
+    sources = ['tlshmodule.cpp',
+      join(realpath('..'), 'src', 'tlsh.cpp'),
+      join(realpath('..'), 'src', 'tlsh_impl.cpp'),
+      join(realpath('..'), 'src', 'tlsh_util.cpp'),
+    ],
     include_dirs = [join(realpath('..'), 'include')],
   )
 
