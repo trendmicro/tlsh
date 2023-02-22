@@ -2,7 +2,7 @@ import os
 import re
 import sys
 from os.path import join, realpath
-from distutils.core import setup, Extension
+from setuptools import setup, Extension
 
 
 
