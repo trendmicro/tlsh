@@ -55,7 +55,7 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#if defined WINDOWS || defined MINGW
+#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(CYGWIN)
 #include "tlsh_win_version.h"
 #else
 #include "tlsh_version.h"
