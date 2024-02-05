@@ -67,7 +67,7 @@
 #define	TLSH_OPTION_PRIVATE		8
 #define	TLSH_OPTION_THREADED		16
 
-#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(CYGWIN)
+#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) || defined(WINDOWS) || defined(MINGW)
 #include "tlsh_win_version.h"
 #else
 #include "tlsh_version.h"
