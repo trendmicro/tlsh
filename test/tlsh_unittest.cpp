@@ -67,7 +67,7 @@
 #include <string.h>
 #include <assert.h>
 
-#ifdef WINDOWS
+#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) || defined(WINDOWS)
 #include <WinFunctions.h>
 #else
 // for directory processing on Unix / Linux
