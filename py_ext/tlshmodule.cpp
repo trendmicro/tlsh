@@ -368,32 +368,53 @@ Tlsh_fromTlshStr(tlsh_TlshObject *self, PyObject *args)
 
     arg = PyTuple_GetItem(args, 0);
 #if PY_MAJOR_VERSION >= 3
-    if (!PyUnicode_Check(arg) || (arg = PyUnicode_AsASCIIString(arg)) == NULL) {
-      PyErr_SetString(PyExc_ValueError, "argument is not a TLSH hex string");
-      return NULL;
-    }
-#else
-    if (!PyString_Check(arg)) {
-      PyErr_SetString(PyExc_ValueError, "argument is not a TLSH hex string");
-      return NULL;
-    }
-#endif
-
-    if (PyBytes_AsStringAndSize(arg, &str, &len) == -1) {
+    if (!PyUnicode_Check(arg)) {
         PyErr_SetString(PyExc_ValueError, "argument is not a TLSH hex string");
         return NULL;
     }
 
-    if ((len != TLSH_STRING_LEN_REQ) && (len != TLSH_STRING_LEN_REQ-2)) {
+    PyObject *asciiStr = PyUnicode_AsASCIIString(arg);
+    if (asciiStr == NULL) {
+        PyErr_SetString(PyExc_ValueError, "failed to convert argument to ASCII string");
+        return NULL;
+    }
+    arg = asciiStr;
+#else
+    if (!PyString_Check(arg)) {
+        PyErr_SetString(PyExc_ValueError, "argument is not a TLSH hex string");
+        return NULL;
+    }
+#endif
+
+    if (PyBytes_AsStringAndSize(arg, &str, &len) == -1) {
+        PyErr_SetString(PyExc_ValueError, "failed to extract string and size");
+#if PY_MAJOR_VERSION >= 3
+        Py_XDECREF(asciiStr);
+#endif
+        return NULL;
+    }
+
+    if ((len != TLSH_STRING_LEN_REQ) && (len != TLSH_STRING_LEN_REQ - 2)) {
         PyErr_SetString(PyExc_ValueError, "argument length incorrect: not a TLSH hex string");
+#if PY_MAJOR_VERSION >= 3
+        Py_XDECREF(asciiStr);
+#endif
         return NULL;
     }
 
     if (self->tlsh.fromTlshStr(str) != 0) {
         PyErr_SetString(PyExc_ValueError, "argument value incorrect: not a TLSH hex string");
+#if PY_MAJOR_VERSION >= 3
+        Py_XDECREF(asciiStr);
+#endif
         return NULL;
     }
+
     self->finalized = true;
+
+#if PY_MAJOR_VERSION >= 3
+    Py_XDECREF(asciiStr);
+#endif
 
     Py_RETURN_NONE;
 }
