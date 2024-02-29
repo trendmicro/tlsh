@@ -381,20 +381,20 @@ Tlsh_fromTlshStr(tlsh_TlshObject *self, PyObject *args)
     arg = asciiStr;
 #else
     if (!PyString_Check(arg)) {
-        PyErr_SetString(PyExc_ValueError, "argument is not a TLSH hex string");
-        return NULL;
+      PyErr_SetString(PyExc_ValueError, "argument is not a TLSH hex string");
+      return NULL;
     }
 #endif
 
     if (PyBytes_AsStringAndSize(arg, &str, &len) == -1) {
-        PyErr_SetString(PyExc_ValueError, "failed to extract string and size");
+        PyErr_SetString(PyExc_ValueError, "argument is not a TLSH hex string");
 #if PY_MAJOR_VERSION >= 3
         Py_XDECREF(asciiStr);
 #endif
         return NULL;
     }
 
-    if ((len != TLSH_STRING_LEN_REQ) && (len != TLSH_STRING_LEN_REQ - 2)) {
+    if ((len != TLSH_STRING_LEN_REQ) && (len != TLSH_STRING_LEN_REQ-2)) {
         PyErr_SetString(PyExc_ValueError, "argument length incorrect: not a TLSH hex string");
 #if PY_MAJOR_VERSION >= 3
         Py_XDECREF(asciiStr);
