@@ -112,6 +112,10 @@ class TlshImpl
 public:
     TlshImpl();
     ~TlshImpl();
+
+public:
+    TlshImpl& operator=(const TlshImpl& other);
+
 public:
     void       update(const unsigned char* data, unsigned int len, int tlsh_option);
     void fast_update5(const unsigned char* data, unsigned int len, int tlsh_option);
