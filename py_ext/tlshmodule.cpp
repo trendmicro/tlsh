@@ -286,10 +286,7 @@ static PyGetSetDef Tlsh_getsetters[] = {
 };
 
 static PyTypeObject tlsh_TlshType = {
-    PyObject_HEAD_INIT(NULL)
-#if PY_MAJOR_VERSION < 3
-    0,                         /* ob_size */
-#endif
+    PyVarObject_HEAD_INIT(NULL, 0)
     "tlsh.Tlsh",               /* tp_name */
     sizeof(tlsh_TlshObject),   /* tp_basicsize */
     0,                         /* tp_itemsize */
