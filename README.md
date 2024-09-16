@@ -10,31 +10,23 @@ the detection of similar objects by comparing their hash values.  Note that
 the byte stream should have a sufficient amount of complexity.  For example,
 a byte stream of identical bytes will not generate a hash value.
 
-## What's New in TLSH 4.10.x
-22/09/2021
-
-Release version 4.8.x	- merged in pull requests for more stable installation.
-
-Release version 4.9.x	- added -thread and -private options.
-- Both versions are faster than previous versions, but they set the checksum to 00.
-- This loses a very small part of the functionality.
-- See 4.9.3 in the Change_History to see timing comparisons.
+## What's (relatively) New in TLSH 4.12.0
+16/09/2024
 
 Release version 4.10.x	- a Python clustering tool.
 - See the directory tlshCluster.
+
+I am going to try to make 4.12.0 a release version and build a py-tlsh Python library from 4.12.0
+4.12.0 includes:
+	Merge pull request #137 - this fixed a memory leak in py-tlsh
+	Merge pull request #134 - this improved the ifdef WINDOWS to be more portable
 
 2020
 - adopted by [Virus Total](https://developers.virustotal.com/v3.0/reference#files-tlsh)
 - adopted by [Malware Bazaar](https://bazaar.abuse.ch/api/#tlsh)
 
-TLSH has gained some traction. It has been included in STIX 2.1 and been ported to a number of langauges.
-
-We have added a version identifier ("T1") to the start of the digest so that we can
-cleary distinguish between different variants of the digest (such as non-standard choices of 3 byte checksum).
-This means that we do not rely on the length of the hex string to determine if a hex string is a TLSH digest
-(this is a brittle method for identifying TLSH digests).
-We are doing this to enable compatibility, especially backwards compatibility of the TLSH approach.
-
+We have added a version identifier ("T1") to the start of the digest.
+Please use versions of TLSH that have the T1 header
 The code is backwards compatible, it can still read and interpret 70 hex character strings as TLSH digests.
 And data sets can include mixes of the old and new digests.
 If you need old style TLSH digests to be outputted, then use the command line option '-old'
@@ -299,11 +291,12 @@ TLSH similarity is expressed as a difference score:
 
 # Current Version
 
-**4.11.2**
+**4.12.0**
 <PRE>
-23/10/2021
-	resolve issue #116
-	Library will not compile on CENTOS 7 (use of threads)
+16/09/2024
+	document what has changed since **4.11.2** on 23/10/2021
+	Merge pull request #137 - this fixed a memory leak in py-tlsh
+	Merge pull request #134 - this improved the ifdef WINDOWS to be more portable
 </PRE>
 
 # Change History
