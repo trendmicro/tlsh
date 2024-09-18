@@ -152,8 +152,7 @@ int err;
 
 	char buf1[2000];
 	char buf2[2000];
-	char nullstr[6];
-	sprintf(nullstr, "TNULL");
+	char nullstr[] = "TNULL";
 
 	if (xref) {
 		if (output_json) {
