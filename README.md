@@ -11,24 +11,31 @@ the byte stream should have a sufficient amount of complexity.  For example,
 a byte stream of identical bytes will not generate a hash value.
 
 ## What's (relatively) New in TLSH 4.12.x
+
 08/10/2024
 
 Release version 4.10.x	- a Python clustering tool.
+
 - See the directory tlshCluster.
 
 I am going to try to make 4.12.0 a release version and build a py-tlsh Python library from 4.12.0
-4.12.0 includes:
-	Merge pull request #137 - this fixed a memory leak in py-tlsh
-	Merge pull request #134 - this improved the ifdef WINDOWS to be more portable
+
 4.12.1 includes:
-	Merge pull request #146 - Remove call to sprintf() to avoid warnings
-	Merge pull request #141 - py_ext: use PyVarObject_HEAD instead of PyObject_HEAD_INIT
-	Merge pull request #138 - Build: Define default options only on "default"
-	Merge pull request #136 - Bug Fix+Portability: Improve portability by integral division
+
+- Merge pull request #146 - Remove call to sprintf() to avoid warnings
+- Merge pull request #141 - py_ext: use PyVarObject_HEAD instead of PyObject_HEAD_INIT
+- Merge pull request #138 - Build: Define default options only on "default"
+- Merge pull request #136 - Bug Fix+Portability: Improve portability by integral division
+
+4.12.0 includes:
+
+- Merge pull request #137 - this fixed a memory leak in py-tlsh
+- Merge pull request #134 - this improved the ifdef WINDOWS to be more portable
 
 2020
-- adopted by [Virus Total](https://developers.virustotal.com/v3.0/reference#files-tlsh)
-- adopted by [Malware Bazaar](https://bazaar.abuse.ch/api/#tlsh)
+
+- Adopted by [Virus Total](https://docs.virustotal.com/reference/files-tlsh)
+- Adopted by [Malware Bazaar](https://bazaar.abuse.ch/api/#tlsh)
 
 We have added a version identifier ("T1") to the start of the digest.
 Please use versions of TLSH that have the T1 header
@@ -87,7 +94,7 @@ We also request that any ports include the files LICENSE and NOTICE.txt exactly 
 - Another Java port is available [here](https://github.com/idealista/tlsh).
 - Another Java port is available [here](https://github.com/kevemueller/kTLSH).
 - A Golang port is available [here](https://github.com/glaslos/tlsh).
-- A Ruby port is available [here](https://github.com/adamliesko/tlsh)
+- A Ruby port is available [here](https://github.com/adamliesko/tlsh).
 
 # Downloading TLSH
 
@@ -133,7 +140,7 @@ To install cmake/gcc compiler on CentOs or Amazon Linux:
 ## Windows (MinGW)
 
 Added in March 2020.
-See the instructions in README.mingw
+See the instructions in [README.mingw](README.mingw)
 
 ## Windows (Visual Studio)
 
@@ -149,10 +156,9 @@ See [tlsh.h](include/tlsh.h) for the tlsh library interface and [tlsh_unittest.c
 
 We have recently created a Python package on PyPi: [https://pypi.org/project/py-tlsh/](https://pypi.org/project/py-tlsh/)  
 The py-tlsh replaces the python-tlsh package. For details see [issue 94](https://github.com/trendmicro/tlsh/issues/94)  
-To install this package
-```
-	$  pip install py-tlsh
-```
+To install this package:
+
+	$ pip install py-tlsh
 
 ### Python Extension
 
@@ -275,6 +281,7 @@ TLSH similarity is expressed as a difference score:
   based on the threshhold. see [Table II on page 5](https://github.com/trendmicro/tlsh/blob/master/TLSH_CTC_final.pdf)
 
 # Clustering
+
 - See the Python code and Jupyter notebooks in tlshCluster.
 - We provide Python code for the HAC-T method.
   We also provide code so that users can use DBSCAN.
