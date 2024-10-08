@@ -103,7 +103,7 @@ class TlshImpl;
 
 #if defined BUCKETS_48
   // No 3 Byte checksum option for 48 Bucket min hash
-  #define TLSH_STRING_LEN 30
+  #define TLSH_STRING_LEN_REQ 30
   // changed the minimum data length to 256 for version 3.3
   #define MIN_DATA_LENGTH		10
   // added the -force option for version 3.5
