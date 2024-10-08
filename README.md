@@ -10,8 +10,8 @@ the detection of similar objects by comparing their hash values.  Note that
 the byte stream should have a sufficient amount of complexity.  For example,
 a byte stream of identical bytes will not generate a hash value.
 
-## What's (relatively) New in TLSH 4.12.0
-16/09/2024
+## What's (relatively) New in TLSH 4.12.x
+08/10/2024
 
 Release version 4.10.x	- a Python clustering tool.
 - See the directory tlshCluster.
@@ -20,6 +20,11 @@ I am going to try to make 4.12.0 a release version and build a py-tlsh Python li
 4.12.0 includes:
 	Merge pull request #137 - this fixed a memory leak in py-tlsh
 	Merge pull request #134 - this improved the ifdef WINDOWS to be more portable
+4.12.1 includes:
+	Merge pull request #146 - Remove call to sprintf() to avoid warnings
+	Merge pull request #141 - py_ext: use PyVarObject_HEAD instead of PyObject_HEAD_INIT
+	Merge pull request #138 - Build: Define default options only on "default"
+	Merge pull request #136 - Bug Fix+Portability: Improve portability by integral division
 
 2020
 - adopted by [Virus Total](https://developers.virustotal.com/v3.0/reference#files-tlsh)
@@ -291,12 +296,13 @@ TLSH similarity is expressed as a difference score:
 
 # Current Version
 
-**4.12.0**
+**4.12.1**
 <PRE>
-16/09/2024
-	document what has changed since **4.11.2** on 23/10/2021
-	Merge pull request #137 - this fixed a memory leak in py-tlsh
-	Merge pull request #134 - this improved the ifdef WINDOWS to be more portable
+08/10/2024
+	Merge pull request #146 - Remove call to sprintf() to avoid warnings
+	Merge pull request #141 - py_ext: use PyVarObject_HEAD instead of PyObject_HEAD_INIT
+	Merge pull request #138 - Build: Define default options only on "default"
+	Merge pull request #136 - Bug Fix+Portability: Improve portability by integral division
 </PRE>
 
 # Change History
