@@ -139,14 +139,12 @@ private:
         unsigned char checksum[TLSH_CHECKSUM_LEN];  // 1 to 3 bytes
         unsigned char Lvalue;                       // 1 byte
         union {
-#if defined(__SPARC) || defined(_AIX)
-		#pragma pack(1)
-#endif
-        unsigned char QB;
+        #pragma pack(1)
+            unsigned char QB;
             struct{
-#if defined(__SPARC) || defined(_AIX)
-		unsigned char Q2ratio : 4;
-		unsigned char Q1ratio : 4;
+#if __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
+                unsigned char Q2ratio : 4;
+                unsigned char Q1ratio : 4;
 #else
                 unsigned char Q1ratio : 4;
                 unsigned char Q2ratio : 4;
