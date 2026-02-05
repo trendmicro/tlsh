@@ -6,8 +6,8 @@
  ****************************************************/
 
 #define VERSION_MAJOR		4
-#define VERSION_MINOR		12
-#define VERSION_PATCH		1
+#define VERSION_MINOR		13
+#define VERSION_PATCH		0
 #define TLSH_HASH		"compact hash"
 #define TLSH_CHECKSUM		"1 byte checksum"
 

@@ -748,3 +748,9 @@ TIME	ms= 21.00	per million iterations
 	Merge pull request #138 - Build: Define default options only on "default"
 	Merge pull request #136 - Bug Fix+Portability: Improve portability by integral division
 </PRE>
+
+**4.13.0**
+<PRE>
+05/02/2026
+	Add CSV files to tlsh_pattern (preparation for a new py-tlsh release)
+</PRE>

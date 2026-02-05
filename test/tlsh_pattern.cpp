@@ -87,7 +87,7 @@ public:
 	pattern_tlsh();
 	~pattern_tlsh();
 	int read_pattern_file(char *pattern_fname);
-	int match_pattern(Tlsh *tlsh, bool xlen, char *ti_fname, int showmiss);
+	int match_pattern(Tlsh *tlsh, bool xlen, char *ti_fname, FILE *outf, int showmiss, int outtlsh, int outcsv);
 	
 	Tlsh	**tlsh_array;
 	char	**pattern_name;
@@ -123,7 +123,7 @@ pattern_tlsh::~pattern_tlsh()
 		free(tlsh_radius);
 }
 
-int pattern_tlsh::match_pattern(Tlsh *tlsh, bool xlen, char *ti_fname, int showmiss)
+int pattern_tlsh::match_pattern(Tlsh *tlsh, bool xlen, char *ti_fname, FILE *outf, int showmiss, int outtlsh, int outcsv)
 {
 	int nmatch = 0;
 	int best_ti = -1;
@@ -148,13 +148,24 @@ int pattern_tlsh::match_pattern(Tlsh *tlsh, bool xlen, char *ti_fname, int showm
 			}
 		}
 	}
+	int sep = '\t';
+	if (outcsv)
+		sep = ',';
 	if (best_ti != -1) {
 		Tlsh *tp = tlsh_array[best_ti];
-		printf("%s	%s	%d\n", ti_fname, pattern_name[best_ti], best_dist);
-		// printf("match	pat_%d	%s	%s	%d	%s\n", best_ti, tlsh->getHash(), tp->getHash(), best_dist, pattern_name[best_ti]);
+		if (outcsv)
+			fprintf(outf, "MATCH%c", sep);
+		if (outtlsh)
+			fprintf(outf, "%s%c%s%c%s%c%s%c%d\n", tlsh->getHash(), sep, ti_fname, sep, tp->getHash(), sep, pattern_name[best_ti], sep, best_dist);
+		else
+			fprintf(outf, "%s%c%s%c%d\n", ti_fname, sep, pattern_name[best_ti], sep, best_dist);
+		// printf("match	pat_%d	%s	%s	%d	%s\n", best_ti, sep, tlsh->getHash(), sep, tp->getHash(), sep, best_dist, sep, pattern_name[best_ti]);
 	} else if ((showmiss > 0) && (miss_best_ti != -1) && (miss_best_dist <= showmiss)) {
 		Tlsh *tp = tlsh_array[miss_best_ti];
-		printf("NEAR-MISS	%s	%s	%d\n", ti_fname, pattern_name[miss_best_ti], miss_best_dist);
+		if (outtlsh)
+			fprintf(outf, "NEAR-MISS%c%s%c%s%c%s%c%s%c%d\n", sep, tlsh->getHash(), sep, ti_fname, sep, tp->getHash(), sep, pattern_name[miss_best_ti], sep, miss_best_dist);
+		else
+			fprintf(outf, "NEAR-MISS%c%s%c%s%c%d\n", sep, ti_fname, sep, pattern_name[miss_best_ti], sep, miss_best_dist);
 	}
 	return(nmatch);
 }
@@ -176,12 +187,12 @@ unsigned char x;
 	}
 }
 
-int read_line(char *buf, char **col1, char **col2, char **col3, char **col4, char **col5)
+int read_line(char *buf, char **col1, char **col2, char **col3, char **col4, char **col5, int sep)
 {
 	char *curr = &buf[0];
 	*col1 = curr;
 
-	*col2 = strchr(curr, '\t');
+	*col2 = strchr(curr, sep);
 	if (*col2 == NULL)
 		return(1);
 	**col2 = '\0';
@@ -189,7 +200,7 @@ int read_line(char *buf, char **col1, char **col2, char **col3, char **col4, cha
 	(*col2) ++;
 	curr = *col2;
 
-	*col3 = strchr(curr, '\t');
+	*col3 = strchr(curr, sep);
 	if (*col3 == NULL)
 		return(1);
 	**col3 = '\0';
@@ -197,7 +208,7 @@ int read_line(char *buf, char **col1, char **col2, char **col3, char **col4, cha
 	(*col3) ++;
 	curr = *col3;
 
-	*col4 = strchr(curr, '\t');
+	*col4 = strchr(curr, sep);
 	if (*col4 == NULL)
 		return(1);
 	**col4 = '\0';
@@ -205,7 +216,7 @@ int read_line(char *buf, char **col1, char **col2, char **col3, char **col4, cha
 	(*col4) ++;
 	curr = *col4;
 
-	*col5 = strchr(curr, '\t');
+	*col5 = strchr(curr, sep);
 	if (*col5 == NULL)
 		return(1);
 	**col5 = '\0';
@@ -264,12 +275,31 @@ int nlines;
 	}
 	int count = 0;
 	char *x;
+	char *col1, *col2, *col3, *col4, *col5;
+	int sep = '\t';
+	/////////////////
+	// parse with tab
+	/////////////////
 	x = fgets(buf, sizeof(buf), f); // ignore line 1 - header line
+	int err = read_line(buf, &col1, &col2, &col3, &col4, &col5, sep);
+	if (err) {
+		// parse with comma
+		sep = ',';
+		err = read_line(buf, &col1, &col2, &col3, &col4, &col5, sep);
+		if (err) {
+			printf("error: bad header line in %s\n", pattern_fname);
+			return(1);
+		}
+	}
+	if (strcasecmp(col3, "tlsh") != 0) {
+		printf("error: pattern file %s must contain TLSH field\n", pattern_fname);
+		return(1);
+	}
+
 	x = fgets(buf, sizeof(buf), f);
 	while (x != NULL) {
-		char *col1, *col2, *col3, *col4, *col5;
 		chomp(buf);
-		int err = read_line(buf, &col1, &col2, &col3, &col4, &col5);
+		err = read_line(buf, &col1, &col2, &col3, &col4, &col5, sep);
 		if (err) {
 			printf("error reading line %d of %s\n", count+2, pattern_fname);
 		} else if (count >= nlines) {
@@ -307,7 +337,7 @@ int nlines;
 }
 
 static void tlsh_pattern(char *dirname, char *listname, int listname_col, int listname_csv, char *fname, char *digestname,
-	bool xlen, int fc_cons_option, char *pattern_fname, int showmiss, int showvers)
+	bool xlen, int fc_cons_option, char *pattern_fname, char *output_fname, int showmiss, int outtlsh, int outcsv, int showvers)
 {
 int show_details = 0;
 	
@@ -329,16 +359,33 @@ int show_details = 0;
 		return;
 	}
 
+	FILE *outf = stdout;
+	if (output_fname != NULL) {
+		outf = fopen(output_fname, "w");
+		if (outf == NULL) {
+			fprintf(stderr, "cannot write to file %s\n", output_fname);
+			exit(1);
+		}
+	}
+	if (outcsv) {
+		if (outtlsh)
+			fprintf(outf, "matchType,inputTlsh,inputLabel,matchTlsh,matchLabel,distance\n");
+		else
+			fprintf(outf, "matchType,inputLabel,matchLabel,distance\n");
+	}
 	for (int ti=0; ti<inputd.n_file; ti++) {
 		Tlsh *tlsh	= inputd.tptr[ti];
 		char *ti_fname	= inputd.fnames[ti].only_fname;
 		if (tlsh != NULL) {
 			// printf("compare TLSH %s\n", tlsh->getHash());
-			int nmatch = pat.match_pattern(tlsh, xlen, ti_fname, showmiss);
+			int nmatch = pat.match_pattern(tlsh, xlen, ti_fname, outf, showmiss, outtlsh, outcsv);
 			// if (nmatch == 0) {
 			// 	printf("nomatch	%s\n", tlsh->getHash());
 			// }
 		}
+	}
+	if (output_fname != NULL) {
+		fclose(outf);
 	}
 
     // free allocated memory
@@ -356,18 +403,24 @@ int show_details = 0;
 #define DEFAULT_THRESHOLD 9999
 static void usage()
 {
-	printf("usage: tlsh_pattern -f <file>                     [-showmiss T] -pat <pattern_file> [-xlen] [-old] [-conservative]\n" );
-	printf("     : tlsh_pattern -d <digest>                   [-showmiss T] -pat <pattern_file> [-xlen] [-old] [-conservative]\n" );
-	printf("     : tlsh_pattern -r <dir>                      [-showmiss T] -pat <pattern_file> [-xlen] [-old] [-conservative]\n" );
-	printf("     : tlsh_pattern -l <listfile> [-l1|-l2|-lcsv] [-showmiss T] -pat <pattern_file> [-xlen] [-old] [-conservative]\n" );
+	printf("usage: tlsh_pattern -f <file>                     OUTPUT_OPTIONS -pat <pattern_file> TLSH_OPTIONS\n" );
+	printf("     : tlsh_pattern -d <digest>                   OUTPUT_OPTIONS -pat <pattern_file> TLSH_OPTIONS\n" );
+	printf("     : tlsh_pattern -r <dir>                      OUTPUT_OPTIONS -pat <pattern_file> TLSH_OPTIONS\n" );
+	printf("     : tlsh_pattern -l <listfile> [-l1|-l2|-lcsv] OUTPUT_OPTIONS -pat <pattern_file> TLSH_OPTIONS\n" );
 	printf("     : tlsh_pattern -version: prints version of tlsh library\n");
 	printf("\n");
-	printf("where the pattern file consists of 5 columns\n");
+	printf("OUTPUT_OPTIONS is [-otlsh][-ocsv][-showmiss T][-o <output_file>]\n");
+	printf("TLSH_OPTIONS   is [-xlen] [-old] [-conservative]\n");
+	printf("\n");
+	printf("tlsh_pattern prints out the closest TLSH in a pattern_file for each TLSH in a list of hashes (defined by -f/-d/-r/-l option)\n");
+	printf("The pattern file consists of 5 columns\n");
 	printf("col 1: pattern number\n");
 	printf("col 2: nitems in group\n");
 	printf("col 3: TLSH\n");
 	printf("col 4: radius\n");
 	printf("col 5: pattern label\n");
+	printf("which can be seperated by TABs to COMMAs.\n");
+	printf("The closest match must be within the radius (col 4 of pattern file)\n");
 	printf("\n");
 	printf("tlsh can be used to compute TLSH digest values or the distance between digest values in the following ways:\n");
 	printf("  1) To compute the TLSH digest value of a single file (-f file), or a directory of files (-r dir).\n");
@@ -378,6 +431,11 @@ static void usage()
 	printf("     list (-l listfile) with every other element in that set, using the –xref flag\n");
 	printf("\n");
 	printf("parameters: \n");
+	printf("  -pat pattern_file:  Specifies the pattern file\n");
+	printf("  -showmiss T:        Specifies a second threshold. Print out matches up the distance threshold T as NEAR-MISS matches\n");
+	printf("  -otlsh:             Print out the input TLSH and matching TLSH\n");
+	printf("  -ocsv:              The output is in CSV format\n");
+	printf("  -o output_file:     Specifies the output file\n");
 	printf("  -f file:            Specifies a file whose TLSH values are to be compared to the pattern file\n");
 	printf("  -d digest:          Specifies a TLSH digest value that is to be compared to the pattern file\n");
 	printf("  -r dir:             Specifies a recursive directory search for files whose TLSH values are to be compared to the pattern file\n");
@@ -408,10 +466,13 @@ int main(int argc, char *argv[])
 	char *dirname			= NULL;
 	char *fname			= NULL;
 	char *pattern_fname		= NULL;
+	char *output_fname		= NULL;
 	char *listname			= NULL;
 	int   listname_col		= 1;		// default is col 1
 	int   listname_csv		= 0;		// default is TAB seperated
 	int showmiss			= 0;
+	int outtlsh			= 0;
+	int outcsv			= 0;
 	int showvers			= 1;
 
 	bool xlen                       = true;
@@ -444,6 +505,9 @@ int main(int argc, char *argv[])
 		} else if (strcmp(argv[argIdx], "-pat") == 0) {
 			pattern_fname = argv[argIdx+1];
 			argIdx = argIdx+2;
+		} else if (strcmp(argv[argIdx], "-o") == 0) {
+			output_fname = argv[argIdx+1];
+			argIdx = argIdx+2;
 		} else if (strcmp(argv[argIdx], "-showmiss") == 0) {
 			char *threshold_str = argv[argIdx+1];
 			if ((threshold_str[0] >= '0') && (threshold_str[0] <= '9')) {
@@ -453,6 +517,12 @@ int main(int argc, char *argv[])
 				usage();
 			}
 			argIdx = argIdx+2;
+		} else if (strcmp(argv[argIdx], "-otlsh") == 0) {
+			outtlsh = 1;
+			argIdx = argIdx+1;
+		} else if (strcmp(argv[argIdx], "-ocsv") == 0) {
+			outcsv = 1;
+			argIdx = argIdx+1;
 		} else if (strcmp(argv[argIdx], "-old") == 0) {
 			showvers = 0;
 			argIdx = argIdx+1;
@@ -492,5 +562,5 @@ int main(int argc, char *argv[])
 		usage();
 	}
 
-	tlsh_pattern(dirname, listname, listname_col, listname_csv, fname, digestname, xlen, fc_cons_option, pattern_fname, showmiss, showvers);
+	tlsh_pattern(dirname, listname, listname_col, listname_csv, fname, digestname, xlen, fc_cons_option, pattern_fname, output_fname, showmiss, outtlsh, outcsv, showvers);
 }

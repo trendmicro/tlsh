@@ -304,7 +304,9 @@ int set_input_desc(char *dirname, char *listname, int listname_col, int listname
 				inputd->fnames[count].dirname    = strdup(col_fname);
 				count ++;
 			} else {
-				fprintf(stderr, "warning: line %d file %s invalid TLSH '%s'\n", lineno, listname, col_tlsh);
+				// do not show warning for line 1 (header line for csv files)
+				if (lineno > 1)
+					fprintf(stderr, "warning: line %d file %s invalid TLSH '%s'\n", lineno, listname, col_tlsh);
 			}
 
 			x = fgets(buf, 1000, f);

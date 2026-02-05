@@ -296,13 +296,10 @@ TLSH similarity is expressed as a difference score:
 
 # Current Version
 
-**4.12.1**
+**4.13.0**
 <PRE>
-08/10/2024
-	Merge pull request #146 - Remove call to sprintf() to avoid warnings
-	Merge pull request #141 - py_ext: use PyVarObject_HEAD instead of PyObject_HEAD_INIT
-	Merge pull request #138 - Build: Define default options only on "default"
-	Merge pull request #136 - Bug Fix+Portability: Improve portability by integral division
+05/02/2026
+	Add CSV files to tlsh_pattern (preparation for a new py-tlsh release)
 </PRE>
 
 # Change History
