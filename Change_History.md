@@ -772,3 +772,9 @@ TIME	ms= 21.00	per million iterations
 06/02/2026
 	Add function WriteVector(unsigned char *vec) to get the byte array of a TLSH
 </PRE>
+
+**4.13.4**
+<PRE>
+17/02/2026
+	Resolve #162 Reverse out T1 change made in 4.13.1
+</PRE>

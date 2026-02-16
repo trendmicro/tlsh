@@ -137,10 +137,10 @@ public:
     void final(const unsigned char* data = NULL, unsigned int len = 0, int fc_cons_option = 0);
 
     /* to get the hex-encoded hash code */
-    const char* getHash(int showvers=1) const ;
+    const char* getHash(int showvers=0) const;
 
     /* to get the hex-encoded hash code without allocating buffer in TlshImpl - bufSize should be TLSH_STRING_BUFFER_LEN */
-    const char* getHash(char *buffer, unsigned int bufSize, int showvers=1) const;  
+    const char* getHash(char *buffer, unsigned int bufSize, int showvers=0) const;
 
     /* to bring to object back to the initial state */
     void reset();

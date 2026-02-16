@@ -296,10 +296,10 @@ TLSH similarity is expressed as a difference score:
 
 # Current Version
 
-**4.13.3**
+**4.13.4**
 <PRE>
-06/02/2026
-	Add function WriteVector(unsigned char *vec) to get the byte array of a TLSH
+17/02/2026
+	Resolve #162 Reverse out T1 change made in 4.13.1
 </PRE>
 
 # Change History
