@@ -5,9 +5,9 @@
  * Beware - do not change these values unless you really understand the software.
  ****************************************************/
 
-#define VERSION_MAJOR		4
-#define VERSION_MINOR		13
-#define VERSION_PATCH		4
+#define VERSION_MAJOR		5
+#define VERSION_MINOR		0
+#define VERSION_PATCH		0
 #define TLSH_HASH		"compact hash"
 #define TLSH_CHECKSUM		"1 byte checksum"
 

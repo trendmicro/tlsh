@@ -136,11 +136,15 @@ public:
     /* to signal the class there is no more data to be added */
     void final(const unsigned char* data = NULL, unsigned int len = 0, int fc_cons_option = 0);
 
+#if defined BUCKETS_128 && !defined(CHECKSUM_3B)
     /* to get the hex-encoded hash code */
-    const char* getHash(int showvers=0) const;
-
+    const char* getHash(int showvers=1) const;
     /* to get the hex-encoded hash code without allocating buffer in TlshImpl - bufSize should be TLSH_STRING_BUFFER_LEN */
+    const char* getHash(char *buffer, unsigned int bufSize, int showvers=1) const;
+#else
+    const char* getHash(int showvers=0) const;
     const char* getHash(char *buffer, unsigned int bufSize, int showvers=0) const;
+#endif
 
     /* to bring to object back to the initial state */
     void reset();

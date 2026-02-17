@@ -794,6 +794,9 @@ int lsh_bin_fromTlshStr(struct lsh_bin_struct *this_lsh_bin, const char* str)
 	// Assume that we have 128 Buckets
 	int start = 0;
         if (strncmp(str, "T1", 2) == 0) {
+		// enforce that the T1 prefix is for TLSH digest with 128 buckets and 1 byte checksum
+		if ((EFF_BUCKETS != 128) || (TLSH_CHECKSUM_LEN != 1))
+			return 1;
 		start = 2;
 	} else {
 		start = 0;
@@ -805,7 +808,6 @@ int lsh_bin_fromTlshStr(struct lsh_bin_struct *this_lsh_bin, const char* str)
 			(str[i] >= 'A' && str[i] <= 'F') ||
 			(str[i] >= 'a' && str[i] <= 'f') ))
         	{
-			// printf("warning ii=%d str[%d]='%c'\n", ii, i, str[i]);
 			return 1;
 		}
 	}
@@ -814,7 +816,6 @@ int lsh_bin_fromTlshStr(struct lsh_bin_struct *this_lsh_bin, const char* str)
 		(str[xi] >= 'A' && str[xi] <= 'F') ||
 		(str[xi] >= 'a' && str[xi] <= 'f') ))
         {
-		// printf("warning xi=%d\n", xi);
 		return 1;
 	}
 	lsh_bin_struct tmp;

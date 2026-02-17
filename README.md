@@ -10,27 +10,21 @@ the detection of similar objects by comparing their hash values.  Note that
 the byte stream should have a sufficient amount of complexity.  For example,
 a byte stream of identical bytes will not generate a hash value.
 
-## What's (relatively) New in TLSH 4.12.x
-08/10/2024
+## What's New in TLSH 5.0.x
+17/02/2026
+The default behaviour is to input / output TLSH digests that start with the prefix "T1"
 
-Release version 4.10.x	- a Python clustering tool.
-- See the directory tlshCluster.
-
-I am going to try to make 4.12.0 a release version and build a py-tlsh Python library from 4.12.0
-4.12.0 includes:
-	Merge pull request #137 - this fixed a memory leak in py-tlsh
-	Merge pull request #134 - this improved the ifdef WINDOWS to be more portable
-4.12.1 includes:
-	Merge pull request #146 - Remove call to sprintf() to avoid warnings
-	Merge pull request #141 - py_ext: use PyVarObject_HEAD instead of PyObject_HEAD_INIT
-	Merge pull request #138 - Build: Define default options only on "default"
-	Merge pull request #136 - Bug Fix+Portability: Improve portability by integral division
+19/01/2026
+Released py-tlsh 4.12.1
 
 2020
 - adopted by [Virus Total](https://developers.virustotal.com/v3.0/reference#files-tlsh)
 - adopted by [Malware Bazaar](https://bazaar.abuse.ch/api/#tlsh)
 
 We have added a version identifier ("T1") to the start of the digest.
+The "T1" prefix is intended for the standard TLSH - that is
+- 128 buckets
+- the checksum is 1 byte
 Please use versions of TLSH that have the T1 header
 The code is backwards compatible, it can still read and interpret 70 hex character strings as TLSH digests.
 And data sets can include mixes of the old and new digests.
@@ -296,10 +290,11 @@ TLSH similarity is expressed as a difference score:
 
 # Current Version
 
-**4.13.4**
+**5.0.0**
 <PRE>
 17/02/2026
-	Resolve #162 Reverse out T1 change made in 4.13.1
+	Change default behaviour to output T1 at the start of the digest
+	A T1 digest requires that the number of buckets = 128 and the checksum is 1 byte
 </PRE>
 
 # Change History
