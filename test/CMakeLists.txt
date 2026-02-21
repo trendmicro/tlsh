@@ -92,9 +92,13 @@ set_target_properties(tlsh_parts PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOU
 set_target_properties(tlsh_parts PROPERTIES OUTPUT_NAME tlsh_parts${BUILD_POSTFIX})
 set_target_properties(tlsh_parts PROPERTIES SKIP_BUILD_RPATH TRUE)
 
+# Always create tlsh/tlsh_unittest executables in the bin dir.  This
+# is for the benefit of Testing/test.sh, which doesn't work on
+# out-of-tree builds otherwise.
 file(MAKE_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
-# issue #115 - CREATE_LINK does not work on CENTOS 7
+# issue #115 - CREATE_LINK does not work on CENTOS 7 (actually, cmake < 3.14)
 # file(CREATE_LINK tlsh_unittest ${CMAKE_SOURCE_DIR}/bin/tlsh SYMBOLIC)
+execute_process(COMMAND ${CMAKE_COMMAND} -E create_symlink tlsh_unittest ${CMAKE_SOURCE_DIR}/bin/tlsh COMMAND_ECHO STDOUT)
 
-install(TARGETS tlsh_unittest DESTINATION bin)
-install(CODE "file(CREATE_LINK tlsh_unittest \$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/bin/tlsh SYMBOLIC)")
+install(TARGETS tlsh_unittest RUNTIME DESTINATION bin)
+install(CODE "execute_process(COMMAND ${CMAKE_COMMAND} -E create_symlink tlsh_unittest \$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/bin/tlsh COMMAND_ECHO STDOUT)")
