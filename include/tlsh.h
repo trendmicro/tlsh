@@ -66,6 +66,7 @@
 #define	TLSH_OPTION_KEEP_BUCKET		4
 #define	TLSH_OPTION_PRIVATE		8
 #define	TLSH_OPTION_THREADED		16
+#define	TLSH_OPTION_THREADED4		32
 
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32) || defined(WINDOWS) || defined(MINGW)
 #include "tlsh_win_version.h"
@@ -146,7 +147,7 @@ public:
 
 #if defined BUCKETS_128 && !defined(CHECKSUM_3B)
     /* to get the hex-encoded hash code */
-    const char* getHash(int showvers=1) const;
+    const char* getHash(int showvers=1) const ;
     /* to get the hex-encoded hash code without allocating buffer in TlshImpl - bufSize should be TLSH_STRING_BUFFER_LEN */
     const char* getHash(char *buffer, unsigned int bufSize, int showvers=1) const;
 #else

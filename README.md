@@ -67,6 +67,25 @@ file, and to compute the similarity between two hash values.
 `tlsh` is a utility for generating TLSH hash values and comparing TLSH
 hash values to determine similarity.  Run it with no parameters for detailed usage.
 
+`tlsh_sha256_benchmark` measures throughput for TLSH variants and SHA256 on a large input.
+Requires OpenSSL (uses the EVP API for SHA256).
+
+```
+Usage: tlsh_sha256_benchmark [-size <bytes>] [-f <path>] [-chunk <bytes>]
+
+  -size <bytes>   synthetic buffer of this size (default: 100 MB)
+  -f <path>       read a file from disk into memory, then hash it
+  -chunk <bytes>  SHA256 streaming chunk size (default: 4 MB)
+```
+
+Example (500 MB synthetic buffer):
+```
+./bin/tlsh_sha256_benchmark -size 500000000
+```
+
+Output reports time in ms and throughput in MB/s for each algorithm:
+TLSH, TLSH-private, TLSH-threaded (2-thread), TLSH-4thread, SHA256.
+
 ## Ports
 
 - A JavaScript port available in the `js_ext` directory.
@@ -290,12 +309,23 @@ TLSH similarity is expressed as a difference score:
 
 # Current Version
 
-**5.0.1**
+**5.0.2**
 <PRE>
 10/07/2026
-	PR #152 Increase cmake_minimum_required version for CMake 4 compat - thanks laumann
-	PR #155 Regard endianness independent of a specific CPU type or OS - thanks sge-d-o
-	PR #156 Make sure one of BUCKETS_* and one of CHECHKSUM_?B are always defined - thanks sge-d-o
+	fix issue #167 reentrancy bug in TLSH_OPTION_THREADED and TLSH_OPTION_THREADED4 (thanks Zenchreal)
+		the per-thread work packages (raw_args structs) were stored as static
+		globals, making concurrent hash computation non-reentrant.
+		fix: move raw_args structs from static globals onto the stack inside fast_update5()
+		add tlsh_thread_test: verifies that N concurrent threaded hash computations produce correct results
+	add TLSH_OPTION_THREADED4 (4-thread parallel hash computation)
+		splits input into 4 equal segments processed concurrently
+		requires minimum 20,000 bytes input
+		checksum is set to 00 (same behaviour as TLSH_OPTION_THREADED)
+		add regression tests for TLSH_OPTION_THREADED4 in test_parts.sh
+		add -thread4 flag to tlsh_parts
+	add tlsh_sha256_benchmark
+		measures throughput for TLSH, TLSH-private, TLSH-threaded, TLSH-4thread, and SHA256
+		supports synthetic buffer (-size) or file input (-f)
 </PRE>
 
 # Change History

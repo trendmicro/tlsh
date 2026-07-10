@@ -793,3 +793,22 @@ TIME	ms= 21.00	per million iterations
 	PR #155 Regard endianness independent of a specific CPU type or OS - thanks sge-d-o
 	PR #156 Make sure one of BUCKETS_* and one of CHECHKSUM_?B are always defined - thanks sge-d-o
 </PRE>
+
+**5.0.2**
+<PRE>
+10/07/2026
+	fix issue #167 reentrancy bug in TLSH_OPTION_THREADED and TLSH_OPTION_THREADED4 (thanks Zenchreal)
+		the per-thread work packages (raw_args structs) were stored as static
+		globals, making concurrent hash computation non-reentrant.
+		fix: move raw_args structs from static globals onto the stack inside fast_update5()
+		add tlsh_thread_test: verifies that N concurrent threaded hash computations produce correct results
+	add TLSH_OPTION_THREADED4 (4-thread parallel hash computation)
+		splits input into 4 equal segments processed concurrently
+		requires minimum 20,000 bytes input
+		checksum is set to 00 (same behaviour as TLSH_OPTION_THREADED)
+		add regression tests for TLSH_OPTION_THREADED4 in test_parts.sh
+		add -thread4 flag to tlsh_parts
+	add tlsh_sha256_benchmark
+		measures throughput for TLSH, TLSH-private, TLSH-threaded, TLSH-4thread, and SHA256
+		supports synthetic buffer (-size) or file input (-f)
+</PRE>

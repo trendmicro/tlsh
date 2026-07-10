@@ -100,5 +100,10 @@ then
 	echo "====================="
 	./test_parts.sh | grep -E "(^test|^passed|error|^Running|Scenario)"
 
+ 	echo "====================="
+ 	echo "tests tlsh_thread_test"
+ 	echo "====================="
+ 	../bin/tlsh_thread_test
+
 	cd ..
 fi
