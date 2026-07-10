@@ -83,6 +83,14 @@ class TlshImpl;
 
 // Define TLSH_STRING_LEN_REQ, which is the string length of "T1" + the hex value of the Tlsh hash.  
 // BUCKETS_256 & CHECKSUM_3B are compiler switches defined in CMakeLists.txt
+// Make sure BUCKETS_* and CHECHKSUM_?B are always defined, to make tlsh.h and
+// the (static or shared) library self-contained.
+#if !(defined BUCKETS_48 || defined BUCKETS_128 || defined BUCKETS_256)
+  #define BUCKETS_128
+#endif
+#if !(defined CHECKSUM_0B || defined CHECKSUM_1B || defined CHECKSUM_3B)
+  #define CHECKSUM_1B
+#endif
 #if defined BUCKETS_256
   #define TLSH_STRING_LEN_REQ 136
   // changed the minimum data length to 256 for version 3.3
