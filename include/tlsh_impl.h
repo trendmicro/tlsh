@@ -117,7 +117,7 @@ struct lsh_bin_struct
 	#endif
 	unsigned char QB;
 	    struct{
-	#if defined(__SPARC) || defined(_AIX)
+	#if __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
 		unsigned char Q2ratio : 4;
 		unsigned char Q1ratio : 4;
 	#else

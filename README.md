@@ -290,11 +290,12 @@ TLSH similarity is expressed as a difference score:
 
 # Current Version
 
-**5.0.0**
+**5.0.1**
 <PRE>
-17/02/2026
-	Change default behaviour to output T1 at the start of the digest
-	A T1 digest requires that the number of buckets = 128 and the checksum is 1 byte
+10/07/2026
+	PR #152 Increase cmake_minimum_required version for CMake 4 compat - thanks laumann
+	PR #155 Regard endianness independent of a specific CPU type or OS - thanks sge-d-o
+	PR #156 Make sure one of BUCKETS_* and one of CHECHKSUM_?B are always defined - thanks sge-d-o
 </PRE>
 
 # Change History
