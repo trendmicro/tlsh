@@ -110,6 +110,9 @@ int main(int argc, char *argv[])
 		} else if (strcmp(argv[argIdx], "-thread") == 0) {
 			fc_cons_option += TLSH_OPTION_THREADED;
 			argIdx = argIdx+1;
+		} else if (strcmp(argv[argIdx], "-thread4") == 0) {
+			fc_cons_option += TLSH_OPTION_THREADED4;
+			argIdx = argIdx+1;
 		} else if (strcmp(argv[argIdx], "-private") == 0) {
 			fc_cons_option += TLSH_OPTION_PRIVATE;
 			argIdx = argIdx+1;

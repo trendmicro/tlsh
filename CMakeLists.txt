@@ -57,7 +57,7 @@ project(TLSH)
 
 set(VERSION_MAJOR 5)
 set(VERSION_MINOR 0)
-set(VERSION_PATCH 1)
+set(VERSION_PATCH 2)
 
 # TLSH uses only half the counting buckets.
 # It can use all the buckets now.
@@ -76,6 +76,8 @@ if(TLSH_BUCKETS_256 EQUAL 1)
   set(TLSH_HASH "full hash")
   add_definitions(-DBUCKETS_256)
 endif()
+
+add_definitions(-DTHREADING_IMPLEMENTED)
 
 # TLSH uses 1 byte checksum. The collision rate is 1 in 24.
 # It can use 3 bytes checksum now. That collision rate in 1 in 5800.

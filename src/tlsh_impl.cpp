@@ -374,18 +374,6 @@ struct raw_args {
 
 static void raw_fast_update5_nochecksum( struct raw_args *ra );
 
-static struct raw_args call1;
-static struct raw_args call2;
-
-void thread1()
-{
-	raw_fast_update5_nochecksum( &call1 );
-}
-void thread2()
-{
-	raw_fast_update5_nochecksum( &call2 );
-}
-
 void TlshImpl::fast_update5(const unsigned char* data, unsigned int len, int tlsh_option)
 {
 #ifdef THREADING_IMPLEMENTED
@@ -394,35 +382,73 @@ void TlshImpl::fast_update5(const unsigned char* data, unsigned int len, int tls
 		unsigned len2B = len - len2A;
 		// printf("method 2	len=%d	len2A=%d	len2B=%d\n", len, len2A, len2B);
 
-		for (int bi=0; bi<256; bi++) {
-			call1.bucket[bi] = 0;
-			call2.bucket[bi] = 0;
-		}
+		struct raw_args c1 = {}, c2 = {};
 		for (int di=0; di<5; di++) {
-			call1.slide_window[di] = 0;
 			int didx = len2A - 5 + di;
 			int wi = didx % 5;
-			call2.slide_window[wi] = data[didx];
+			c2.slide_window[wi] = data[didx];
 		}
 
-		call1.data	= data;
-		call1.len	= len2A;
-		call1.fed_len	= 0;
+		c1.data		= data;
+		c1.len		= len2A;
+		c1.fed_len	= 0;
 
-		call2.data	= &data[len2A];
-		call2.len	= len2B;
-		call2.fed_len	= len2A;
+		c2.data		= &data[len2A];
+		c2.len		= len2B;
+		c2.fed_len	= len2A;
 
-		std::thread t1(thread1);
-		std::thread t2(thread2);
+		std::thread t1([&c1]{ raw_fast_update5_nochecksum(&c1); });
+		std::thread t2([&c2]{ raw_fast_update5_nochecksum(&c2); });
 		t1.join();
 		t2.join();
 
 		this->data_len += len;
 
 		for (int bi=0; bi<128; bi++) {
-			this->a_bucket[bi] += (call1.bucket[bi] + call2.bucket[bi]) ;
+			this->a_bucket[bi] += (c1.bucket[bi] + c2.bucket[bi]) ;
 			// printf("bucket	%d	=%d\n", bi, this->a_bucket[bi] );
+		}
+		return;
+	}
+	if ((len >= 20000) && (tlsh_option & TLSH_OPTION_THREADED4)) {
+		unsigned lenA = len / 4;
+		unsigned lenB = len / 4;
+		unsigned lenC = len / 4;
+		unsigned lenD = len - 3 * lenA;
+
+		unsigned offA = 0;
+		unsigned offB = offA + lenA;
+		unsigned offC = offB + lenB;
+		unsigned offD = offC + lenC;
+
+		struct raw_args c1 = {}, c2 = {}, c3 = {}, c4 = {};
+
+		auto seed_window = [&](struct raw_args &c, unsigned off) {
+			for (int di = 0; di < 5; di++) {
+				int didx = (int)off - 5 + di;
+				int wi   = didx % 5;
+				c.slide_window[wi] = data[didx];
+			}
+		};
+		seed_window(c2, offB);
+		seed_window(c3, offC);
+		seed_window(c4, offD);
+
+		c1.data = data + offA; c1.len = lenA; c1.fed_len = offA;
+		c2.data = data + offB; c2.len = lenB; c2.fed_len = offB;
+		c3.data = data + offC; c3.len = lenC; c3.fed_len = offC;
+		c4.data = data + offD; c4.len = lenD; c4.fed_len = offD;
+
+		std::thread t1([&c1]{ raw_fast_update5_nochecksum(&c1); });
+		std::thread t2([&c2]{ raw_fast_update5_nochecksum(&c2); });
+		std::thread t3([&c3]{ raw_fast_update5_nochecksum(&c3); });
+		std::thread t4([&c4]{ raw_fast_update5_nochecksum(&c4); });
+		t1.join(); t2.join(); t3.join(); t4.join();
+
+		this->data_len += len;
+		for (int bi = 0; bi < 128; bi++) {
+			this->a_bucket[bi] += c1.bucket[bi] + c2.bucket[bi]
+			                    + c3.bucket[bi] + c4.bucket[bi];
 		}
 		return;
 	}
@@ -1089,7 +1115,7 @@ void find_quartile(unsigned int *q1, unsigned int *q2, unsigned int *q3, const u
             break;
         }
     }
-    
+
     short_cut_left[spl] = p2-1;
     short_cut_right[spr] = p2+1;
 
@@ -1138,7 +1164,6 @@ void find_quartile(unsigned int *q1, unsigned int *q2, unsigned int *q3, const u
             break;
         }
     }
-
 }
 
 unsigned int partition(unsigned int * buf, unsigned int left, unsigned int right) 

@@ -50,7 +50,7 @@ fi
 mkdir tmp
 
 listfiles=`ls example_data`
-for experiment in "none" "private" "thread" ; do
+for experiment in "none" "private" "thread" "thread4" ; do
 	for fname in $listfiles ; do
 		if test $experiment = "none"
 		then
