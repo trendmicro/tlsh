@@ -89,6 +89,34 @@ TlshImpl::~TlshImpl()
     delete [] this->lsh_code;
 }
 
+TlshImpl& TlshImpl::operator=(const TlshImpl& other)
+{
+    if (this == &other)
+        return *this;
+
+    if (other.a_bucket != NULL) {
+        if (this->a_bucket == NULL) {
+            this->a_bucket = new unsigned int[BUCKETS];
+        }
+        memcpy(this->a_bucket, other.a_bucket, BUCKETS*sizeof(*this->a_bucket));
+    } else {
+        delete [] this->a_bucket; this->a_bucket = NULL;
+    }
+    memcpy(this->slide_window, other.slide_window, SLIDING_WND_SIZE);
+    this->data_len = other.data_len;
+    this->lsh_bin = other.lsh_bin;
+    if (other.lsh_code != NULL) {
+        if (this->lsh_code == NULL) {
+            this->lsh_code = new char[TLSH_STRING_LEN_REQ+1];
+        }
+        memcpy(this->lsh_code, other.lsh_code, TLSH_STRING_LEN_REQ+1);
+    } else {
+        delete [] this->lsh_code; this->lsh_code = NULL;
+    }
+    this->lsh_code_valid = other.lsh_code_valid;
+    return *this;
+}
+
 void TlshImpl::reset()
 {
     delete [] this->a_bucket; this->a_bucket = NULL;
